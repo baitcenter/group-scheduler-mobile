@@ -42,3 +42,9 @@ dist/
 npm-debug.log
 www/
 src/fonts
+
+# Jetbrains IDE
+.idea
+
+# Mac OS
+*.DS_Store
