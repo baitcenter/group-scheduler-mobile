@@ -6,6 +6,7 @@ import NotFoundPage from './pages/not-found.vue';
 
 import PanelLeftPage from './pages/panel-left.vue';
 import PanelRightPage from './pages/panel-right.vue';
+import Panel from './pages/Component/Panel';
 
 export default [
   {
@@ -31,6 +32,10 @@ export default [
   {
     path: '/dynamic-route/blog/:blogId/post/:postId/',
     component: DynamicRoutePage,
+  },
+  {
+    path: '/panel/',
+    component: Panel,
   },
   {
     path: '(.*)',
