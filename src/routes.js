@@ -9,6 +9,7 @@ import PanelRightPage from './pages/panel-right.vue';
 import Panel from './pages/Component/Panel';
 import Profile from './pages/User/Profile';
 import MyGroup from './pages/Group/MyGroup';
+import Group from './pages/Group/Group';
 
 export default [
   {
@@ -46,6 +47,10 @@ export default [
     {
         path: '/my-group/',
         component: MyGroup
+    },
+    {
+        path: '/group/:groupId',
+        component: Group
     },
   {
     path: '(.*)',
