@@ -4,6 +4,8 @@ import FormPage from './pages/form.vue';
 import DynamicRoutePage from './pages/dynamic-route.vue';
 import NotFoundPage from './pages/not-found.vue';
 
+import Schedule from './pages/schedule/ScheduleMobile'
+import ViewEvent from './pages/schedule/ViewEvent'
 import PanelLeftPage from './pages/panel-left.vue';
 import PanelRightPage from './pages/panel-right.vue';
 
@@ -32,6 +34,15 @@ export default [
     path: '/dynamic-route/blog/:blogId/post/:postId/',
     component: DynamicRoutePage,
   },
+  {
+    path :'/schedule/',
+    component: Schedule,
+  },
+  {
+    path :'/event/',
+    component: ViewEvent,
+  }
+  ,
   {
     path: '(.*)',
     component: NotFoundPage,

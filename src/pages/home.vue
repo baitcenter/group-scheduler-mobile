@@ -2,7 +2,7 @@
   <f7-page>
     <f7-navbar>
       <f7-nav-left>
-        <f7-link icon-if-ios="f7:menu" icon-if-md="material:menu" panel-open="left"></f7-link>
+        <f7-link icon-if-ios="f7:menu" icon-if-md="material:menu" panel-open="right"></f7-link>
       </f7-nav-left>
       <f7-nav-title>My App</f7-nav-title>
       <f7-nav-right>
@@ -20,6 +20,8 @@
     <f7-list>
       <f7-list-item link="/about/" title="About"></f7-list-item>
       <f7-list-item link="/form/" title="Form"></f7-list-item>
+    
+      <f7-list-item link="/schedule/" title="Schedule"></f7-list-item>
     </f7-list>
     <f7-block-title>Modals</f7-block-title>
     <f7-block strong>
@@ -30,6 +32,7 @@
         <f7-col width="50">
           <f7-button fill raised login-screen-open="#login-screen">Login Screen</f7-button>
         </f7-col>
+        
       </f7-row>
     </f7-block>
     <f7-block-title>Panels</f7-block-title>
@@ -49,6 +52,7 @@
     </f7-list>
   </f7-page>
 </template>
-<script>
-export default {}
+<script>  
+export default {
+}
 </script>

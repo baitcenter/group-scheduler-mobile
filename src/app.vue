@@ -18,6 +18,9 @@
     <!-- Main View -->
     <f7-view id="main-view" url="/" main></f7-view>
 
+    <!-- Schedule View -->
+    <f7-view id="schedule" url="/schedule" main></f7-view>
+
     <!-- Popup -->
     <f7-popup id="popup">
       <f7-view>
