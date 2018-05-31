@@ -7,6 +7,7 @@ import NotFoundPage from './pages/not-found.vue';
 import PanelLeftPage from './pages/panel-left.vue';
 import PanelRightPage from './pages/panel-right.vue';
 import Panel from './pages/Component/Panel';
+import Profile from './pages/User/Profile';
 
 export default [
   {
@@ -37,6 +38,10 @@ export default [
     path: '/panel/',
     component: Panel,
   },
+    {
+        path: '/profile/',
+        component: Profile
+    },
   {
     path: '(.*)',
     component: NotFoundPage,
