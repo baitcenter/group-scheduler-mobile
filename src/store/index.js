@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from '@/firebase'
 import {googleProvider} from '@/firebase'
-import router from '@/router'
 
 Vue.use(Vuex)
 
