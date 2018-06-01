@@ -6,8 +6,8 @@
     <f7-statusbar></f7-statusbar>
 
     <!-- Left Panel -->
-    <f7-panel left reveal theme-dark>
-      <f7-view url="/panel-left/"></f7-view>
+    <f7-panel left cover>
+      <f7-view url="/panel/"></f7-view>
     </f7-panel>
 
     <!-- Right Panel -->
@@ -52,9 +52,9 @@
           </f7-list>
           <f7-list>
             <f7-list-button title="Sign In" login-screen-close></f7-list-button>
-            <f7-block-footer>
+            <!-- <f7-block-footer>
               <p>Click Sign In to close Login Screen</p>
-            </f7-block-footer>
+            </f7-block-footer> -->
           </f7-list>
         </f7-page>
       </f7-view>

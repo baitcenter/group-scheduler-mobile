@@ -1,7 +1,7 @@
 <template>
 
 <f7-page>
-    <f7-navbar title="Schedule" back-link="Back"></f7-navbar>
+    <f7-navbar title="My Schedule" back-link="Back"></f7-navbar>
     <!-- FAB must be direct child of a page -->
     <f7-fab color="green" position="center-bottom" href="/create-event/" >
         <f7-icon f7="add"></f7-icon>

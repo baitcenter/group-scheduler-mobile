@@ -1,7 +1,7 @@
 <template>
     <f7-page>
         <f7-page-content>
-            <f7-navbar title="CreateEvent" back-link="Back"></f7-navbar>
+            <f7-navbar title="Create Event" back-link="Back"></f7-navbar>
             <f7-list form>
                 <f7-list-item>
                     <f7-label>Event Name</f7-label>

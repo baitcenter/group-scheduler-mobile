@@ -20,6 +20,8 @@ import Routes from './routes.js'
 // Import App Component
 import App from './app';
 
+import {store} from './store';
+
 // Init F7 Vue Plugin
 Vue.use(Framework7Vue, Framework7)
 
@@ -27,6 +29,7 @@ Vue.use(Framework7Vue, Framework7)
 new Vue({
   el: '#app',
   template: '<app/>',
+  store,
   // Init Framework7 by passing parameters here
   framework7: {
     id: 'io.framework7.testapp', // App bundle ID
