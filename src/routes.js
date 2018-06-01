@@ -6,6 +6,8 @@ import NotFoundPage from './pages/not-found.vue';
 
 import Schedule from './pages/schedule/ScheduleMobile'
 import ViewEvent from './pages/schedule/ViewEvent'
+import CreateEvent from './pages/schedule/CreateEventMobile'
+
 import PanelLeftPage from './pages/panel-left.vue';
 import PanelRightPage from './pages/panel-right.vue';
 
@@ -41,6 +43,10 @@ export default [
   {
     path :'/event/',
     component: ViewEvent,
+  },
+  {
+    path :'/create-event/',
+    component: CreateEvent,
   }
   ,
   {

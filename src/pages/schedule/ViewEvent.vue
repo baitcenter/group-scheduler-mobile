@@ -28,7 +28,7 @@
 
         </f7-page-content>
         <f7-toolbar bottom-md>
-            <f7-link icon-material="group_add" text="Join" @click="openConfirmJoin"> Join</f7-link>
+            <f7-link icon-material="group_add" @click="openConfirmJoin"> Join</f7-link>
             <f7-link disabled icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-link>
             <f7-link  icon-material="delete" @click="openConfirmDel"> Delete</f7-link>
         
