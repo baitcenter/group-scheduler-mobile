@@ -12,16 +12,16 @@
             </f7-list-item>
             <f7-list-item>Invite code: {{inviteCode}}</f7-list-item>
         </f7-list>
-        <f7-row>
-            <f7-col width="5"></f7-col>
-            <f7-button class="col-90" fill @click="redirectTo">Schedule</f7-button>
-            <f7-col width="5"></f7-col>
-        </f7-row>
+        <f7-block>
+            <f7-button class="col-80" fill @click="redirectTo">Schedule</f7-button>
+        </f7-block>
     </f7-page>
 </template>
 
 <script>
+    import F7Block from "framework7-vue/src/components/block";
     export default {
+        components: {F7Block},
         data() {
             return {
                 groupName: "Hello",
