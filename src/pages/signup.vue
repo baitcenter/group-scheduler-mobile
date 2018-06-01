@@ -9,7 +9,7 @@
             </f7-list-item>
             <f7-list-item>
                 <f7-icon material="email" slot="media"></f7-icon>
-                <f7-lable>E-mail</f7-lable>
+                <f7-label>E-mail</f7-label>
                 <f7-input type="email" placeholder="E-mail"></f7-input>
             </f7-list-item>
             <f7-list-item>
