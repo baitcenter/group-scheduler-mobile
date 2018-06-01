@@ -23,11 +23,23 @@
                 </f7-list-item>
                 <f7-list-item>
                     <f7-label><f7-icon material="timer"></f7-icon> From</f7-label>
-                    <f7-input type="text" placeholder="Start Time" readonly="readonly" id="demo-picker-starttime" v-bind:value="startTime" @input="startTime=$event.target.value"/>
+                    <f7-input 
+                        type="text" 
+                        placeholder="Start Time" 
+                        readonly="readonly" 
+                        id="demo-picker-starttime"
+                        v-bind:value="startTime"
+                        v-on:change="onStartTimeChange" />
                 </f7-list-item>
                 <f7-list-item>
                     <f7-label><f7-icon material="timer"></f7-icon> To</f7-label>
-                    <f7-input type="text" placeholder="End Time" readonly="readonly" id="demo-picker-endtime"/>
+                    <f7-input 
+                        type="text" 
+                        placeholder="End Time" 
+                        readonly="readonly" 
+                        id="demo-picker-endtime"
+                        v-bind:value="endTime"
+                        v-on:change="onEndTimeChange" />
                 </f7-list-item>
                 <f7-row>
                     <f7-col width="5"></f7-col>        
@@ -49,6 +61,7 @@
     </f7-page>
 </template>
 <script>
+
 export default {
     data(){
         return{
@@ -63,14 +76,21 @@ export default {
         createNewEvent(){
             this.eventName =''
             this.eventDescription=''
+        },
+        onStartTimeChange(e){
+            this.startTime=e.target.value;
+        },
+        onEndTimeChange(e){
+            this.endTime=e.target.value;
         }
+        
     },
     on: {
       pageInit(e) {
         const app = this.$f7;
         
         // Time picker for start time
-        var TimePicker = app.picker.create({
+        var StartTimePicker = app.picker.create({
           inputEl: '#demo-picker-starttime',
           rotateEffect: true,
           formatValue(values, displayValues) {
@@ -102,9 +122,8 @@ export default {
         });
         
         //Time picker for endtime
-        
         // Time picker
-        var TimePicker = app.picker.create({
+        var EndTimePicker = app.picker.create({
           inputEl: '#demo-picker-endtime',
           rotateEffect: true,
           formatValue(values, displayValues) {
