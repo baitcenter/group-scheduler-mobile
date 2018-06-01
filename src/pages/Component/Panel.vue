@@ -27,6 +27,7 @@
                     {title: "My group", path:"/my-group/", icon: "people"},
                     {title: "Create group", path:"/create-group/", icon: "add_circle"},
                     {title: "Enroll in a group", path:"/enroll-group/", icon: "group_add"},
+                    {title: "About", path:"/about/", icon:"info"},
                 ]
             }
         }
