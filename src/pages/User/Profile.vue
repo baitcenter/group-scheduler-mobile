@@ -8,8 +8,8 @@
             </f7-list>
             <f7-row>
                 <f7-col width="5"></f7-col>
-                <f7-button class="col-60" fill color="green" @click="">Re-send email verified</f7-button>
-                <f7-button class="col-35" fill color="gray" @click="toggleEdit">Edit profile</f7-button>
+                <f7-button class="col-65" fill color="green" @click="">Re-send email verified</f7-button>
+                <f7-button class="col-30" fill color="gray" @click="toggleEdit">Edit</f7-button>
                 <f7-col width="5"></f7-col>
             </f7-row>
         </div>
@@ -41,8 +41,8 @@
             </f7-list>
             <f7-row>
                 <f7-col width="5"></f7-col>
-                <f7-button class="col-40" fill @click="cancelEdit">Cancel</f7-button>
-                <f7-button class="col-40" fill color="red" @click="saveChanges">Save changes</f7-button>
+                <f7-button class="col-45" fill @click="cancelEdit">Cancel</f7-button>
+                <f7-button class="col-45" fill color="red" @click="saveChanges">Save changes</f7-button>
                 <f7-col width="5"></f7-col>
             </f7-row>
         </div>
