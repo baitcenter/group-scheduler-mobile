@@ -46,6 +46,10 @@
     <f7-list>
       <f7-list-item link="/dynamic-route/blog/45/post/125/?foo=bar#about" title="Dynamic Route"></f7-list-item>
       <f7-list-item link="/load-something-that-doesnt-exist/" title="Default Route (404)"></f7-list-item>
+      <f7-list-item link="/startup" title="Start up"></f7-list-item>
+      <f7-list-item link="/signup" title="Sign Up"></f7-list-item>
+      <f7-list-item link="/creategroup" title="Create Group"></f7-list-item>
+      <f7-list-item link="/enroll" title="Enroll"></f7-list-item>
     </f7-list>
   </f7-page>
 </template>

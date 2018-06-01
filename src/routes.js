@@ -4,6 +4,11 @@ import FormPage from './pages/form.vue';
 import DynamicRoutePage from './pages/dynamic-route.vue';
 import NotFoundPage from './pages/not-found.vue';
 
+import SignUp from './pages/signup.vue';
+import CreateGroup from './pages/creategroup.vue';
+import Enroll from './pages/enroll.vue';
+import StartUp from './pages/startup.vue';
+
 import PanelLeftPage from './pages/panel-left.vue';
 import PanelRightPage from './pages/panel-right.vue';
 import Panel from './pages/Component/Panel';
@@ -12,6 +17,22 @@ import MyGroup from './pages/Group/MyGroup';
 import Group from './pages/Group/Group';
 
 export default [
+  {
+    path: '/startup',
+    component : StartUp,
+  },
+  {
+    path: '/enroll',
+    component : Enroll,
+  },
+  {
+    path: '/creategroup',
+    component : CreateGroup,
+  },
+  {
+    path: '/signup',
+    component : SignUp
+  },
   {
     path: '/',
     component: HomePage,
