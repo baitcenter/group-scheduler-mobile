@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import firebase from '@/firebase'
 import {googleProvider} from '@/firebase'
+import f7Vue from '../main'
 
 Vue.use(Vuex)
 
@@ -102,7 +103,8 @@ export const store = new Vuex.Store({
                     commit('setUser', newUser)
                     commit('setLoading', false)
                     commit('setError', null)
-                    router.push('/')
+                    f7Vue.$f7.views.main.router.navigate({url: '/my-schedule/'})
+                    // router.push('/')
                 })
                 .catch(error => {
                     commit('setError', error.message)
