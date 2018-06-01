@@ -36,7 +36,7 @@
         methods: {
             redirectTo() {
                 const groupId = this.$f7router.params.groupId
-                this.$f7.router.navigate("group/"+groupId+"/schedule/")
+                this.$f7router.navigate("/group/"+groupId+"/schedule/")
             }
         }
     }

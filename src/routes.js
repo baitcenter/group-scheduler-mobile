@@ -2,7 +2,8 @@ import HomePage from './pages/home.vue';
 import About from './pages/About.vue';
 import NotFoundPage from './pages/not-found.vue';
 
-import Schedule from './pages/schedule/ScheduleMobile'
+import MySchedule from './pages/schedule/MySchedule'
+import GroupSchedule from './pages/schedule/GroupSchedule'
 import ViewEvent from './pages/schedule/ViewEvent'
 import CreateEvent from './pages/schedule/CreateEventMobile'
 import SignUp from './pages/signup.vue';
@@ -42,7 +43,7 @@ export default [
   },
   {
     path :'/my-schedule/',
-    component: Schedule,
+    component: MySchedule,
   },
   {
     path :'/event/',
@@ -65,8 +66,12 @@ export default [
     component: MyGroup
   },
   {
-    path: '/group/:groupId',
+    path: '/group/:groupId/',
     component: Group
+  },
+  {
+    path: '/group/:groupId/schedule/',
+    component: GroupSchedule
   },
   {
     path: '(.*)',
