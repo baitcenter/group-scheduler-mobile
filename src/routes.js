@@ -16,6 +16,17 @@ import Profile from './pages/User/Profile';
 import MyGroup from './pages/Group/MyGroup';
 import Group from './pages/Group/Group';
 
+import {auth} from './firebase';
+
+const AuthGuard = (route, resolve, reject) => {
+    if (auth.currentUser) {
+        resolve()
+    }
+    else {
+        resolve("/startup")
+    }
+}
+
 export default [
   {
     path: '/startup',
@@ -44,6 +55,7 @@ export default [
   {
     path :'/my-schedule/',
     component: MySchedule,
+    redirect: AuthGuard,
   },
   {
     path :'/event/',

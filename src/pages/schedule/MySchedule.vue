@@ -1,7 +1,12 @@
 <template>
 
 <f7-page>
-    <f7-navbar title="My Schedule" back-link="Back"></f7-navbar>
+    <f7-navbar>
+        <f7-nav-left>
+            <f7-link icon-if-ios="f7:menu" icon-if-md="material:menu" panel-open="left"></f7-link>
+        </f7-nav-left>
+        <f7-nav-title>My Schedule</f7-nav-title>
+    </f7-navbar>
     <!-- FAB must be direct child of a page -->
     <f7-fab color="green" position="center-bottom" href="/create-event/" >
         <f7-icon f7="add"></f7-icon>
@@ -55,6 +60,8 @@
 </template>
 
 <script>
+import F7Navbar from "framework7-vue/src/components/navbar";
 export default {
+    components: {F7Navbar}
 }
 </script>
