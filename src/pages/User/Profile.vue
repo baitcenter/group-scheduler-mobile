@@ -17,14 +17,14 @@
             <f7-list>
                 <f7-list-item>
                     <f7-label>Name</f7-label>
-                    <f7-input type="text" :value="name"
+                    <f7-input type="text" @input="name=$event.target.value"
                               required validate
                               placeholder="Name" clear-button>
                     </f7-input>
                 </f7-list-item>
                 <f7-list-item>
                     <f7-label>Email</f7-label>
-                    <f7-input type="email" :value="name"
+                    <f7-input type="email" @input="email=$event.target.value"
                               required validate
                               placeholder="Email" clear-button>
                     </f7-input>
