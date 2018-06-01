@@ -60,8 +60,6 @@
 </template>
 
 <script>
-import F7Navbar from "framework7-vue/src/components/navbar";
 export default {
-    components: {F7Navbar}
 }
 </script>
