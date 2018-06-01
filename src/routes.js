@@ -15,6 +15,7 @@ import Panel from './pages/Component/Panel';
 import Profile from './pages/User/Profile';
 import MyGroup from './pages/Group/MyGroup';
 import Group from './pages/Group/Group';
+import Login from './pages/Authentication/Login';
 
 import {auth} from './firebase';
 
@@ -84,6 +85,10 @@ export default [
   {
     path: '/group/:groupId/schedule/',
     component: GroupSchedule
+  },
+  {
+    path: '/login/',
+    component: Login
   },
   {
     path: '(.*)',

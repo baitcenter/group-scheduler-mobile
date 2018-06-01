@@ -7,7 +7,7 @@
                     <f7-button href="/signup" color="red" raised fill>Sign Up</f7-button>
                 </f7-col>
                 <f7-col>
-                    <f7-button raised fill color="green" login-screen-open="#login-screen">Login</f7-button>
+                    <f7-button href="/login/" raised fill color="green">Login</f7-button>
                 </f7-col>
             </f7-row>
         </f7-block>
