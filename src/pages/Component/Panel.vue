@@ -19,9 +19,7 @@
 </template>
 
 <script>
-    import F7Icon from "framework7-vue/src/components/icon";
     export default {
-        components: {F7Icon},
         computed: {
             panelItems() {
                 return [

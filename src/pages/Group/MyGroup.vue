@@ -14,10 +14,7 @@
 </template>
 
 <script>
-    import F7ListItem from "framework7-vue/src/components/list-item";
-    import F7CardFooter from "framework7-vue/src/components/card-footer";
     export default {
-        components: {F7CardFooter, F7ListItem},
         methods: {
             redirectTo(groupId) {
                 this.$f7router.navigate('/group/'+groupId+'/')
