@@ -50,11 +50,7 @@
 </template>
 
 <script>
-    import F7ListItem from "framework7-vue/src/components/list-item";
-    import F7Input from "framework7-vue/src/components/input";
-    import F7Label from "framework7-vue/src/components/label";
     export default {
-        components: {F7Label, F7Input, F7ListItem},
         data() {
             return {
                 editing: false,
