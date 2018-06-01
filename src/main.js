@@ -26,7 +26,7 @@ import {store} from './store';
 Vue.use(Framework7Vue, Framework7)
 
 // Init App
-new Vue({
+export default new Vue({
   el: '#app',
   template: '<app/>',
   store,
