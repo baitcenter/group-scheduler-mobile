@@ -50,10 +50,6 @@ export default [
     component: ViewEvent,
   },
   {
-    path :'/create-event/',
-    component: CreateEvent,
-  }
-  ,{
     path: '/panel/',
     component: Panel,
   },
@@ -72,6 +68,10 @@ export default [
   {
     path: '/group/:groupId/schedule/',
     component: GroupSchedule
+  },
+  {
+    path: '/group/:groupId/schedule/create-event/',
+    component: CreateEvent
   },
   {
     path: '(.*)',

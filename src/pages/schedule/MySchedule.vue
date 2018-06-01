@@ -2,10 +2,6 @@
 
 <f7-page>
     <f7-navbar title="My Schedule" back-link="Back"></f7-navbar>
-    <!-- FAB must be direct child of a page -->
-    <f7-fab color="green" position="center-bottom" href="/create-event/" >
-        <f7-icon f7="add"></f7-icon>
-    </f7-fab>
     <!-- Switch Between Tabs -->
     <f7-segmented>
         <f7-button tab-link="#tab-1" tab-link-active>Mon</f7-button>

@@ -62,6 +62,7 @@
 </template>
 <script>
 
+import { auth, db } from '@/firebase'
 export default {
     data(){
         return{
@@ -74,8 +75,33 @@ export default {
     },
     methods : {
         createNewEvent(){
-            this.eventName =''
-            this.eventDescription=''
+            const groupId = this.$f7route.params.groupId
+            console.log(groupId)
+            let eventInfo ={
+                    eventName : this.eventName,
+                    eventDescription : this.eventDescription,
+                    startTime : this.startTime,
+                    endTime : this.endTime
+                }
+            db.ref('events/').push(eventInfo)
+            .then((snapshot)=>{
+                db.ref('events/'+snapshot.key).child('joinedMembers').push("user@user.com")
+                console.log(this.selectedDay)
+                db.ref('groups/'+groupId+'/groupSchedule/').child(this.selectedDay).child(snapshot.key).set(0)
+                db.ref('users/uid/userEvents').child(snapshot.key).set(0)
+
+                          //end
+                this.eventName =''
+                this.eventDescription=''
+                this.selectedDay=''
+                this.startTime=''
+                this.endTime=''
+                console.log('ss55'+groupId)            
+                this.$f7router.navigate("/group/"+groupId+"/schedule/")
+            })
+
+
+
         },
         onStartTimeChange(e){
             this.startTime=e.target.value;
