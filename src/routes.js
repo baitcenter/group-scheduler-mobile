@@ -18,14 +18,14 @@ import Group from './pages/Group/Group';
 import Login from './pages/Authentication/Login';
 
 import {auth} from './firebase';
+import f7Vue from './main';
 
-const AuthGuard = (route, resolve, reject) => {
-    if (auth.currentUser) {
-        resolve()
-    }
-    else {
-        resolve("/startup")
-    }
+const AuthGuard = (e, page) => {
+  if (auth.currentUser) {
+  }
+  else {
+      f7Vue.$f7.views.main.router.navigate({url: '/startup'})
+  }
 }
 
 export default [
@@ -56,7 +56,9 @@ export default [
   {
     path :'/my-schedule/',
     component: MySchedule,
-    redirect: AuthGuard,
+    on: {
+      pageBeforeIn: AuthGuard
+    }
   },
   {
     path :'/event/',
@@ -72,7 +74,7 @@ export default [
   },
   {
     path: '/profile/',
-    component: Profile
+    component: Profile,
   },
   {
     path: '/my-group/',
