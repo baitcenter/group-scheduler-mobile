@@ -22,6 +22,8 @@ import App from './app';
 
 import {store} from './store';
 
+import {auth} from './firebase'
+
 // Init F7 Vue Plugin
 Vue.use(Framework7Vue, Framework7)
 
@@ -41,5 +43,17 @@ export default new Vue({
   // Register App Component
   components: {
     app: App
+  },
+  methods: {
+      onF7Ready(f7) {
+          auth.onAuthStateChanged((firebaseUser) => {
+              if (firebaseUser) {
+                  store.dispatch("autoSignIn", firebaseUser)
+              }
+              else {
+                  f7.router.navigate('/startup')
+              }
+          })
+      }
   }
 });
