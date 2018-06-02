@@ -104,7 +104,7 @@ export const store = new Vuex.Store({
                     commit('setUser', newUser)
                     commit('setLoading', false)
                     commit('setError', null)
-                    f7Vue.$f7.router.navigate({url: '/my-schedule/'})
+                    f7Vue.$f7.router.navigate('/my-schedule/')
                     // router.push('/')
                 })
                 .catch(error => {
@@ -123,7 +123,7 @@ export const store = new Vuex.Store({
         userSignOut({commit}) {
             firebase.auth().signOut()
             commit('setUser', null)
-            f7Vue.$f7.router.navigate({url: '/startup'})
+            f7Vue.$f7.router.navigate('/startup')
         },
         userEnrollGroup({commit}, payload) {
             commit('setLoading', true)
