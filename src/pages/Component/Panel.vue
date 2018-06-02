@@ -14,7 +14,7 @@
                 </div>
             </f7-list-item>
         </f7-list>
-        <f7-button icon-material="exit_to_app">Sign out</f7-button>
+        <f7-button icon-material="exit_to_app" @click="userSigout" panel-close>Sign out</f7-button>
     </f7-page>
 </template>
 
@@ -29,6 +29,11 @@
                     {title: "Enroll in a group", path:"/enroll-group/", icon: "group_add"},
                     {title: "About", path:"/about/", icon:"info"},
                 ]
+            }
+        },
+        methods: {
+            userSigout() {
+                this.$store.dispatch("userSignOut")
             }
         }
     }
