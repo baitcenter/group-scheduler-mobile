@@ -22,6 +22,7 @@ import f7Vue from './main';
 
 const AuthGuard = (e, page) => {
   if (auth.currentUser) {
+      // f7Vue.$f7.views.main.router.navigate({url: '/my-schedule/'})
   }
   else {
       f7Vue.$f7.views.main.router.navigate({url: '/startup'})
@@ -56,9 +57,9 @@ export default [
   {
     path :'/my-schedule/',
     component: MySchedule,
-    on: {
-      pageBeforeIn: AuthGuard
-    }
+    // on: {
+    //   pageBeforeIn: AuthGuard
+    // }
   },
   {
     path :'/event/',
