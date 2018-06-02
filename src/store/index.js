@@ -4,6 +4,7 @@ import firebase from '@/firebase'
 import {googleProvider} from '@/firebase'
 import f7Vue from '../main'
 
+// f7 router syntax in here, f7Vue.$f7.router.navigate(<url>)
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
@@ -103,7 +104,7 @@ export const store = new Vuex.Store({
                     commit('setUser', newUser)
                     commit('setLoading', false)
                     commit('setError', null)
-                    f7Vue.$f7.views.main.router.navigate({url: '/my-schedule/'})
+                    f7Vue.$f7.router.navigate({url: '/my-schedule/'})
                     // router.push('/')
                 })
                 .catch(error => {
@@ -122,7 +123,7 @@ export const store = new Vuex.Store({
         userSignOut({commit}) {
             firebase.auth().signOut()
             commit('setUser', null)
-            f7Vue.$f7.views.main.router.navigate({url: '/startup'})
+            f7Vue.$f7.router.navigate({url: '/startup'})
         },
         userEnrollGroup({commit}, payload) {
             commit('setLoading', true)
