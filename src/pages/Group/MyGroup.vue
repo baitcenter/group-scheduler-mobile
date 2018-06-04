@@ -10,8 +10,6 @@
                 </f7-card-footer>
             </f7-card>
         </f7-list>
-        <!--{{myGroups}}-->
-        <!--{{groups}}-->
     </f7-page>
 </template>
 
@@ -27,14 +25,13 @@
             redirectTo(groupId) {
                 this.$f7router.navigate('/group/'+groupId+'/')
             },
-            populateMyGroup() {
+            populateMyGroups() {
                 let groups = []
                 this.$firebaseRefs.groups.once('value', snapshot => {
-                    for (let groupKey in snapshot.val()) {
-                        if (this.myGroupsKey.includes(groupKey)) {
-                            // console.log(groupKey)
-                            let group = {...snapshot.val()[groupKey]}
-                            group["groupId"] = groupKey
+                    for (let groupId in snapshot.val()) {
+                        if (this.myGroupsIDs.includes(groupId)) {
+                            let group = {...snapshot.val()[groupId]}
+                            group["groupId"] = groupId
                             groups.push(group)
                         }
                     }
@@ -50,7 +47,7 @@
             }
         },
         computed: {
-            myGroupsKey() {
+            myGroupsIDs() {
                 let keys = []
                 this.$firebaseRefs.userGroups.once('value', snapshot => {
                     snapshot.forEach(group => {
@@ -61,7 +58,7 @@
             },
         },
         mounted() {
-            this.populateMyGroup()
+            this.populateMyGroups()
         }
     }
 </script>
