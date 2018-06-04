@@ -3,7 +3,7 @@
 <f7-page>
     <f7-navbar title="My Schedule" back-link="Back"></f7-navbar>
     <!-- FAB must be direct child of a page -->
-    <f7-fab color="green" position="center-bottom" href="/create-event/" >
+    <f7-fab color="green" position="center-bottom" @click="redirectTo" >
         <f7-icon f7="add"></f7-icon>
     </f7-fab>
     <!-- Switch Between Tabs -->
@@ -56,5 +56,13 @@
 
 <script>
 export default {
+    methods:{
+        redirectTo(){
+            const groupId = this.$f7route.params.groupId
+            console.log(groupId)
+            this.$f7router.navigate("/group/"+groupId+"/schedule/create-event/")
+            
+        }
+    }
 }
 </script>

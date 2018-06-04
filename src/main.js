@@ -51,7 +51,7 @@ export default new Vue({
                   store.dispatch("autoSignIn", firebaseUser)
               }
               else {
-                  f7.router.navigate('/startup')
+                  f7.router.navigate('/')
               }
           })
       }

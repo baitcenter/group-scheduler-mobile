@@ -1,15 +1,14 @@
-import HomePage from './pages/home.vue';
-import About from './pages/About.vue';
-import NotFoundPage from './pages/not-found.vue';
+import About from './pages/About';
+import NotFoundPage from './pages/NotFound';
 
-import MySchedule from './pages/schedule/MySchedule'
+import MySchedule from './pages/schedule/MySchedule';
 import GroupSchedule from './pages/schedule/GroupSchedule'
 import ViewEvent from './pages/schedule/ViewEvent'
 import CreateEvent from './pages/schedule/CreateEventMobile'
-import SignUp from './pages/signup.vue';
-import CreateGroup from './pages/creategroup.vue';
-import Enroll from './pages/enroll.vue';
-import StartUp from './pages/startup.vue';
+import SignUp from './pages/Authentication/signup.vue';
+import CreateGroup from './pages/Group/creategroup.vue';
+import Enroll from './pages/Schedule/Enroll';
+import Home from './pages/Home.vue';
 
 import Panel from './pages/Component/Panel';
 import Profile from './pages/User/Profile';
@@ -31,8 +30,8 @@ const AuthGuard = (e, page) => {
 
 export default [
   {
-    path: '/startup',
-    component : StartUp,
+    path: '/',
+    component : Home,
   },
   {
     path: '/enroll-group/',
@@ -43,12 +42,8 @@ export default [
     component : CreateGroup,
   },
   {
-    path: '/signup',
+    path: '/signup/',
     component : SignUp
-  },
-  {
-    path: '/',
-    component: HomePage,
   },
   {
     path: '/about/',
@@ -66,10 +61,6 @@ export default [
     component: ViewEvent,
   },
   {
-    path :'/create-event/',
-    component: CreateEvent,
-  }
-  ,{
     path: '/panel/',
     component: Panel,
   },
@@ -92,6 +83,10 @@ export default [
   {
     path: '/login/',
     component: Login
+  },
+  {
+    path: '/group/:groupId/schedule/create-event/',
+    component: CreateEvent
   },
   {
     path: '(.*)',

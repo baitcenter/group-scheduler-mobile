@@ -15,6 +15,7 @@
         <f7-block>
             <f7-button class="col-80" fill @click="redirectTo">Schedule</f7-button>
         </f7-block>
+        <!-- {{this.$f7router.params.groupId}} -->
     </f7-page>
 </template>
 
@@ -35,7 +36,7 @@
         // user $f7route.params to get the params from url
         methods: {
             redirectTo() {
-                const groupId = this.$f7router.params.groupId
+                const groupId = this.$f7route.params.groupId
                 this.$f7router.navigate("/group/"+groupId+"/schedule/")
             }
         }
