@@ -18,9 +18,7 @@
 
 <script>
     import {db, auth} from '@/firebase'
-    import F7Block from "framework7-vue/src/components/block";
     export default {
-        components: {F7Block},
         data() {
             return {
                 myGroups: []
@@ -64,7 +62,6 @@
         },
         mounted() {
             this.populateMyGroups()
-            console.log(this.myGroups === undefined || this.myGroups === 0)
         }
     }
 </script>
