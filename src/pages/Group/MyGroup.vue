@@ -1,7 +1,7 @@
 <template>
     <f7-page>
         <f7-navbar title="My Group" back-link="Back"></f7-navbar>
-        <f7-list>
+        <f7-list v-if="myGroups.length !== 0">
             <f7-card v-for="group in myGroups" :key="group.groupId"
                      :title="group.groupName">
                 <f7-card-footer>
@@ -10,15 +10,20 @@
                 </f7-card-footer>
             </f7-card>
         </f7-list>
+        <f7-block v-else strong>
+            <p>You haven't enrolled in any group yet.</p>
+        </f7-block>
     </f7-page>
 </template>
 
 <script>
     import {db, auth} from '@/firebase'
+    import F7Block from "framework7-vue/src/components/block";
     export default {
+        components: {F7Block},
         data() {
             return {
-                myGroups: null
+                myGroups: []
             }
         },
         methods: {
@@ -59,6 +64,7 @@
         },
         mounted() {
             this.populateMyGroups()
+            console.log(this.myGroups === undefined || this.myGroups === 0)
         }
     }
 </script>
