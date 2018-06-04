@@ -1,7 +1,7 @@
 <template>
     <f7-page>
         <f7-block>
-            <img data-src="../static/logo.png">
+            <img class="center" src="/static/logo.png">
             <f7-row>
                 <f7-col>
                     <f7-button href="/signup/" color="red" raised fill>Sign Up</f7-button>

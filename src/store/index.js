@@ -74,6 +74,14 @@ export const store = new Vuex.Store({
             commit('setLoading', true)
             firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
                 .then(firebaseUser => {
+                    auth.currentUser.updateProfile({
+                        displayName : payload.displayName
+                    })
+                    auth.currentUser.sendEmailVerification().then(function(){
+                        
+                    }).catch(function(error){
+
+                    })
                     const newUser = {
                         id: firebaseUser.user.uid,
                         displayName: firebaseUser.user.displayName,
@@ -85,7 +93,7 @@ export const store = new Vuex.Store({
                     // const uid =firebaseUser.uid;
                     // firebase.database().ref('users/'+uid +'/groups').push();
                     //
-                    router.push('/')
+                    f7Vue.$f7.router.navigate('/my-schedule/')
                 })
                 .catch(error => {
                     commit('setError', error.message)
@@ -170,7 +178,7 @@ export const store = new Vuex.Store({
                     ).catch(error => {
                         console.log(error)
                     });
-
+                    f7Vue.$f7.router.navigate('/my-schedule/')
                     alert("You successfully joined the group")
                 }
                 else {
