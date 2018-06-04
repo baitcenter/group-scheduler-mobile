@@ -71,37 +71,103 @@ export default {
             selectedDay:'',
             startTime:'',
             endTime:'',
+            allGroupEvents:{},
+            allUserEvents:{},
         }
     },
+    mounted(){
+        const uid = auth.currentUser.uid
+        const groupId = this.$f7route.params.groupId
+        console.log('groupID'+groupId)
+        db.ref('groups/'+ groupId).child('groupSchedule').once('value',snapsot=>{
+            console.log(snapsot.key)
+            snapsot .forEach(child=>{
+                this.allGroupEvents[child.key] = child.val()
+            }) 
+        })
+        console.log('fuck')
+        db.ref('users/'+ uid).child('userEvents').once('value',snapsot=>{
+            
+            console.log(snapsot.key)
+            snapsot .forEach(child=>{
+                this.allUserEvents[child.key]=child.val()
+            }) 
+        })
+    },
     methods : {
+        isOverlap(){
+            var i=0;
+            var dayIndex = this.days.indexOf(this.selectedDay);
+            let dayEvents = this.schedule[dayIndex]
+            console.log(dayEvents)
+            if(dayEvents ==='empty')return false
+            else{
+                var existDateStart, existDateEnd
+                for(i;i<dayEvents.length;i++){
+                    existDateStart = dayEvents[i].dateStart
+                    existDateEnd  = dayEvents[i].dateEnd
+                    if((existDateStart <= this.dateStart && this.dateStart <=existDateEnd) ||
+                       (existDateStart <= this.dateEnd && this.dateEnd <=existDateEnd) ||
+                       (existDateStart <= this.dateStart && this.dateStart <=existDateEnd) ||
+                    ((this.dateStart <= existDateStart) && (this.dateEnd>= existDateEnd))
+                    ){
+                        return true
+                    }
+                }
+            }
+            return false
+        },
         createNewEvent(){
+            
+            console.log(this.allGroupEvents)
+            console.log(this.allUserEvents)
+            const uid = auth.currentUser.uid
             const groupId = this.$f7route.params.groupId
-            console.log(groupId)
+            // console.log(groupId)
+
+            let userEventRef = db.ref('users/'+uid+'/userEvents')
+            
+            userEventRef.once('value',(snapshot)=>{
+                if(!snapshot.hasChild('userEvents')){                  
+                    userEventRef.child('Monday').set(0)
+                    userEventRef.child('Tuesday').set(0)
+                    userEventRef.child('Wednesday').set(0)
+                    userEventRef.child('Thursday').set(0)
+                    userEventRef.child('Friday').set(0)
+                }
+            })
+
             let eventInfo ={
                     eventName : this.eventName,
                     eventDescription : this.eventDescription,
+                    day : this.selectedDay,
                     startTime : this.startTime,
                     endTime : this.endTime
                 }
+
+            
             db.ref('events/').push(eventInfo)
             .then((snapshot)=>{
-                db.ref('events/'+snapshot.key).child('joinedMembers').push("user@user.com")
+                
+            
+                db.ref('events/'+snapshot.key).child('joinedMembers').push(uid)
                 console.log(this.selectedDay)
                 db.ref('groups/'+groupId+'/groupSchedule/').child(this.selectedDay).child(snapshot.key).set(0)
-                db.ref('users/uid/userEvents').child(snapshot.key).set(0)
-
-                          //end
+                
+                db.ref('users/'+uid+'/userEvents/'+this.selectedDay).child(snapshot.key).set(0)
+                
+                
+                //end
                 this.eventName =''
                 this.eventDescription=''
                 this.selectedDay=''
                 this.startTime=''
-                this.endTime=''
-                console.log('ss55'+groupId)            
+                this.endTime=''        
                 this.$f7router.navigate("/group/"+groupId+"/schedule/")
+            }).catch((error)=>{
+                alert("Error Occured!")
+                console.log(error)
             })
-
-
-
         },
         onStartTimeChange(e){
             this.startTime=e.target.value;
