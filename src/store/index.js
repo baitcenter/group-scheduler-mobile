@@ -123,7 +123,7 @@ export const store = new Vuex.Store({
         userSignOut({commit}) {
             firebase.auth().signOut()
             commit('setUser', null)
-            f7Vue.$f7.router.navigate('/startup')
+            f7Vue.$f7.router.navigate('/')
         },
         userEnrollGroup({commit}, payload) {
             commit('setLoading', true)
