@@ -178,11 +178,11 @@ export default {
 
             userEventRef.once('value',(snapshot)=>{
                 if(!snapshot.hasChild('userEvents')){                  
-                    userEventRef.child('Monday').set(0)
-                    userEventRef.child('Tuesday').set(0)
-                    userEventRef.child('Wednesday').set(0)
-                    userEventRef.child('Thursday').set(0)
-                    userEventRef.child('Friday').set(0)
+                    userEventRef.child('userEvents').child('Monday').set(0)
+                    userEventRef.child('userEvents').child('Tuesday').set(0)
+                    userEventRef.child('userEvents').child('Wednesday').set(0)
+                    userEventRef.child('userEvents').child('Thursday').set(0)
+                    userEventRef.child('userEvents').child('Friday').set(0)
                 }
             })
 

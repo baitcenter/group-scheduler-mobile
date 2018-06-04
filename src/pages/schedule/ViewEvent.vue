@@ -38,40 +38,72 @@
 </template>
 <script>
 
+import {auth,db} from '@/firebase'
 export default {
     data(){
         return{
-            members : ['Tui','Bright','Win'],
+            eventInfo:{}
             
         }
     },
+    mounted(){
+        const eventId = this.$route.params.eventId
+        db.ref('event/'+eventId).once('value',snapshot=>{
+            this.eventInfo[snapshot.key]=snapshot.val()
+        })
+    },
     methods:{
+        joinEvent(){
+            const uid = auth.currentUser.uid
+            const eventId = this.$route.params.eventId
+            // const groupId = this.$route.params.groupId
+            db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).child(eventId).set(0)
+            db.ref('event/'+eventId +'/joinedMembers').push(uid)//may change to something else
+        },
+        leaveEvent(){
+            const uid = auth.currentUser.uid
+            const eventId = this.$route.params.eventId
+            // const groupId = this.$route.params.groupId
+            db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).remove(eventId)
+            db.ref('event/'+eventId +'/joinedMembers').remove(uid)//may change to something else
+        },
+        deleteEvent(){
+            const uid = auth.currentUser.uid
+            const eventId = this.$route.params.eventId
+            const groupId = this.$route.params.groupId
+            //not sure
+            db.ref('event/'+eventId+'/joinedMembers').once('value',snapshot=>{
+                db.ref('users/'+snapshot.val()+'/userEvents/'+this.eventInfo['day']).remove(eventId);
+            })
+            db.ref('groups/'+groupId+'/groupSchedule/'+this.eventInfo['day']).remove(eventId)
+            db.ref('event').remove(eventId)
+        },
         openConfirmDel(eventName){                  
             const app = this.$f7;
             app.dialog.title
-            app.dialog.confirm('Do you want to delete this event?',"EventName", () => 
+            app.dialog.confirm('Do you want to delete this event?',eventName, () => 
             {
-                app.dialog.alert('Great!',"EventName");
-                // Delete function and redirect
+                app.dialog.alert('Great!',eventName);
+                this.deleteEvent()
             });
         
         },
         openConfirmJoin(eventName){
             const app = this.$f7;
             app.dialog.title
-            app.dialog.confirm('Do you want to Join this event?',"EventName", () => 
+            app.dialog.confirm('Do you want to Join this event?',eventName, () => 
             {
-                app.dialog.alert('Great!',"EventName");
-                // Delete function and redirect
+                app.dialog.alert('Great!',eventName);
+                this.joinEvent()
             });
         },
         openConfirmLeave(eventName){
             const app = this.$f7;
             app.dialog.title
-            app.dialog.confirm('Do you want to Leave this event?',"EventName", () => 
+            app.dialog.confirm('Do you want to Leave this event?',eventName, () => 
             {
-                app.dialog.alert('Great!',"EventName");
-                // Delete function and redirect
+                app.dialog.alert('Great!',eventName);
+                this.leaveEvent()
             });
         },
     }

@@ -57,7 +57,7 @@ export default [
     // }
   },
   {
-    path :'/event/',
+    path :'/event/:eventId/',
     component: ViewEvent,
   },
   {
