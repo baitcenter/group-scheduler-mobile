@@ -22,10 +22,13 @@ import App from './app';
 
 import {store} from './store';
 
-import {auth} from './firebase'
+import {auth} from './firebase';
+
+import VueFire from 'vuefire';
 
 // Init F7 Vue Plugin
 Vue.use(Framework7Vue, Framework7)
+Vue.use(VueFire)
 
 // Init App
 export default new Vue({
