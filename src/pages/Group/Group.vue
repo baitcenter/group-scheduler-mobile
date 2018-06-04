@@ -20,9 +20,7 @@
 </template>
 
 <script>
-    import F7Block from "framework7-vue/src/components/block";
     export default {
-        components: {F7Block},
         data() {
             return {
                 groupName: "Hello",
