@@ -50,7 +50,7 @@ export default {
             }
             db.ref('groups').push(groupInfo)
             .then((snapshot)=>{
-                db.ref('groups/'+snapshot.key).child('groupKey').set(snapshot.key)
+                // db.ref('groups/'+snapshot.key).child('groupKey').set(snapshot.key)
                 db.ref('groups/'+snapshot.key).child('groupMembers').child(uid).set('userUID')
                 let groupRef = db.ref('groups/'+snapshot.key+'/groupSchedule')
                 groupRef.child('Monday').set(0)
