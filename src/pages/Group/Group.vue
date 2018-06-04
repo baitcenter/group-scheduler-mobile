@@ -23,12 +23,6 @@
     export default {
         data() {
             return {
-                // groupName: "Hello",
-                // groupMembers: [
-                //     {name: "1"},
-                //     {name: "2"}
-                // ],
-                // inviteCode: "toc",
                 groupId: this.$f7route.params.groupId,
                 groupData: null
             }
