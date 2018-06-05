@@ -1,24 +1,21 @@
 <template>
     <f7-page>
         <f7-page-content>
-            <f7-navbar title="EventName" back-link="Back"></f7-navbar>
+            <f7-navbar title='Event' back-link="Back"></f7-navbar>
                 <f7-block>
-                    
-                    <f7-block-title><b>Time: </b> xx:xx - yy:yy</f7-block-title>
+                    <f7-block-title><b>Event Name : {{this.eventInfo['eventName']}}</b></f7-block-title>
+                    <f7-block-title><b>Time: </b> {{this.eventInfo['startTime']}} - {{this.eventInfo['endTime']}}</f7-block-title>
                 
-
-         
                 <f7-block-title><b>Description:</b></f7-block-title>
                 <!-- Inset -->
                 <f7-block strong inset>
-                      <p>Mauris posuere sit amet metus id venenatis. Ut ante dolor, tempor nec commodo rutrum, varius at sem. Nullam ac nisi non neque ornare pretium. Nulla mauris mauris, consequat et elementum sit amet, egestas sed orci. In hac habitasse platea dictumst.</p>
+                      <p>{{this.eventInfo['eventDescription']}}</p>
                 </f7-block>
 
                 <f7-block-title><b>Joined Members: </b></f7-block-title>
                 <!-- <f7-card> -->
-                        
                     <f7-list simple-list inset>
-                        <f7-list-item v-for="(name, index) in members" v-bind:key="index">
+                        <f7-list-item v-for="(name, index) in this.eventInfo['joinedMembers']" v-bind:key="index">
                             {{name, index}}
                         </f7-list-item>
                     </f7-list>
@@ -43,43 +40,65 @@ export default {
     data(){
         return{
             eventInfo:{}
-            
         }
     },
     mounted(){
-        const eventId = this.$route.params.eventId
-        db.ref('event/'+eventId).once('value',snapshot=>{
-            this.eventInfo[snapshot.key]=snapshot.val()
+        // const eventId = this.$route.params.eventId
+        const eventId = '-LEAeShlv-XW4_1xsAyc'
+        let tempEventInfo={}
+        db.ref('events/'+eventId).once('value',snapshot=>{
+            if(snapshot.val()){
+                snapshot.forEach(child=>{
+                    tempEventInfo[child.key]=child.val()
+                })
+            }
+        }).then(()=>{
+            this.eventInfo=tempEventInfo
         })
     },
     methods:{
+        isJoinedMember(){
+            
+        },
+        isLeader(){},
         joinEvent(){
             const uid = auth.currentUser.uid
-            const eventId = this.$route.params.eventId
+            // const eventId = this.$route.params.eventId
             // const groupId = this.$route.params.groupId
+            
+            const eventId = '-LEAeShlv-XW4_1xsAyc'
             db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).child(eventId).set(0)
             db.ref('event/'+eventId +'/joinedMembers').push(uid)//may change to something else
         },
         leaveEvent(){
             const uid = auth.currentUser.uid
-            const eventId = this.$route.params.eventId
+            // const eventId = this.$route.params.eventId
+            
+            const eventId = '-LEAeShlv-XW4_1xsAyc'
             // const groupId = this.$route.params.groupId
-            db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).remove(eventId)
-            db.ref('event/'+eventId +'/joinedMembers').remove(uid)//may change to something else
+            db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).child(eventId).remove()
+            db.ref('event/'+eventId +'/joinedMembers').child(uid).remove()//may change to something else
         },
         deleteEvent(){
             const uid = auth.currentUser.uid
-            const eventId = this.$route.params.eventId
-            const groupId = this.$route.params.groupId
+            // const eventId = this.$route.params.eventId
+            
+            const eventId = '-LEAeShlv-XW4_1xsAyc'
+            // const groupId = this.$route.params.groupId
+            const groupId = '-LEAWB5A7DfR2Fboz6fE'
             //not sure
-            db.ref('event/'+eventId+'/joinedMembers').once('value',snapshot=>{
-                db.ref('users/'+snapshot.val()+'/userEvents/'+this.eventInfo['day']).remove(eventId);
-            })
-            db.ref('groups/'+groupId+'/groupSchedule/'+this.eventInfo['day']).remove(eventId)
-            db.ref('event').remove(eventId)
+            for(var key in this.eventInfo['joinedMembers']){
+                const uid = this.eventInfo['joinedMembers'][key]
+                
+                db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).child(eventId).remove();
+
+            }
+            db.ref('groups/'+groupId+'/groupSchedule/'+this.eventInfo['day']).child(eventId).remove()
+            db.ref('events/').child(eventId).remove()
         },
-        openConfirmDel(eventName){                  
+        openConfirmDel(){                  
             const app = this.$f7;
+            const eventName = this.eventInfo['eventName']
             app.dialog.title
             app.dialog.confirm('Do you want to delete this event?',eventName, () => 
             {
@@ -88,8 +107,9 @@ export default {
             });
         
         },
-        openConfirmJoin(eventName){
+        openConfirmJoin(){
             const app = this.$f7;
+            const eventName = this.eventInfo['eventName']
             app.dialog.title
             app.dialog.confirm('Do you want to Join this event?',eventName, () => 
             {
@@ -97,8 +117,10 @@ export default {
                 this.joinEvent()
             });
         },
-        openConfirmLeave(eventName){
+        openConfirmLeave(){
             const app = this.$f7;
+            
+            const eventName = this.eventInfo['eventName']
             app.dialog.title
             app.dialog.confirm('Do you want to Leave this event?',eventName, () => 
             {

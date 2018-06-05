@@ -23,7 +23,7 @@
                 <f7-card-content>
                     <f7-list media-list>
                         <f7-list-item 
-                            link="/event/" 
+                            link="/group/-LEAWB5A7DfR2Fboz6fE/schedule/event/-LEAWDldU7aUe8RHTdPY/" 
                             title="Event Title" 
                             footer="Time: xx:xx - yy:yy"
                             after=" "
@@ -61,8 +61,7 @@ export default {
             const groupId = this.$f7route.params.groupId
             console.log(groupId)
             this.$f7router.navigate("/group/"+groupId+"/schedule/create-event/")
-            
-        }
+        },
     }
 }
 </script>

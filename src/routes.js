@@ -57,7 +57,7 @@ export default [
     // }
   },
   {
-    path :'/event/:eventId/',
+    path :'/group/:groupId/schedule/event/:eventId/',
     component: ViewEvent,
   },
   {
