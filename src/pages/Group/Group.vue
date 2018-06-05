@@ -1,6 +1,6 @@
 <template>
     <f7-page>
-        <f7-navbar title="GroupName" back-link="Back"></f7-navbar>
+        <f7-navbar :title="groupData.groupName" back-link="Back"></f7-navbar>
         <f7-list>
             <f7-list-item>Group Name: {{groupData.groupName}}</f7-list-item>
             <f7-list-item accordion-item title="Group members">
