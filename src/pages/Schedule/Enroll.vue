@@ -13,7 +13,7 @@
         </f7-list>
         <f7-block>
             <f7-row>
-                <f7-button class="col" color="red" @click="userEnroll" raised fill>Submit</f7-button>
+                <f7-button class="col" color="red" @click="enrollGroup" raised fill>Submit</f7-button>
             </f7-row>
         </f7-block>
         <!-- Popovers -->
@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import {auth,db} from '@/firebase'
 export default {
     data(){
         return{
@@ -34,13 +35,21 @@ export default {
         }
     },
     methods: {
-        // openInfoModal(){
-        //     const app = this.$f7
-        //     app.dialog.alert()
-        // },
-        userEnroll(){
-            this.$store.dispatch('userEnrollGroup',{enroll_group_key : this.enrollCode})
-        }
+        
+        enrollGroup() {
+
+            const uid = auth.currentUser.uid
+            let userInfo = {
+                        'name': auth.currentUser.displayName,
+                        'email' : auth.currentUser.email
+                        }
+            db.ref('groups/').once('value', snapshot=>{
+                if(snapshot.hasChild(this.enrollCode)){
+                    db.ref('groups/'+this.enrollCode+'/groupMembers').child(uid).set(userInfo)
+                    db.ref('users/'+uid+'/userGroups').child(this.enrollCode).set(1)
+                }
+            })
+        },
     }
 }
 </script>
