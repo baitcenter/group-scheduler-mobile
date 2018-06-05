@@ -145,7 +145,7 @@ export const store = new Vuex.Store({
             const groupKey = payload.enroll_group_key;
             const groupMembersRef = firebase.database().ref('groups/' + groupKey + '/groupMembers');
             const uid = firebase.auth().currentUser.uid;
-            const userRef = firebase.database().ref('users/' + uid + '/groups');
+            const userGroupRef = firebase.database().ref('users/' + uid + '/userGroups');
             const email = firebase.auth().currentUser.email;
 
             var user_groups = [];
@@ -154,7 +154,7 @@ export const store = new Vuex.Store({
             firebase.database().ref('groups/').once('value', function (snapshot) {
                 if (snapshot.hasChild(groupKey)) {
 
-                    userRef.once('value', function (snapshot) {
+                    userGroupRef.once('value', function (snapshot) {
                             snapshot.forEach(function (childSnapshot) {
                                 var childData = childSnapshot.val();
                                 user_groups = user_groups.concat([childData]);
@@ -164,7 +164,7 @@ export const store = new Vuex.Store({
                         () => {
                             user_groups = user_groups.concat([groupKey]);
 
-                            userRef.set(user_groups);
+                            userGroupRef.set(user_groups);
 
                         }
                     )
