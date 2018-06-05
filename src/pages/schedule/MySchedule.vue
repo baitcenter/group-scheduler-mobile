@@ -26,7 +26,7 @@
                     <f7-list media-list v-for="(eData, eKey) in this.userEvents['Monday']" :key="eKey">
 
                         <f7-list-item
-                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :link="'/group/'+eData.groupId+'/schedule/event/'+eKey+'/'"
                             :title="eData['eventName']"
                             :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
                             after=" "
@@ -51,7 +51,7 @@
                     <f7-list media-list v-for="(eData, eKey) in this.userEvents['Tuesday']" :key="eKey">
 
                         <f7-list-item
-                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :link="'/group/'+eData.groupId+'/schedule/event/'+eKey+'/'"
                             :title="eData['eventName']"
                             :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
                             after=" "
@@ -75,7 +75,7 @@
                     <f7-list media-list v-for="(eData, eKey) in this.userEvents['Wednesday']" :key="eKey">
 
                         <f7-list-item
-                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :link="'/group/'+eData.groupId+'/schedule/event/'+eKey+'/'"
                             :title="eData['eventName']"
                             :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
                             after=" "
@@ -99,7 +99,7 @@
                     <f7-list media-list v-for="(eData, eKey) in this.userEvents['Thursday']" :key="eKey">
 
                         <f7-list-item
-                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :link="'/group/'+eData.groupId+'/schedule/event/'+eKey+'/'"
                             :title="eData['eventName']"
                             :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
                             after=" "
@@ -123,7 +123,7 @@
                     <f7-list media-list v-for="(eData, eKey) in this.userEvents['Friday']" :key="eKey">
 
                         <f7-list-item
-                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :link="'/group/'+eData.groupId+'/schedule/event/'+eKey+'/'"
                             :title="eData['eventName']"
                             :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
                             after=" "
@@ -152,13 +152,13 @@ export default {
             groupId :'',
         }
     },
+    methods :{
+        redirectToEvent(gid,eid){
+          console.log("gid " + gid + ", eid " + eid)
+          this.$f7router.navigate('/group/'+gid+'/schedule/event/'+eid+'/')
+        },
+    },
     mounted(){
-        // const uid = '29x4eMAYhtchiZ55Y3DN2hrQzor2'
-        // const groupId = this.$f7route.params.groupId
-        // const groupId = '-LEE3-vFFkyFYd9M4eYG'
-        // this.groupId=groupId
-
-        // console.log(groupId)
         const uid = auth.currentUser.uid
         let tempEvents = {
             Monday : 0,

@@ -23,41 +23,41 @@
                 </f7-list-item>
                 <f7-list-item>
                     <f7-label><f7-icon material="timer"></f7-icon> From</f7-label>
-                    <f7-input 
-                        type="text" 
-                        placeholder="Start Time" 
-                        readonly="readonly" 
+                    <f7-input
+                        type="text"
+                        placeholder="Start Time"
+                        readonly="readonly"
                         id="demo-picker-starttime"
                         v-bind:value="startTime"
                         v-on:change="onStartTimeChange" />
                 </f7-list-item>
                 <f7-list-item>
                     <f7-label><f7-icon material="timer"></f7-icon> To</f7-label>
-                    <f7-input 
-                        type="text" 
-                        placeholder="End Time" 
-                        readonly="readonly" 
+                    <f7-input
+                        type="text"
+                        placeholder="End Time"
+                        readonly="readonly"
                         id="demo-picker-endtime"
                         v-bind:value="endTime"
                         v-on:change="onEndTimeChange" />
                 </f7-list-item>
                 <f7-row>
-                    <f7-col width="5"></f7-col>        
+                    <f7-col width="5"></f7-col>
                     <f7-button class="col-90" color="red" fill-md icon-material="create" @click="createNewEvent" >Create</f7-button>
                     <f7-col width="5"></f7-col>
                 </f7-row>
-                
+
             </f7-list>
-               
+
             {{eventName}},
             {{eventDescription}},
             {{selectedDay}},
             {{startTime}},
             {{endTime}},
         </f7-page-content>
-    
 
-            
+
+
     </f7-page>
 </template>
 <script>
@@ -84,13 +84,13 @@ export default {
             // console.log(snapsot.key)
             snapsot .forEach(child=>{
                 this.allGroupEvents[child.key] = child.val()
-            }) 
+            })
         })
         db.ref('users/'+ uid).child('userEvents').once('value',snapsot=>{
             // console.log(snapsot.key)
             snapsot .forEach(child=>{
                 this.allUserEvents[child.key]=child.val()
-            }) 
+            })
         })
         db.ref('events/').once('value',snapsot=>{
             this.allEvents = snapsot.val()
@@ -147,11 +147,11 @@ export default {
                     return true
                 }
             }
-            
+
             return false
         },
         createNewEvent(){
-    
+
             if(this.eventName ===''){
                 alert('Please state your event name!')
             }
@@ -174,10 +174,10 @@ export default {
             const uid = auth.currentUser.uid
             const groupId = this.$f7route.params.groupId
 
-            let userEventRef = db.ref('users/'+uid)  
+            let userEventRef = db.ref('users/'+uid)
 
             userEventRef.once('value',(snapshot)=>{
-                if(!snapshot.hasChild('userEvents')){                  
+                if(!snapshot.hasChild('userEvents')){
                     userEventRef.child('userEvents').child('Monday').set(0)
                     userEventRef.child('userEvents').child('Tuesday').set(0)
                     userEventRef.child('userEvents').child('Wednesday').set(0)
@@ -191,22 +191,23 @@ export default {
                     eventDescription : this.eventDescription,
                     day : this.selectedDay,
                     startTime : this.startTime,
-                    endTime : this.endTime
+                    endTime : this.endTime,
+                    groupId : groupId
                 }
-            
+
             db.ref('events/').push(eventInfo)
             .then((snapshot)=>{
-            
+
                 db.ref('events/'+snapshot.key).child('joinedMembers').push(uid)
                 db.ref('groups/'+groupId+'/groupSchedule/').child(this.selectedDay).child(snapshot.key).set(0)
                 db.ref('users/'+uid+'/userEvents/'+this.selectedDay).child(snapshot.key).set(0)
-                
+
                 //end
                 this.eventName =''
                 this.eventDescription=''
                 this.selectedDay=''
                 this.startTime=''
-                this.endTime=''        
+                this.endTime=''
                 this.$f7router.navigate("/group/"+groupId+"/schedule/")
             }).catch((error)=>{
                 alert("Error Occured!")
@@ -219,12 +220,12 @@ export default {
         onEndTimeChange(e){
             this.endTime=e.target.value;
         }
-        
+
     },
     on: {
       pageInit(e) {
         const app = this.$f7;
-        
+
         // Time picker for start time
         var StartTimePicker = app.picker.create({
           inputEl: '#demo-picker-starttime',
@@ -256,7 +257,7 @@ export default {
             },
           ],
         });
-        
+
         //Time picker for endtime
         // Time picker
         var EndTimePicker = app.picker.create({
@@ -289,8 +290,8 @@ export default {
             },
           ],
         });
-         
-       
+
+
       },
     },
 }
