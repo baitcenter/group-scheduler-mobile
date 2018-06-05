@@ -1,7 +1,9 @@
 <template>
     <f7-page>
         <f7-page-content>
-            <f7-navbar color="red" :title='eventInfo.eventName' back-link="Back"></f7-navbar>
+            <f7-navbar color="red" title="EventName" back-link="Back">
+                <f7-nav-right><f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
+            </f7-navbar>
                 <f7-block>
                     <f7-block-title><b>Event Name : {{this.eventInfo['eventName']}}</b></f7-block-title>
                     <f7-block-title><b>Time: </b> {{this.eventInfo['startTime']}} - {{this.eventInfo['endTime']}}</f7-block-title>

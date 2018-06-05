@@ -1,10 +1,13 @@
 <template>
     <f7-page>
-        <f7-navbar color="red" title="Profile" back-link="Back"></f7-navbar>
+        <f7-navbar color="red" title="Profile" back-link="Back">
+            <f7-nav-right><f7-link href="/my-schedule/" icon-if-md="material:home"></f7-link></f7-nav-right>
+        </f7-navbar>
         <div v-if="!editing">
+            <f7-block-title>Profile</f7-block-title>
             <f7-list>
-                <f7-list-item>Name: {{username}}</f7-list-item>
-                <f7-list-item>Email: {{useremail}}</f7-list-item>
+                <f7-list-item><f7-icon material="person" slot="media"></f7-icon>Name: {{username}}</f7-list-item>
+                <f7-list-item><f7-icon material="email" slot="media"></f7-icon>Email: {{useremail}}</f7-list-item>
             </f7-list>
             <f7-row>
                 <f7-col width="5"></f7-col>
@@ -14,39 +17,43 @@
             </f7-row>
         </div>
         <div v-else>
+            <f7-block-title>Editing</f7-block-title>
             <f7-list>
                 <f7-list-item>
+                    <f7-icon material="person" slot="media"></f7-icon>
                     <f7-label>Name</f7-label>
                     <f7-input type="text" @input="name=$event.target.value"
-                              required validate
-                              placeholder="Name" clear-button>
+                              required validate v-bind:value="name"
+                              placeholder="Display name" clear-button>
                     </f7-input>
                 </f7-list-item>
                 <f7-list-item>
+                    <f7-icon material="email" slot="media"></f7-icon>
                     <f7-label>Email</f7-label>
                     <f7-input type="email" @input="email=$event.target.value"
-                              required validate
+                              required validate v-bind:value="email"
                               placeholder="Email" clear-button>
                     </f7-input>
                 </f7-list-item>
             </f7-list>
             <f7-list>
                 <f7-list-item>
-                    <f7-label>Old Password</f7-label>
-                    <f7-input type="password" @input="old_password=$event.target.value"
-                              required validate
-                              placeholder="Password" clear-button>
-                    </f7-input>
-                </f7-list-item>
-            </f7-list>
-            <f7-list>
-                <f7-list-item>
+                    <f7-icon material="lock" slot="media"></f7-icon>
                     <f7-label>New Password</f7-label>
                     <f7-input type="password" @input="new_password=$event.target.value"
                               required validate
                               placeholder="Password" clear-button>
                     </f7-input>
                 </f7-list-item>
+                <f7-list-item>
+                    <f7-icon material="check_circle" slot="media"></f7-icon>
+                    <f7-label>Old Password</f7-label>
+                    <f7-input type="password" @input="old_password=$event.target.value"
+                              required validate
+                              placeholder="Password" clear-button>
+                    </f7-input>
+                </f7-list-item>
+                
             </f7-list>
             <f7-row>
                 <f7-col width="5"></f7-col>
@@ -74,6 +81,11 @@
             }
         },
         methods: {
+            initializedField(){
+                var curUser = auth.currentUser
+                this.name = curUser.displayName
+                this.email = curUser.email
+            },
              toggleEdit() {
                 this.editing = !this.editing
             },
@@ -87,6 +99,7 @@
                 }
             },
             cancelEdit() {
+                this.initializedField()
                 this.toggleEdit()
             },
             // saveChanges() {
@@ -101,6 +114,7 @@
             this.username = curUser.displayName
             this.useremail = curUser.email
             this.verified = curUser.emailVerified
+            this.initializedField()
             console.log(curUser.emailVerified)
             console.log(this.verified)
         }
