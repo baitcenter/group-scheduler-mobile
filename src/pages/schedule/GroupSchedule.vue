@@ -7,47 +7,135 @@
         <f7-icon f7="add"></f7-icon>
     </f7-fab>
     <!-- Switch Between Tabs -->
-    <f7-segmented>
-        <f7-button tab-link="#tab-1" tab-link-active>Mon</f7-button>
-        <f7-button tab-link="#tab-2">Tue</f7-button>
-        <f7-button tab-link="#tab-2">Wed</f7-button>
-        <f7-button tab-link="#tab-2">Thu</f7-button>
-        <f7-button tab-link="#tab-2">Fri</f7-button>
-    </f7-segmented>       
+
+     <f7-segmented>
+        <f7-button 
+            v-for="(data, key) in this.groupEvents" 
+            :key="key" 
+            :tab-link="'#tab-'+key" >{{key.substring(0,3)}}</f7-button>
+    </f7-segmented>      
     <f7-tabs swipeable>
-        <!-- loop days -->
-        <f7-tab id="tab-1" tab-active>
-            <h3 center>Monday</h3>
-            <!-- loop events -->
-            <f7-card>
+               
+        <f7-tab id="tab-Monday"  
+            tab-active>
+            <f7-block-title>Monday</f7-block-title>
+            <f7-block inset v-if="!this.groupEvents['Monday']">There is no event in this day.</f7-block>
+            <f7-card v-else>
                 <f7-card-content>
-                    <f7-list media-list>
+                    <f7-list media-list v-for="(eData, eKey) in this.groupEvents['Monday']" :key="eKey">
+                       
                         <f7-list-item 
-                            link="/group/-LEAWB5A7DfR2Fboz6fE/schedule/event/-LEAWDldU7aUe8RHTdPY/" 
-                            title="Event Title" 
-                            footer="Time: xx:xx - yy:yy"
+                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :title="eData['eventName']" 
+                            :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
                             after=" "
-                        ></f7-list-item>
-                        <f7-list-item 
-                            link="/about/" 
-                            title="Event Title" 
-                            footer="Time: xx:xx - yy:yy"
-                            after=" "
-                        ></f7-list-item>
-                        <f7-list-item 
-                            link="/about/" 
-                            title="Event Title" 
-                            footer="Time: xx:xx - yy:yy"
-                            after=" "
-                        ></f7-list-item>
-                        </f7-list>
+                        >
+                         </f7-list-item>
+                         
+                       
+                    </f7-list>
                 </f7-card-content>
                 
             </f7-card>
 
-            
         </f7-tab>
-        <f7-tab id="tab-2">Tab 2</f7-tab>
+
+
+         <f7-tab id="tab-Tuesday"  
+           >
+            <f7-block-title center>Tuesday</f7-block-title>
+            <f7-block inset v-if="!this.groupEvents['Tuesday']">There is no event in this day.</f7-block>
+            <f7-card v-else>
+                <f7-card-content>
+                    <f7-list media-list v-for="(eData, eKey) in this.groupEvents['Tuesday']" :key="eKey">
+                       
+                        <f7-list-item 
+                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :title="eData['eventName']" 
+                            :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
+                            after=" "
+                        >
+                         </f7-list-item>
+                         
+                       
+                    </f7-list>
+                </f7-card-content>
+                
+            </f7-card>
+
+        </f7-tab>
+
+         <f7-tab id="tab-Wednesday"  
+            >
+            <f7-block-title center>Wednesday</f7-block-title>
+            <f7-block inset v-if="!this.groupEvents['Wednesday']">There is no event in this day.</f7-block>
+            <f7-card v-else>
+                <f7-card-content>
+                    <f7-list media-list v-for="(eData, eKey) in this.groupEvents['Wednesday']" :key="eKey">
+                       
+                        <f7-list-item 
+                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :title="eData['eventName']" 
+                            :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
+                            after=" "
+                        >
+                         </f7-list-item>
+                         
+                       
+                    </f7-list>
+                </f7-card-content>
+                
+            </f7-card>
+
+        </f7-tab>
+
+         <f7-tab id="tab-Thursday"  
+            >
+            <f7-block-title center>Thursday</f7-block-title>
+            <f7-block inset v-if="!this.groupEvents['Thursday']">There is no event in this day.</f7-block>
+            <f7-card v-else>
+                <f7-card-content>
+                    <f7-list media-list v-for="(eData, eKey) in this.groupEvents['Thursday']" :key="eKey">
+                       
+                        <f7-list-item 
+                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :title="eData['eventName']" 
+                            :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
+                            after=" "
+                        >
+                         </f7-list-item>
+                         
+                       
+                    </f7-list>
+                </f7-card-content>
+                
+            </f7-card>
+
+        </f7-tab>
+
+         <f7-tab id="tab-Friday"  
+           >
+            <f7-block-title center>Friday</f7-block-title>
+            <f7-block inset v-if="!this.groupEvents['Friday']">There is no event in this day.</f7-block>
+            <f7-card v-else>
+                <f7-card-content>
+                    <f7-list media-list v-for="(eData, eKey) in this.groupEvents['Friday']" :key="eKey">
+                       
+                        <f7-list-item 
+                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :title="eData['eventName']" 
+                            :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
+                            after=" "
+                        >
+                         </f7-list-item>
+                         
+                       
+                    </f7-list>
+                </f7-card-content>
+                
+            </f7-card>
+
+        </f7-tab>
     </f7-tabs>
 
 </f7-page>
@@ -55,13 +143,52 @@
 </template>
 
 <script>
+import { auth, db} from '@/firebase'
 export default {
+    data(){
+        return{
+            groupEvents : {},
+            groupId :''
+        }
+    },
     methods:{
         redirectTo(){
             const groupId = this.$f7route.params.groupId
             console.log(groupId)
             this.$f7router.navigate("/group/"+groupId+"/schedule/create-event/")
         },
+    },
+    mounted(){
+        // const groupId = this.$f7route.params.groupId
+        const groupId = '-LEE3-vFFkyFYd9M4eYG'
+        this.groupId=groupId
+        console.log(groupId)
+        let tempEvents = {
+            Monday : 0,
+            Tuesday : 0,
+            Wednesday :0,
+            Thursday :0,
+            Friday :0,
+        }
+        db.ref('groups/'+ groupId+'/groupSchedule/').once('value',snapshot=>{
+            snapshot.forEach(child=>{
+                if(child.val()===0){
+                    tempEvents[child.key] = child.val()
+                }
+                else{
+                    let eventData={}
+                    child.forEach(e=>{
+                        db.ref('events/'+e.key).once('value', eventVal=>{
+                            eventData[eventVal.key] = eventVal.val()
+                        }).then(()=>{
+                            tempEvents[child.key] = eventData
+                        })
+                    })
+                }
+            })
+        }).then(()=>{
+            this.groupEvents=tempEvents
+        })
     }
 }
 </script>
