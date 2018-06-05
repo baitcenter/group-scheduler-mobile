@@ -50,7 +50,7 @@ export default [
     component: About,
   },
   {
-    path :'/my-schedule/',
+    path :'/home/',
     component: MySchedule,
     // on: {
     //   pageBeforeIn: AuthGuard

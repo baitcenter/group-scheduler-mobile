@@ -11,7 +11,7 @@
     </f7-panel>
 
     <!-- Main View -->
-    <f7-view id="main-view" url="/my-schedule/" main></f7-view>
+    <f7-view id="main-view" main></f7-view>
 
   </div>
 </template>

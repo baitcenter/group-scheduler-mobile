@@ -51,7 +51,7 @@ export default new Vue({
       onF7Ready(f7) {
           auth.onAuthStateChanged((firebaseUser) => {
               if (firebaseUser) {
-                  store.dispatch("autoSignIn", firebaseUser)
+                  f7.router.navigate('/home/')
               }
               else {
                   f7.router.navigate('/')
