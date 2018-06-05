@@ -27,7 +27,7 @@
             <f7-row>
                 <f7-button class="col" color="red" @click.prevent="createUser" raised fill>Sign Up</f7-button>
             </f7-row>
-        </f7-block>
+        </f7-block >
     </f7-page>
 </template>
 
@@ -44,9 +44,11 @@ export default {
     methods: {
         createUser(){
             if(this.confirmpassword === this.password){
-                this.$store.dispatch('userSignUp',{displayName : this.displayName, email : this.email, password : this.password})
+                console.log("Sign up page" + this.displayName)
+                this.$store.dispatch('userSignUp',{displayname : this.displayName, email : this.email, password : this.password})
             }else{
-                alert("The password and confirm is not the same")
+                const app = this.$f7;
+                app.dialog.alert("The password and confirm is not the same")
             }
         }
     }
