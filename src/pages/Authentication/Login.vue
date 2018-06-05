@@ -19,7 +19,7 @@
         </f7-list>
         <f7-list>
             <f7-list-button title="Sign In" @click="userSignIn"></f7-list-button>
-            <f7-list-button title="Go to Sign Up" @click="redirectToSignUp"></f7-list-button>
+            <f7-list-button title="Back" @click="goBack"></f7-list-button>
         </f7-list>
     </f7-page>
 </template>
@@ -36,8 +36,8 @@
             userSignIn() {
                 this.$store.dispatch('userSignIn', {email: this.email, password: this.password})
             },
-            redirectToSignUp(){
-                this.$f7router.navigate("/signup/")
+            goBack(){
+                this.$f7router.navigate("/")
             }
         }
     }
