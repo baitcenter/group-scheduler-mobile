@@ -1,7 +1,7 @@
 <template>
     <f7-page>
         <f7-navbar color="red" title="Profile" back-link="Back">
-            <f7-nav-right><f7-link href="/my-schedule/" icon-if-md="material:home"></f7-link></f7-nav-right>
+            <f7-nav-right><f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
         </f7-navbar>
         <div v-if="!editing">
             <f7-block-title>Profile</f7-block-title>
