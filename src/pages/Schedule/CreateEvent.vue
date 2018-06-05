@@ -208,7 +208,7 @@ export default {
                 this.selectedDay=''
                 this.startTime=''
                 this.endTime=''
-                this.$f7router.navigate("/group/"+groupId+"/schedule/")
+                this.$f7router.navigate("/group/"+groupId+"/schedule/", {reloadPrevious: true})
             }).catch((error)=>{
                 alert("Error Occured!")
                 console.log(error)
