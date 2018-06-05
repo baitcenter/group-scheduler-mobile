@@ -7,46 +7,186 @@
         </f7-nav-left>
         <f7-nav-title>My Schedule</f7-nav-title>
     </f7-navbar>
-    <!-- FAB must be direct child of a page -->
-    <f7-fab color="green" position="center-bottom" href="/create-event/" >
-        <f7-icon f7="add"></f7-icon>
-    </f7-fab>
     <!-- Switch Between Tabs -->
-    <f7-segmented>
-        <f7-button color="orange" tab-link="#tab-1" tab-link-active>Mon</f7-button>
-        <f7-button color="orange" tab-link="#tab-2">Tue</f7-button>
-        <f7-button color="orange" tab-link="#tab-2">Wed</f7-button>
-        <f7-button color="orange" tab-link="#tab-2">Thu</f7-button>
-        <f7-button color="orange" tab-link="#tab-2">Fri</f7-button>
+      <f7-segmented>
+        <f7-button color="orange" tab-link="#tab-Monday" tab-link-active>Mon</f7-button>
+        <f7-button color="orange" tab-link="#tab-Tuesday">Tue</f7-button>
+        <f7-button color="orange" tab-link="#tab-Wednesday">Wed</f7-button>
+        <f7-button color="orange" tab-link="#tab-Thursday">Thu</f7-button>
+        <f7-button color="orange" tab-link="#tab-Friday">Fri</f7-button>
     </f7-segmented>
-    <!--{{userEvents}}-->
+    <f7-tabs swipeable>
+
+        <f7-tab id="tab-Monday"
+            tab-active>
+            <f7-block-title>Monday</f7-block-title>
+            <f7-block inset v-if="!this.userEvents['Monday']">There is no event in this day.</f7-block>
+            <f7-card v-else>
+                <f7-card-content>
+                    <f7-list media-list v-for="(eData, eKey) in this.userEvents['Monday']" :key="eKey">
+
+                        <f7-list-item
+                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :title="eData['eventName']"
+                            :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
+                            after=" "
+                        >
+                         </f7-list-item>
+
+
+                    </f7-list>
+                </f7-card-content>
+
+            </f7-card>
+
+        </f7-tab>
+
+
+         <f7-tab id="tab-Tuesday"
+           >
+            <f7-block-title center>Tuesday</f7-block-title>
+            <f7-block inset v-if="!this.userEvents['Tuesday']">There is no event in this day.</f7-block>
+            <f7-card v-else>
+                <f7-card-content>
+                    <f7-list media-list v-for="(eData, eKey) in this.userEvents['Tuesday']" :key="eKey">
+
+                        <f7-list-item
+                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :title="eData['eventName']"
+                            :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
+                            after=" "
+                        >
+                         </f7-list-item>
+
+
+                    </f7-list>
+                </f7-card-content>
+
+            </f7-card>
+
+        </f7-tab>
+
+         <f7-tab id="tab-Wednesday"
+            >
+            <f7-block-title center>Wednesday</f7-block-title>
+            <f7-block inset v-if="!this.userEvents['Wednesday']">There is no event in this day.</f7-block>
+            <f7-card v-else>
+                <f7-card-content>
+                    <f7-list media-list v-for="(eData, eKey) in this.userEvents['Wednesday']" :key="eKey">
+
+                        <f7-list-item
+                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :title="eData['eventName']"
+                            :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
+                            after=" "
+                        >
+                         </f7-list-item>
+
+
+                    </f7-list>
+                </f7-card-content>
+
+            </f7-card>
+
+        </f7-tab>
+
+         <f7-tab id="tab-Thursday"
+            >
+            <f7-block-title center>Thursday</f7-block-title>
+            <f7-block inset v-if="!this.userEvents['Thursday']">There is no event in this day.</f7-block>
+            <f7-card v-else>
+                <f7-card-content>
+                    <f7-list media-list v-for="(eData, eKey) in this.userEvents['Thursday']" :key="eKey">
+
+                        <f7-list-item
+                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :title="eData['eventName']"
+                            :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
+                            after=" "
+                        >
+                         </f7-list-item>
+
+
+                    </f7-list>
+                </f7-card-content>
+
+            </f7-card>
+
+        </f7-tab>
+
+         <f7-tab id="tab-Friday"
+           >
+            <f7-block-title center>Friday</f7-block-title>
+            <f7-block inset v-if="!this.userEvents['Friday']">There is no event in this day.</f7-block>
+            <f7-card v-else>
+                <f7-card-content>
+                    <f7-list media-list v-for="(eData, eKey) in this.userEvents['Friday']" :key="eKey">
+
+                        <f7-list-item
+                            :link="'/group/'+groupId+'/schedule/event/'+eKey+'/'"
+                            :title="eData['eventName']"
+                            :footer="'Time: '+eData['startTime'] + ' - '+eData['endTime']"
+                            after=" "
+                        >
+                         </f7-list-item>
+
+
+                    </f7-list>
+                </f7-card-content>
+
+            </f7-card>
+
+        </f7-tab>
+    </f7-tabs>
+
 </f7-page>
 
 </template>
 
 <script>
-    import {auth,db} from "@/firebase"
-    export default {
-        data() {
-            return {
-                userEvents: null
-            }
-        },
-        firebase() {
-            return {
-                // dbMySchedule: db.ref("users/"+auth.currentUser.uid+"/userEvents")
-            }
-        },
-        methods: {
-            populateUserEvents() {
-                // this.$firebaseRefs.dbMySchedule.once("value", snapshot => {
-                //     console.log(snapshot.val())
-                //     this.userEvents = snapshot.val()
-                // })
-            }
-        },
-        mounted() {
-            console.log(auth.currentUser.uid)
+import { auth, db} from '@/firebase'
+export default {
+    data(){
+        return{
+            userEvents : {},
+            groupId :'',
         }
+    },
+    mounted(){
+        // const uid = '29x4eMAYhtchiZ55Y3DN2hrQzor2'
+        // const groupId = this.$f7route.params.groupId
+        // const groupId = '-LEE3-vFFkyFYd9M4eYG'
+        // this.groupId=groupId
+
+        // console.log(groupId)
+        const uid = auth.currentUser.uid
+        let tempEvents = {
+            Monday : 0,
+            Tuesday : 0,
+            Wednesday :0,
+            Thursday :0,
+            Friday :0,
+        }
+        db.ref('users/'+ uid+'/userEvents').once('value',snapshot=>{
+            snapshot.forEach(child=>{
+                if(child.val()===0){
+                    tempEvents[child.key] = child.val()
+                }
+                else{
+                    let eventData={}
+                    child.forEach(e=>{
+                        db.ref('events/'+e.key).once('value', eventVal=>{
+                            eventData[eventVal.key] = eventVal.val()
+                        }).then(()=>{
+                            tempEvents[child.key] = eventData
+                        })
+                    })
+                }
+            })
+        }).then(()=>{
+            this.userEvents=tempEvents
+            console.log('fuck: '+ this.userEvents)
+        })
     }
+}
 </script>

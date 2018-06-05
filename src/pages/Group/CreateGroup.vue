@@ -42,21 +42,23 @@ export default {
     methods : {
         //lazy, no loop
         createNewGroup(){
-            // const uid=auth.currentUser.uid;
+            const uid=auth.currentUser.uid;
+            console.log(uid)
             let groupInfo={
                 groupName:this.groupName,
                 groupDescription:this.groupDescription,
             }
             db.ref('groups').push(groupInfo)
             .then((snapshot)=>{
-                db.ref('groups/'+snapshot.key).child('groupMembers').push({user:'user@user.com', name:'name'})
+                // db.ref('groups/'+snapshot.key).child('groupKey').set(snapshot.key)
+                db.ref('groups/'+snapshot.key).child('groupMembers').child(uid).set('userUID')
                 let groupRef = db.ref('groups/'+snapshot.key+'/groupSchedule')
                 groupRef.child('Monday').set(0)
-                groupRef.child('Tuesday').set(1)
-                groupRef.child('Wednesday').set(2)
-                groupRef.child('Thursday').set(3)
-                groupRef.child('Friday').set(4)
-                db.ref('users/uid/userGroups').child(snapshot.key).set(1)
+                groupRef.child('Tuesday').set(0)
+                groupRef.child('Wednesday').set(0)
+                groupRef.child('Thursday').set(0)
+                groupRef.child('Friday').set(0)
+                db.ref('users/'+uid+'/userGroups').child(snapshot.key).set(1)
 
                 this.groupName=''
                 this.groupDescription=''

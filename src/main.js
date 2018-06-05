@@ -49,7 +49,9 @@ export default new Vue({
   },
   methods: {
       onF7Ready(f7) {
+
           auth.onAuthStateChanged((firebaseUser) => {
+              console.log('in this shit')
               if (firebaseUser) {
                   f7.router.navigate('/home/')
               }

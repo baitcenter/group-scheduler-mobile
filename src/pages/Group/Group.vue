@@ -33,7 +33,7 @@
         data() {
             return {
                 groupId: this.$f7route.params.groupId,
-                groupData: null
+                groupData: {}
             }
         },
         firebase() {

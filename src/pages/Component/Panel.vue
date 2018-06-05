@@ -23,7 +23,7 @@
         computed: {
             panelItems() {
                 return [
-                    {title: "My schedule", path:"/my-schedule/", icon: "today"},
+                    {title: "My schedule", path:"/home/", icon: "today"},
                     {title: "My group", path:"/my-group/", icon: "people"},
                     {title: "Create group", path:"/create-group/", icon: "add_circle"},
                     {title: "Enroll in a group", path:"/enroll-group/", icon: "group_add"},
