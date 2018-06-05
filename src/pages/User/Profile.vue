@@ -6,8 +6,8 @@
         <div v-if="!editing">
             <f7-block-title>Profile</f7-block-title>
             <f7-list>
-                <f7-list-item>Name: {{username}}</f7-list-item>
-                <f7-list-item>Email: {{useremail}}</f7-list-item>
+                <f7-list-item><f7-icon material="person" slot="media"></f7-icon>Name: {{username}}</f7-list-item>
+                <f7-list-item><f7-icon material="email" slot="media"></f7-icon>Email: {{useremail}}</f7-list-item>
             </f7-list>
             <f7-row>
                 <f7-col width="5"></f7-col>
@@ -20,6 +20,7 @@
             <f7-block-title>Editing</f7-block-title>
             <f7-list>
                 <f7-list-item>
+                    <f7-icon material="person" slot="media"></f7-icon>
                     <f7-label>Name</f7-label>
                     <f7-input type="text" @input="name=$event.target.value"
                               required validate v-bind:value="name"
@@ -27,6 +28,7 @@
                     </f7-input>
                 </f7-list-item>
                 <f7-list-item>
+                    <f7-icon material="email" slot="media"></f7-icon>
                     <f7-label>Email</f7-label>
                     <f7-input type="email" @input="email=$event.target.value"
                               required validate v-bind:value="email"
@@ -36,6 +38,7 @@
             </f7-list>
             <f7-list>
                 <f7-list-item>
+                    <f7-icon material="lock" slot="media"></f7-icon>
                     <f7-label>New Password</f7-label>
                     <f7-input type="password" @input="new_password=$event.target.value"
                               required validate
@@ -43,6 +46,7 @@
                     </f7-input>
                 </f7-list-item>
                 <f7-list-item>
+                    <f7-icon material="check_circle" slot="media"></f7-icon>
                     <f7-label>Old Password</f7-label>
                     <f7-input type="password" @input="old_password=$event.target.value"
                               required validate
