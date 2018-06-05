@@ -61,7 +61,7 @@
                 try{
                     var success = document.execCommand("copy")
                     var msg = success ? 'successful' : "failed"
-                    app.dialog.alert("copying " + msg)
+                    // app.dialog.alert("copying " + msg)
                 }catch(error){
                     app.dialog.alert("failed copying the text")
                 }
@@ -69,6 +69,7 @@
                 window.getSelection().removeAllRanges()
                 console.log("copy process ended")
                 // document.execCommand("copy")
+                this.showToastBottom()
             },
             redirectTo() {
                 const groupId = this.$f7route.params.groupId
@@ -83,7 +84,18 @@
                     }
                 })
             },
-
+            showToastBottom() {
+                const self = this;
+                // Create toast
+                if (!self.toastBottom) {
+                    self.toastBottom = self.$f7.toast.create({
+                        text: 'copied to clipboard',
+                        closeTimeout: 2000,
+                    });
+                }
+                // Open it
+                self.toastBottom.open();
+            }
         },
         created() {
             this.populateGroupData()
