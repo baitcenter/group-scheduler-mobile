@@ -72,8 +72,23 @@ export const store = new Vuex.Store({
         },
         userSignUp({commit}, payload) {
             commit('setLoading', true)
+            var name = payload.displayname
             firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
                 .then(firebaseUser => {
+                    var user = firebase.auth().currentUser
+                    console.log("before " + firebase.auth().currentUser.displayName)
+                    console.log("The name" + name)
+                    user.updateProfile({
+                        displayName: name,
+                    }).then(function(){
+                        console.log("The name after" + user.displayName)
+                    }).catch(function(error){
+                        console.log(error)
+                    })
+                    user.sendEmailVerification().then(function(){                        
+                    }).catch(function(error){
+
+                    })
                     const newUser = {
                         id: firebaseUser.user.uid,
                         displayName: firebaseUser.user.displayName,
@@ -85,7 +100,7 @@ export const store = new Vuex.Store({
                     // const uid =firebaseUser.uid;
                     // firebase.database().ref('users/'+uid +'/groups').push();
                     //
-                    router.push('/')
+                    f7Vue.$f7.router.navigate('/my-schedule/')
                 })
                 .catch(error => {
                     commit('setError', error.message)
@@ -130,7 +145,7 @@ export const store = new Vuex.Store({
             const groupKey = payload.enroll_group_key;
             const groupMembersRef = firebase.database().ref('groups/' + groupKey + '/groupMembers');
             const uid = firebase.auth().currentUser.uid;
-            const userRef = firebase.database().ref('users/' + uid + '/groups');
+            const userGroupRef = firebase.database().ref('users/' + uid + '/userGroups');
             const email = firebase.auth().currentUser.email;
 
             var user_groups = [];
@@ -139,7 +154,7 @@ export const store = new Vuex.Store({
             firebase.database().ref('groups/').once('value', function (snapshot) {
                 if (snapshot.hasChild(groupKey)) {
 
-                    userRef.once('value', function (snapshot) {
+                    userGroupRef.once('value', function (snapshot) {
                             snapshot.forEach(function (childSnapshot) {
                                 var childData = childSnapshot.val();
                                 user_groups = user_groups.concat([childData]);
@@ -149,7 +164,7 @@ export const store = new Vuex.Store({
                         () => {
                             user_groups = user_groups.concat([groupKey]);
 
-                            userRef.set(user_groups);
+                            userGroupRef.set(user_groups);
 
                         }
                     )
@@ -170,7 +185,7 @@ export const store = new Vuex.Store({
                     ).catch(error => {
                         console.log(error)
                     });
-
+                    f7Vue.$f7.router.navigate('/my-schedule/')
                     alert("You successfully joined the group")
                 }
                 else {
@@ -267,6 +282,7 @@ export const store = new Vuex.Store({
                 .then(() => {
                     commit('setLoading', false)
                 })
+            console.log("name updated")
         },
         updateEmail({commit}, payload) {
             commit('setLoading', true)
@@ -274,6 +290,31 @@ export const store = new Vuex.Store({
                 .then(f => {
                     commit('setLoading', false)
                 })
+            console.log("email updated")
+        },
+        updateProfile({commit}, payload) {
+            firebase.auth().currentUser.updateProfile({
+                displayName : payload.displayName,
+                email : payload.email
+            }).then(function(){
+                const credential = firebase.auth.EmailAuthProvider.credential(payload.email,payload.old_password)
+                firebase.auth().currentUser.reauthenticateAndRetrieveDataWithCredential(credential)
+                .then(function(){
+                    console.log("reauthed")
+                    firebase.auth().currentUser.updatePassword(payload.new_password).then(function(){
+                        console.log("password updated")
+                    }).catch(function(error){
+                        console.log(error)
+                    })
+                }).catch(function(error){
+                    console.log(error)
+                })
+                commit('setLoading',false)
+            }).catch(function(error){
+                console.log(error)
+                commit('setLoading',false)
+            })
+            console.log("update complete")       
         },
         reauthenticateUser({commit}, payload) {
             commit('setLoading', true)
@@ -293,13 +334,22 @@ export const store = new Vuex.Store({
             commit('setLoading', true)
             firebase.auth().currentUser.updatePassword(payload.new_password).then(function(){
                 commit('setLoading',false)
-                router.push('/profile')
+                console.log("password updated")
+                // f7Vue.$f7.router.navigate('/profile/')
             }).catch(function(error){
                 commit('setError', error.message)
                 commit('setLoading', false)
             })
+        },
+        resendVerificationEmail({commit},payload) {
+            commit('setLoading', true)
+            firebase.auth().currentUser.sendEmailVerification().then(function(){
+                commit('setLoading',false)
+            }).catch(function(error){
+                commit('setLoading',false)
+                commit('setError',error.message)
+            })
         }
-
     },
     loadGroupsInfo({commit}) {
         console.log('loadGroupsInfo')

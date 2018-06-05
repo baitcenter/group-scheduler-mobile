@@ -1,7 +1,7 @@
 <template>
 
 <f7-page>
-    <f7-navbar>
+    <f7-navbar color="red">
         <f7-nav-left>
             <f7-link icon-if-ios="f7:menu" icon-if-md="material:menu" panel-open="left"></f7-link>
         </f7-nav-left>
@@ -13,11 +13,11 @@
     </f7-fab>
     <!-- Switch Between Tabs -->
     <f7-segmented>
-        <f7-button tab-link="#tab-1" tab-link-active>Mon</f7-button>
-        <f7-button tab-link="#tab-2">Tue</f7-button>
-        <f7-button tab-link="#tab-2">Wed</f7-button>
-        <f7-button tab-link="#tab-2">Thu</f7-button>
-        <f7-button tab-link="#tab-2">Fri</f7-button>
+        <f7-button color="orange" tab-link="#tab-1" tab-link-active>Mon</f7-button>
+        <f7-button color="orange" tab-link="#tab-2">Tue</f7-button>
+        <f7-button color="orange" tab-link="#tab-2">Wed</f7-button>
+        <f7-button color="orange" tab-link="#tab-2">Thu</f7-button>
+        <f7-button color="orange" tab-link="#tab-2">Fri</f7-button>
     </f7-segmented>
     <!--{{userEvents}}-->
 </f7-page>

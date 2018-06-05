@@ -1,7 +1,7 @@
 <template>
     <f7-page>
         <f7-page-content>
-            <f7-navbar title="EventName" back-link="Back"></f7-navbar>
+            <f7-navbar color="red" title="EventName" back-link="Back"></f7-navbar>
                 <f7-block>
                     
                     <f7-block-title><b>Time: </b> xx:xx - yy:yy</f7-block-title>
@@ -27,11 +27,11 @@
 
 
         </f7-page-content>
-        <f7-toolbar bottom-md>
+        <f7-toolbar color="green" bottom-md>
             <f7-link icon-material="group_add" @click="openConfirmJoin"> Join</f7-link>
             <f7-link disabled icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-link>
             <f7-link  icon-material="delete" @click="openConfirmDel"> Delete</f7-link>
-        
+         
         </f7-toolbar>
         
     </f7-page>
