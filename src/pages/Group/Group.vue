@@ -5,10 +5,12 @@
         </f7-navbar>
         <f7-list>
             <f7-list-item>Group Name: {{groupData.groupName}}</f7-list-item>
-            <f7-list-item accordion-item title="Group members">
+            <f7-list-item>Description: {{groupData.groupDescription}}</f7-list-item>
+            <f7-list-item>Leader: {{groupLeader}}</f7-list-item>
+            <f7-list-item accordion-item title="Members">
                 <f7-accordion-content>
                     <f7-list-item v-for="(member, index) in groupData.groupMembers" :key="index">
-                        {{member}}
+                        {{member.name}}
                     </f7-list-item>
                 </f7-accordion-content>
             </f7-list-item>
@@ -33,7 +35,8 @@
         data() {
             return {
                 groupId: this.$f7route.params.groupId,
-                groupData: {}
+                groupData: {},
+                groupLeader: ''
             }
         },
         firebase() {
@@ -50,9 +53,13 @@
             populateGroupData() {
                 this.$firebaseRefs.group.once("value", snapshot => {
                     this.groupData = snapshot.val()
-                    console.log()
+                }).then(() => {
+                    for(var x in this.groupData.groupLeader) {
+                        this.groupLeader = this.groupData.groupLeader[x].name
+                    }
                 })
-            }
+            },
+
         },
         created() {
             this.populateGroupData()

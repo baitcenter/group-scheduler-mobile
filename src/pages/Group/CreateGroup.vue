@@ -51,7 +51,12 @@ export default {
             db.ref('groups').push(groupInfo)
             .then((snapshot)=>{
                 // db.ref('groups/'+snapshot.key).child('groupKey').set(snapshot.key)
-                db.ref('groups/'+snapshot.key).child('groupMembers').child(uid).set('userUID')
+                const user = {
+                    name: auth.currentUser.displayName,
+                    email: auth.currentUser.email
+                }
+                db.ref('groups/'+snapshot.key).child('groupMembers').set(0)
+                db.ref('groups/'+snapshot.key).child('groupLeader').child(uid).set(user)
                 let groupRef = db.ref('groups/'+snapshot.key+'/groupSchedule')
                 groupRef.child('Monday').set(0)
                 groupRef.child('Tuesday').set(0)

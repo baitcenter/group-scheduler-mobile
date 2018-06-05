@@ -198,7 +198,7 @@ export default {
             db.ref('events/').push(eventInfo)
             .then((snapshot)=>{
 
-                db.ref('events/'+snapshot.key).child('joinedMembers').push(uid)
+                db.ref('events/'+snapshot.key).child('joinedMembers').set(0)
                 db.ref('groups/'+groupId+'/groupSchedule/').child(this.selectedDay).child(snapshot.key).set(0)
                 db.ref('users/'+uid+'/userEvents/'+this.selectedDay).child(snapshot.key).set(0)
 
