@@ -43,7 +43,7 @@ export default {
         }
     },
     mounted(){
-        console.log(this.$f7route.params)
+        // console.log(this.$f7route.params)
         const eventId = this.$f7route.params.eventId
         let tempEventInfo={}
         db.ref('events/'+eventId).once('value',snapshot=>{
@@ -57,17 +57,40 @@ export default {
         })
     },
     methods:{
-        isJoinedMember(){
-
-        },
-        isLeader(){},
         joinEvent(){
             const uid = auth.currentUser.uid
-            const eventId = this.$route.params.eventId
-            // const groupId = this.$route.params.groupId
+            const eventId = this.$f7route.params.eventId
+            const groupId = this.$f7route.params.groupId
+            let userInfo ={
+                name : auth.currentUser.displayName,
+                email : auth.currentUser.email
+            }
+            let userEventRef = db.ref('users/'+uid)
+                userEventRef.once('value',(snapshot)=>{
+                    console.log(snapshot)
+                    if(!snapshot.hasChild('userEvents')){
+                        console.log('fuckthisshit')
+                        userEventRef.child('userEvents').child('Monday').set(0)
+                        userEventRef.child('userEvents').child('Tuesday').set(0)
+                        userEventRef.child('userEvents').child('Wednesday').set(0)
+                        userEventRef.child('userEvents').child('Thursday').set(0)
+                        userEventRef.child('userEvents').child('Friday').set(0)
+                    }
+                })
+            const app =this.$f7
+            db.ref('events/'+eventId+'/joinedMembers').once('value', snapshot=>{
+                if(snapshot.hasChild(uid)){
+                    app.dialog.alert('User already joined this event','Error!')
+                }
+                else{     
+                    db.ref('events/'+eventId+'/joinedMembers').child(uid).set(userInfo)
+                    db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).set(0)
+                }
+            })
 
-            db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).child(eventId).set(0)
-            db.ref('event/'+eventId +'/joinedMembers').push(uid)//may change to something else
+            // db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).child(eventId).set(0)
+            // db.ref('event/'+eventId +'/joinedMembers').push(uid)//may change to something else
+
         },
         leaveEvent(){
             const uid = auth.currentUser.uid
@@ -86,32 +109,25 @@ export default {
             for(var key in this.eventInfo['joinedMembers']){
                 const uid = this.eventInfo['joinedMembers'][key]
 
-                db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).child(eventId).remove();
+                // db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).child(eventId).remove();
 
             }
-            db.ref('groups/'+groupId+'/groupSchedule/'+this.eventInfo['day']).child(eventId).remove()
-            db.ref('events/').child(eventId).remove()
+            // db.ref('groups/'+groupId+'/groupSchedule/'+this.eventInfo['day']).child(eventId).remove()
+            // db.ref('events/').child(eventId).remove()
+            this.$f7router.navigate('group/'+groupId+'/schedule/')
         },
         openConfirmDel(){
             const app = this.$f7;
             const eventName = this.eventInfo['eventName']
-            app.dialog.title
-            app.dialog.confirm('Do you want to delete this event?',eventName, () =>
-            {
-                app.dialog.alert('Great!',eventName);
-                this.deleteEvent()
-            });
+            // app.dialog.title
+            app.dialog.confirm('Do you want to delete this event?',eventName,this.deleteEvent());
 
         },
         openConfirmJoin(){
             const app = this.$f7;
             const eventName = this.eventInfo['eventName']
-            app.dialog.title
-            app.dialog.confirm('Do you want to Join this event?',eventName, () =>
-            {
-                app.dialog.alert('Great!',eventName);
-                this.joinEvent()
-            });
+            // app.dialog.title
+            app.dialog.confirm('Do you want to Join this event?',eventName, this.joinEvent());
         },
         openConfirmLeave(){
             const app = this.$f7;

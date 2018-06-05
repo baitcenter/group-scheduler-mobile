@@ -57,7 +57,7 @@ export default {
                             else{
                                 db.ref('groups/'+this.enrollCode+'/groupMembers').child(uid).set(userInfo)                
                                 db.ref('users/'+uid+'/userGroups').child(this.enrollCode).set(1)
-                                this.$f7router.navigate('groups/'+this.enrollCode+'/')
+                                this.$f7router.navigate('group/'+this.enrollCode+'/')
                             }
                         })
                     }

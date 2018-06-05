@@ -48,12 +48,6 @@
                 </f7-row>
 
             </f7-list>
-
-            {{eventName}},
-            {{eventDescription}},
-            {{selectedDay}},
-            {{startTime}},
-            {{endTime}},
         </f7-page-content>
 
 
