@@ -49,9 +49,14 @@ export default new Vue({
   },
   methods: {
       onF7Ready(f7) {
+        
           auth.onAuthStateChanged((firebaseUser) => {
+              console.log('in this shit')
               if (firebaseUser) {
+                  store.commit('setLoading',true)
                   store.dispatch("autoSignIn", firebaseUser)
+                  console.log(auth.currentUser.email)
+                  store.commit('setLoading',false)
               }
               else {
                   f7.router.navigate('/')

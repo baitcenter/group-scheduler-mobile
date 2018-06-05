@@ -1,19 +1,20 @@
 <template>
 
 <f7-page>
-    <f7-navbar title="My Schedule" back-link="Back"></f7-navbar>
+    <f7-navbar title="Group Schedule" back-link="Back"></f7-navbar>
     <!-- FAB must be direct child of a page -->
     <f7-fab color="green" position="center-bottom" @click="redirectTo" >
         <f7-icon f7="add"></f7-icon>
     </f7-fab>
     <!-- Switch Between Tabs -->
 
-     <f7-segmented>
-        <f7-button 
-            v-for="(data, key) in this.groupEvents" 
-            :key="key" 
-            :tab-link="'#tab-'+key" >{{key.substring(0,3)}}</f7-button>
-    </f7-segmented>      
+      <f7-segmented>
+        <f7-button tab-link="#tab-Monday" tab-link-active>Mon</f7-button>
+        <f7-button tab-link="#tab-Tuesday">Tue</f7-button>
+        <f7-button tab-link="#tab-Wednesday">Wed</f7-button>
+        <f7-button tab-link="#tab-Thursday">Thu</f7-button>
+        <f7-button tab-link="#tab-Friday">Fri</f7-button>
+    </f7-segmented>           
     <f7-tabs swipeable>
                
         <f7-tab id="tab-Monday"  
@@ -148,7 +149,8 @@ export default {
     data(){
         return{
             groupEvents : {},
-            groupId :''
+            groupId :'',
+            groupName : ''
         }
     },
     methods:{
@@ -162,6 +164,7 @@ export default {
         // const groupId = this.$f7route.params.groupId
         const groupId = '-LEE3-vFFkyFYd9M4eYG'
         this.groupId=groupId
+        
         console.log(groupId)
         let tempEvents = {
             Monday : 0,
