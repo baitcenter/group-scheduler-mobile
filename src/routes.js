@@ -4,11 +4,11 @@ import NotFoundPage from './pages/NotFound';
 import MySchedule from './pages/Schedule/MySchedule';
 import GroupSchedule from './pages/Schedule/GroupSchedule'
 import ViewEvent from './pages/Schedule/ViewEvent'
-import CreateEvent from './pages/Schedule/CreateEventMobile'
+import CreateEvent from './pages/Schedule/CreateEvent'
 import SignUp from './pages/Authentication/Signup';
 import CreateGroup from './pages/Group/CreateGroup';
 import Enroll from './pages/Schedule/Enroll';
-import Home from './pages/Home.vue';
+import Home from './pages/Home';
 
 import Panel from './pages/Component/Panel';
 import Profile from './pages/User/Profile';
