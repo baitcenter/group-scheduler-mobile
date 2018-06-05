@@ -17,8 +17,9 @@
                     </f7-list-item>
                 </f7-accordion-content>
             </f7-list-item>
-            <f7-list-item>Invite code: <div id="invite_code">{{groupId}}</div></f7-list-item>
-            <f7-button @click="copyToClipboard">Copy to clipboard</f7-button>
+            <f7-list-item>Invite code: {{groupId}}
+                <f7-button @click="copyToClipboard" icon-material="content_copy"></f7-button>
+            </f7-list-item>
         </f7-list>
         <f7-block>
             <f7-button color="red" class="col-80" fill @click="redirectTo">Schedule</f7-button>
