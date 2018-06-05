@@ -1,7 +1,7 @@
 <template>
     <f7-page>
         <f7-page-content>
-            <f7-navbar title="Create Event" back-link="Back"></f7-navbar>
+            <f7-navbar color="red" title="Create Event" back-link="Back"></f7-navbar>
             <f7-list form>
                 <f7-list-item>
                     <f7-label>Event Name</f7-label>
@@ -43,7 +43,7 @@
                 </f7-list-item>
                 <f7-row>
                     <f7-col width="5"></f7-col>        
-                    <f7-button class="col-90" fill-md icon-material="create" @click="createNewEvent" >Create</f7-button>
+                    <f7-button class="col-90" color="red" fill-md icon-material="create" @click="createNewEvent" >Create</f7-button>
                     <f7-col width="5"></f7-col>
                 </f7-row>
                 

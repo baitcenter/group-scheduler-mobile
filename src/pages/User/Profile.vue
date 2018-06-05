@@ -1,6 +1,6 @@
 <template>
     <f7-page>
-        <f7-navbar title="Profile" back-link="Back"></f7-navbar>
+        <f7-navbar color="red" title="Profile" back-link="Back"></f7-navbar>
         <div v-if="!editing">
             <f7-list>
                 <f7-list-item>Name: {{username}}</f7-list-item>

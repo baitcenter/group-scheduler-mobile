@@ -1,6 +1,6 @@
 <template>
     <f7-page>
-        <f7-navbar title="My Group" back-link="Back"></f7-navbar>
+        <f7-navbar color="red" title="My Group" back-link="Back"></f7-navbar>
         <f7-list>
             <f7-card v-for="group in myGroup" :key="group.id"
                      :title="group.name">

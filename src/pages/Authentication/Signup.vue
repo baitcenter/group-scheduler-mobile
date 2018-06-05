@@ -47,7 +47,7 @@ export default {
                 console.log("Sign up page" + this.displayName)
                 this.$store.dispatch('userSignUp',{displayname : this.displayName, email : this.email, password : this.password})
             }else{
-                const app = this.$f7;
+                const app = this.$f7
                 app.dialog.alert("The password and confirm is not the same")
             }
         }

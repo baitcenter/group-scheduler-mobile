@@ -1,6 +1,6 @@
 <template>
     <f7-page>
-        <f7-navbar>
+        <f7-navbar color="red">
             <f7-button big href="/profile/" icon-material="account_circle" icon-size="40px" view="#main-view" panel-close> Example</f7-button>
         </f7-navbar>
         <f7-list>
