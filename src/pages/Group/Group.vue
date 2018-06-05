@@ -1,7 +1,7 @@
 <template>
     <f7-page>
         <f7-navbar color="red" title="GroupName" back-link="Back">
-            <f7-nav-right><f7-link icon-if-md="material:info" class="popover-open" href="#" data-popover=".popover-info"></f7-link></f7-nav-right>
+            <f7-nav-right><f7-link icon-if-md="material:info" class="popover-open" href="#" data-popover=".popover-info"></f7-link><f7-link href="/my-schedule/" icon-if-md="material:home"></f7-link></f7-nav-right>
         </f7-navbar>
         <f7-list>
             <f7-list-item>Group Name: {{groupName}}</f7-list-item>

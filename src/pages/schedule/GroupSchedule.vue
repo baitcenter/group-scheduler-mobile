@@ -1,7 +1,9 @@
 <template>
 
 <f7-page>
-    <f7-navbar color="red" title="My Schedule" back-link="Back"></f7-navbar>
+    <f7-navbar color="red" title="My Schedule" back-link="Back">
+            <f7-nav-right><f7-link href="/my-schedule/" icon-if-md="material:home"></f7-link></f7-nav-right>
+    </f7-navbar>
     <!-- FAB must be direct child of a page -->
     <f7-fab color="green" position="center-bottom" @click="redirectTo" >
         <f7-icon f7="add"></f7-icon>

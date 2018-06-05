@@ -1,7 +1,9 @@
 <template>
     <f7-page>
-        <f7-navbar title="Enroll" color="red" back-link="Back">
-            <f7-nav-right><f7-link icon-if-md="material:info" class="popover-open" href="#" data-popover=".popover-info"></f7-link></f7-nav-right>
+        <f7-navbar color="red" back-link="Back">
+            <f7-navbar-title>Enroll</f7-navbar-title>
+            <f7-nav-right><f7-link icon-if-md="material:info" class="popover-open" href="#" data-popover=".popover-info"></f7-link>
+            <f7-link href="/my-schedule/" icon-if-md="material:home"></f7-link></f7-nav-right>
         </f7-navbar>
         <f7-block-title>Enroll</f7-block-title>
         <f7-list form>
@@ -34,6 +36,9 @@ export default {
         }
     },
     methods: {
+        // goHome(){
+        //     this.$f7router.navigate('/home/')
+        // },
         // openInfoModal(){
         //     const app = this.$f7
         //     app.dialog.alert()
