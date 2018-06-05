@@ -100,7 +100,7 @@ export const store = new Vuex.Store({
                     // const uid =firebaseUser.uid;
                     // firebase.database().ref('users/'+uid +'/groups').push();
                     //
-                    f7Vue.$f7.router.navigate('/my-schedule/')
+                    f7Vue.$f7.router.navigate('/home/')
                 })
                 .catch(error => {
                     commit('setError', error.message)
@@ -119,7 +119,7 @@ export const store = new Vuex.Store({
                     commit('setUser', newUser)
                     commit('setLoading', false)
                     commit('setError', null)
-                    f7Vue.$f7.router.navigate('/my-schedule/')
+                    f7Vue.$f7.router.navigate('/home/')
                     // router.push('/')
                 })
                 .catch(error => {
