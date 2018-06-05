@@ -40,11 +40,11 @@ export default {
     data(){
         return{
             eventInfo:{},
-            userEvents:{}
+            userEvents:{},
+            groupInfo:{}
         }
     },
     mounted(){
-        // console.log(this.$f7route.params)
         const eventId = this.$f7route.params.eventId
         let tempEventInfo={}
         db.ref('events/'+eventId).once('value',snapshot=>{
@@ -55,19 +55,30 @@ export default {
             }
         }).then(()=>{
             this.eventInfo=tempEventInfo
+            console.log(this.eventInfo)
         })
+
         const uid = auth.currentUser.uid
-        console.log(uid)
         let tempUserEvents={}
         db.ref('users/'+uid+'/userEvents').once('value', snapshot=>{
             snapshot.forEach(child=>{
-                // console.log(child)
                 tempUserEvents[child.key]=child.val()
             })
         })
         .then(()=>{
             this.userEvents = tempUserEvents
-            // console.log(tempUserEvents)
+            console.log(tempUserEvents)
+        })
+
+        const groupId = this.$f7route.params.groupId
+        let tempGroupData={}
+        db.ref('groups/'+groupId).once('value',snapshot=>{
+            snapshot.forEach(child=>{
+                tempGroupData[child.key] = child.val()
+            })
+        }).then(()=>{
+            this.groupInfo = tempGroupData
+            console.log(this.groupInfo)
         })
     },
     methods:{
@@ -118,25 +129,24 @@ export default {
             if(Object.keys(this.userEvents[this.eventInfo.day]).length===1){
                 db.ref('users/'+uid+'/userEvents/').child(this.eventInfo.day).set(0)
                 .then(()=>{this.$f7router.navigate('group/'+groupId+'/')})
-            }else{
+            }
+            else{
 
                 db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
-                .then(()=>{this.$f7router.navigate('group/'+groupId+'/')
-            })
+                .then(()=>{
+                    
+                    this.$f7router.navigate('group/'+groupId+'/')
+                })
             }
             
         },
         deleteEvent(){
             const uid = auth.currentUser.uid
             const eventId = this.$f7route.params.eventId
-
             const groupId = this.$f7route.params.groupId
-            //not sure
-            console.log('shit:' +this.eventInfo.joinedMembers)
+            
+            //for joinedEvent Members
             for(var key in this.eventInfo.joinedMembers){
-                // console.log(key)
-                // const key = this.eventInfo.joinedMembers[key]
-                // console.log(key)
                 let tempUserEvents={}
                 db.ref('users/'+key+'/userEvents').once('value', snapshot=>{
                     snapshot.forEach(child=>{
@@ -152,20 +162,34 @@ export default {
                 })
                
             }
-            let tempGroupEvents={}
-            db.ref('groups/'+groupId+'/groupSchedule/').once('value',snapshot=>{
-                snapshot.forEach(child=>{
-                    tempGroupEvents[child.key]=child.val()
+            //remove event from group leader
+            for (var x in this.groupInfo.groupLeader){
+                //x =key
+                let tempUserEvents={}
+                db.ref('users/'+x+'/userEvents').once('value', snapshot=>{
+                    snapshot.forEach(child=>{
+                        tempUserEvents[child.key]=child.val()
+                    })
                 })
-            }).then(()=>{
-                if(Object.keys(tempUserEvents[this.eventInfo.day]).length===1){
-                    db.ref('groups/'+groupId+'/groupSchedule/').child(this.eventInfo.day).set(0)
-                }else{
-                    db.ref('groups/'+groupId+'/groupSchedule/'+this.eventInfo.day).child(eventId).remove()
-                }
-            })
+                .then(()=>{
+                    if(Object.keys(tempUserEvents[this.eventInfo.day]).length===1){
+                        db.ref('users/'+x+'/userEvents/').child(this.eventInfo.day).set(0)
+                    }else{
+                        db.ref('users/'+x+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
+                    }
+                })
+            }
+
+            //delete from groupSchedule
+            if(Object.keys(this.groupInfo.groupSchedule[this.eventInfo.day]).length===1){
+                db.ref('groups/'+groupId+'/groupSchedule/').child(this.eventInfo.day).set(0)
+            }else{
+                db.ref('groups/'+groupId+'/groupSchedule/'+this.eventInfo.day).child(eventId).remove()
+            }
+
+            //remove event
             db.ref('events/').child(eventId).remove()
-            .then(()=>{this.$f7router.navigate('group/'+groupId+'/schedule/')})
+            .then(()=>{this.$f7router.navigate('group/'+groupId+'/')})
         },
         openConfirmDel(){
             const app = this.$f7;
