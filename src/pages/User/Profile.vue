@@ -238,7 +238,7 @@
                 firebase.auth().currentUser.updateProfile({
                     displayName : this.name,
                     email : this.email
-                }).then(function(){
+                }).then(() => {
                     console.log("profile updated")
                     const profile = db.ref("users/" + auth.currentUser.uid)
                     profile.child("profile").set({
@@ -247,7 +247,7 @@
                     })
                     this.$store.commit('setError',null)
                     this.$store.commit('setLoading',false)
-                }).catch(function(error){
+                }).catch(error => {
                     console.log("update profile error")
                     console.log(error.message)
                     this.$store.commit('setError',error.message)
