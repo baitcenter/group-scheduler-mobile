@@ -182,7 +182,9 @@ export default {
                 app.dialog.close()
 
             })
+            app.dialog.close()
         })
+
     }
 }
 </script>
