@@ -59,6 +59,10 @@ export default {
                             }
                         })
                     }
+                    else {
+                        this.enrollCode = ''
+                        app.dialog.alert("Invalid invite code. Please try again.")
+                    }
                 })
             }
         },
