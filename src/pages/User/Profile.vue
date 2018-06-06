@@ -54,7 +54,7 @@
                               required validate
                               placeholder="Password" clear-button>
                     </f7-input> -->
-                </f7-list-item>
+                <!-- </f7-list-item> -->
                 <f7-list-item>
                     <f7-icon material="check_circle" slot="media"></f7-icon>
                     <f7-label>Password</f7-label>
@@ -68,7 +68,7 @@
             <f7-row>
                 <f7-col width="5"></f7-col>
                 <f7-button class="col-45" fill color="orange" @click="cancelEdit">Cancel</f7-button>
-                <f7-button class="col-45" fill color="green" @click="submitEdit">Save changes</f7-button>
+                <f7-button class="col-45" fill color="green" @click="submitEdit2">Save changes</f7-button>
                 <f7-col width="5"></f7-col>
             </f7-row>
         </div>
@@ -103,7 +103,8 @@
 </template>
 
 <script>
-    import {auth} from '@/firebase'
+    import firebase from '@/firebase'
+    import {auth,db} from '@/firebase'
     export default {
         data() {
             return {
@@ -124,6 +125,10 @@
             },
             loading() {
                 return this.$store.state.loading
+            },
+            user(){
+                console.log("current state user : " + this.$store.getters.getUser)
+                return this.$store.getters.getUser
             }
         },
         methods: {
@@ -141,9 +146,34 @@
             },
             submitEdit() {
                 if((this.name !== "") && (this.email !== "") && (this.password !== "")){
-                    this.$store.dispatch('updateProfile',{displayName : this.name, email : this.email, password : this.password})
-                    this.initializedField()
-                    this.toggleEdit()
+                    console.log("in page 1")
+                    var test = this.reauthenticateUser()
+                    console.log("test value : " + test)
+                    if(test){
+                        this.updateUserProfile()
+                        // this.toggleEdit()
+                    }else{
+                        console.log("alert!!!")
+                        this.initializedField()
+                    }
+                    // this.$store.dispatch('reauthenticateUser',{password : this.password})
+                    // .then(()=>{
+                    //     console.log('error1: ',this.$store.state.error);
+                    // }, error => {
+                    //     console.log('error : ',this.$store.state.error);
+                        
+                    // // if(this.$store.state.error){
+                    // //     console.log("why though?")
+                    // //     this.initializedField()
+                    // // }else{
+                    // //     console.log("hooray")
+                    // //     this.$store.dispatch('updateUserProfile',{displayName : this.name, email : this.email})
+                    // // }
+                    // // // this.initializedField()
+                    // // console.log("in page 2")
+                    // // this.toggleEdit()
+
+                    // })
                 }else{
                     const self = this;
                     if(!self.toastBottom) {
@@ -161,7 +191,67 @@
                     }
                     self.toastBottom.open();
                     // this.toggleEdit()
-                }
+                    }
+                },
+            submitEdit2() {
+                if((this.name !== "") && (this.email !== "") && (this.password !== "")){
+                this.$store.commit('setLoading', true)
+                console.log("reauthenticating")
+                const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email, this.password)
+                firebase.auth().currentUser.reauthenticateAndRetrieveDataWithCredential(credential)
+                    .then(f => {
+                        console.log("reauthenticate successful")
+                        this.$store.commit('setLoading', false)
+                        this.$store.commit('setError', '')
+                        this.updateUserProfile()
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        this.alert = true
+                        this.$store.commit('setError', error.message)
+                        this.$store.commit('setLoading', false)
+                        this.initializedField()
+                    })
+                }else{
+                    const self = this;
+                    if(!self.toastBottom) {
+                        self.toastBottom = self.$f7.toast.create({
+                            text : "please fill in the edit form",
+                            closeTimeout : 3000,
+                            closeButton : true
+                        });
+                    }else{
+                        self.toastBottom = self.$f7.toast.create({
+                            text : "please fill in the edit form",
+                            closeTimeout : 3000,
+                            closeButton : true
+                        });
+                    }
+                    self.toastBottom.open();
+                    // this.toggleEdit()
+                    }
+            },
+            updateUserProfile() {
+                this.$store.commit('setLoading',true)
+                console.log("updating profile")
+                firebase.auth().currentUser.updateProfile({
+                    displayName : this.name,
+                    email : this.email
+                }).then(function(){
+                    console.log("profile updated")
+                    const profile = db.ref("users/" + auth.currentUser.uid)
+                    profile.child("profile").set({
+                        name : auth.currentUser.displayName,
+                        email : auth.currentUser.email
+                    })
+                    this.$store.commit('setError',null)
+                    this.$store.commit('setLoading',false)
+                }).catch(function(error){
+                    console.log("update profile error")
+                    console.log(error.message)
+                    this.$store.commit('setError',error.message)
+                    this.$store.commit('setLoading',false)
+                })     
             },
             cancelEdit() {
                 this.initializedField()
@@ -237,6 +327,7 @@
             this.username = curUser.displayName
             this.useremail = curUser.email
             this.verified = curUser.emailVerified
+            this.alert = false
             this.initializedField()
             console.log(curUser.emailVerified)
             console.log(this.verified)
