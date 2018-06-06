@@ -177,7 +177,7 @@ export const store = new Vuex.Store({
                     email : payload.email
                 }).then(function(){
                     console.log("profile updated")
-                    const profile = db.ref("user/" + auth.currentUser.uid)
+                    const profile = db.ref("users/" + auth.currentUser.uid)
                     profile.child("profile").set({
                         name : auth.currentUser.displayName,
                         email : auth.currentUser.email
