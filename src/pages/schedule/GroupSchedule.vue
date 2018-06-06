@@ -166,7 +166,7 @@ export default {
             this.$f7router.navigate("/group/"+groupId+"/schedule/create-event/")
         },
     },
-    mounted(){
+    mounted() {
         const groupId = this.$f7route.params.groupId
         this.groupId = groupId
 

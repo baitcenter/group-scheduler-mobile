@@ -50,12 +50,6 @@
                 </f7-row>
 
             </f7-list>
-
-            {{eventName}},
-            {{eventDescription}},
-            {{selectedDay}},
-            {{startTime}},
-            {{endTime}},
         </f7-page-content>
 
 
@@ -154,22 +148,23 @@ export default {
         },
         createNewEvent(){
 
+            const app = this.$f7
             if(this.eventName ===''){
-                alert('Please state your event name!')
+                app.dialog.alert('Please state your event name!')
             }
             else if(this.eventDescription ===''){
-                alert('Please describe your event!')
+                app.dialog.alert('Please describe your event!')
             }
             else if(this.selectedDay===''){
-                alert('Please select your event day!')
+                app.dialog.alert('Please select your event day!')
             }
             else if(this.startTime==='' || this.endTime===''){
-                alert('Please select the time period for your events')
+                app.dialog.alert('Please select the time period for your events')
                 return
             }
 
             if(this.isOverlap()){
-                alert('The time is overlap with your current schedule.')
+                app.dialog.alert('The time is overlap with your current schedule.')
                 return
             }
 
@@ -210,9 +205,9 @@ export default {
                 this.selectedDay=''
                 this.startTime=''
                 this.endTime=''
-                this.$f7router.navigate("/group/"+groupId+"/schedule/", {reloadPrevious: true})
+                this.$f7router.navigate("/group/"+groupId+"/schedule/", {reloadCurrent: true})
             }).catch((error)=>{
-                alert("Error Occured!")
+                app.dialog.alert("Error Occured!")
                 console.log(error)
             })
         },

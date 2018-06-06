@@ -15,7 +15,7 @@
         </f7-list>
         <f7-block>
             <f7-row>
-                <f7-button class="col" color="red" @click="userEnroll" raised fill>Submit</f7-button>
+                <f7-button class="col" color="red" @click="enrollGroup" raised fill>Submit</f7-button>
             </f7-row>
         </f7-block>
         <!-- Popovers -->
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import {auth,db} from '@/firebase'
 export default {
     data(){
         return{
@@ -36,16 +37,35 @@ export default {
         }
     },
     methods: {
-        // goHome(){
-        //     this.$f7router.navigate('/home/')
-        // },
-        // openInfoModal(){
-        //     const app = this.$f7
-        //     app.dialog.alert()
-        // },
-        userEnroll(){
-            this.$store.dispatch('userEnrollGroup',{enroll_group_key : this.enrollCode})
-        }
+
+        enrollGroup() {
+            const app = this.$f7
+            const uid = auth.currentUser.uid
+            let userInfo = {
+                        'name': auth.currentUser.displayName,
+                        'email' : auth.currentUser.email
+                        }
+            if(this.enrollCode===''){
+                app.dialog.alert('Please enter your enroll code!','Enroll')
+            }
+            else{
+                db.ref('groups/').once('value', snapshot=>{
+                    if(snapshot.hasChild(this.enrollCode)){
+
+                        db.ref('groups/'+this.enrollCode+'/groupMembers').once('value',childSnapshot=>{
+                            if(childSnapshot.hasChild(uid)){
+                                app.dialog.alert('User already joined this group!','Enroll')
+                            }
+                            else{
+                                db.ref('groups/'+this.enrollCode+'/groupMembers').child(uid).set(userInfo)
+                                db.ref('users/'+uid+'/userGroups').child(this.enrollCode).set(1)
+                                this.$f7router.navigate('group/'+this.enrollCode+'/')
+                            }
+                        })
+                    }
+                })
+            }
+        },
     }
 }
 </script>

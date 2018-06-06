@@ -41,11 +41,12 @@ import {auth,db} from '@/firebase'
 export default {
     data(){
         return{
-            eventInfo:{}
+            eventInfo:{},
+            userEvents:{},
+            groupInfo:{}
         }
     },
     mounted(){
-        console.log(this.$f7route.params)
         const eventId = this.$f7route.params.eventId
         let tempEventInfo={}
         db.ref('events/'+eventId).once('value',snapshot=>{
@@ -56,75 +57,162 @@ export default {
             }
         }).then(()=>{
             this.eventInfo=tempEventInfo
+            console.log(this.eventInfo)
+        })
+
+        const uid = auth.currentUser.uid
+        let tempUserEvents={}
+        db.ref('users/'+uid+'/userEvents').once('value', snapshot=>{
+            snapshot.forEach(child=>{
+                tempUserEvents[child.key]=child.val()
+            })
+        })
+        .then(()=>{
+            this.userEvents = tempUserEvents
+            console.log(tempUserEvents)
+        })
+
+        const groupId = this.$f7route.params.groupId
+        let tempGroupData={}
+        db.ref('groups/'+groupId).once('value',snapshot=>{
+            snapshot.forEach(child=>{
+                tempGroupData[child.key] = child.val()
+            })
+        }).then(()=>{
+            this.groupInfo = tempGroupData
+            console.log(this.groupInfo)
         })
     },
     methods:{
-        isJoinedMember(){
-
-        },
-        isLeader(){},
         joinEvent(){
             const uid = auth.currentUser.uid
-            const eventId = this.$route.params.eventId
-            // const groupId = this.$route.params.groupId
+            const eventId = this.$f7route.params.eventId
+            const groupId = this.$f7route.params.groupId
+            let userInfo ={
+                name : auth.currentUser.displayName,
+                email : auth.currentUser.email
+            }
+            let userEventRef = db.ref('users/'+uid)
+                userEventRef.once('value',(snapshot)=>{
+                    console.log(snapshot)
+                    if(!snapshot.hasChild('userEvents')){
+                        console.log('fuckthisshit')
+                        userEventRef.child('userEvents').child('Monday').set(0)
+                        userEventRef.child('userEvents').child('Tuesday').set(0)
+                        userEventRef.child('userEvents').child('Wednesday').set(0)
+                        userEventRef.child('userEvents').child('Thursday').set(0)
+                        userEventRef.child('userEvents').child('Friday').set(0)
+                    }
+                })
+            const app =this.$f7
+            db.ref('events/'+eventId+'/joinedMembers').once('value', snapshot=>{
+                if(snapshot.hasChild(uid)){
+                    app.dialog.alert('User already joined this event','Error!')
+                }
+                else{     
+                    db.ref('events/'+eventId+'/joinedMembers').child(uid).set(userInfo)
+                    db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).set(0)
+                    this.$f7router.navigate('/group/'+groupId)
+                }
+            })
 
-            db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).child(eventId).set(0)
-            db.ref('event/'+eventId +'/joinedMembers').push(uid)//may change to something else
         },
         leaveEvent(){
             const uid = auth.currentUser.uid
-            const eventId = this.$route.params.eventId
+            const eventId = this.$f7route.params.eventId
+            const groupId = this.$f7route.params.groupId
 
-            // const groupId = this.$route.params.groupId
-            db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).child(eventId).remove()
-            db.ref('event/'+eventId +'/joinedMembers').child(uid).remove()//may change to something else
+            if(Object.keys(this.eventInfo.joinedMembers).length===1){ 
+                db.ref('events/'+eventId +'/joinedMembers').set(0)
+            }
+            else{
+                db.ref('events/'+eventId +'/joinedMembers').child(uid).remove()//may change to something else
+            }
+            if(Object.keys(this.userEvents[this.eventInfo.day]).length===1){
+                db.ref('users/'+uid+'/userEvents/').child(this.eventInfo.day).set(0)
+                .then(()=>{this.$f7router.navigate('group/'+groupId+'/')})
+            }
+            else{
+
+                db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
+                .then(()=>{
+                    
+                    this.$f7router.navigate('group/'+groupId+'/')
+                })
+            }
+            
         },
         deleteEvent(){
             const uid = auth.currentUser.uid
-            const eventId = this.$route.params.eventId
-
-            const groupId = this.$route.params.groupId
-            //not sure
-            for(var key in this.eventInfo['joinedMembers']){
-                const uid = this.eventInfo['joinedMembers'][key]
-
-                db.ref('users/'+uid+'/userEvents/'+this.eventInfo['day']).child(eventId).remove();
-
+            const eventId = this.$f7route.params.eventId
+            const groupId = this.$f7route.params.groupId
+            
+            //for joinedEvent Members
+            for(var key in this.eventInfo.joinedMembers){
+                let tempUserEvents={}
+                db.ref('users/'+key+'/userEvents').once('value', snapshot=>{
+                    snapshot.forEach(child=>{
+                        tempUserEvents[child.key]=child.val()
+                    })
+                })
+                .then(()=>{
+                    if(Object.keys(tempUserEvents[this.eventInfo.day]).length===1){
+                        db.ref('users/'+key+'/userEvents/').child(this.eventInfo.day).set(0)
+                    }else{
+                        db.ref('users/'+key+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
+                    }
+                })
+               
             }
-            db.ref('groups/'+groupId+'/groupSchedule/'+this.eventInfo['day']).child(eventId).remove()
+            //remove event from group leader
+            for (var x in this.groupInfo.groupLeader){
+                //x =key
+                let tempUserEvents={}
+                db.ref('users/'+x+'/userEvents').once('value', snapshot=>{
+                    snapshot.forEach(child=>{
+                        tempUserEvents[child.key]=child.val()
+                    })
+                })
+                .then(()=>{
+                    if(Object.keys(tempUserEvents[this.eventInfo.day]).length===1){
+                        db.ref('users/'+x+'/userEvents/').child(this.eventInfo.day).set(0)
+                    }else{
+                        db.ref('users/'+x+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
+                    }
+                })
+            }
+
+            //delete from groupSchedule
+            if(Object.keys(this.groupInfo.groupSchedule[this.eventInfo.day]).length===1){
+                db.ref('groups/'+groupId+'/groupSchedule/').child(this.eventInfo.day).set(0)
+            }else{
+                db.ref('groups/'+groupId+'/groupSchedule/'+this.eventInfo.day).child(eventId).remove()
+            }
+
+            //remove event
             db.ref('events/').child(eventId).remove()
+            .then(()=>{this.$f7router.navigate('group/'+groupId+'/')})
         },
         openConfirmDel(){
             const app = this.$f7;
             const eventName = this.eventInfo['eventName']
-            app.dialog.title
-            app.dialog.confirm('Do you want to delete this event?',eventName, () =>
-            {
-                app.dialog.alert('Great!',eventName);
-                this.deleteEvent()
-            });
+            // app.dialog.title
+            app.dialog.confirm('Do you want to delete this event?',eventName,this.deleteEvent());
 
         },
         openConfirmJoin(){
             const app = this.$f7;
             const eventName = this.eventInfo['eventName']
-            app.dialog.title
-            app.dialog.confirm('Do you want to Join this event?',eventName, () =>
-            {
-                app.dialog.alert('Great!',eventName);
-                this.joinEvent()
-            });
+            // app.dialog.title
+            app.dialog.confirm('Do you want to join this event?',eventName, this.joinEvent());
         },
         openConfirmLeave(){
             const app = this.$f7;
 
             const eventName = this.eventInfo['eventName']
-            app.dialog.title
-            app.dialog.confirm('Do you want to Leave this event?',eventName, () =>
-            {
-                app.dialog.alert('Great!',eventName);
-                this.leaveEvent()
-            });
+            // app.dialog.title
+            app.dialog.confirm('Do you want to leave this event?',eventName, this.leaveEvent()
+            );
         },
     }
 }
