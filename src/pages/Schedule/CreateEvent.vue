@@ -189,7 +189,8 @@ export default {
                     day : this.selectedDay,
                     startTime : this.startTime,
                     endTime : this.endTime,
-                    groupId : groupId
+                    groupId : groupId,
+                    eventCreator: uid,
                 }
 
             db.ref('events/').push(eventInfo)

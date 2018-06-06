@@ -25,13 +25,11 @@
                     </f7-list>
                 <!-- </f7-card> -->
                 </f7-block>
-
-
         </f7-page-content>
         <f7-toolbar color="orange" bottom-md>
-            <f7-link icon-material="group_add" @click="openConfirmJoin"> Join</f7-link>
-            <f7-link disabled icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-link>
-            <f7-link  icon-material="delete" @click="openConfirmDel"> Delete</f7-link>
+            <f7-link v-if="!isCreator && !isJoinedMember" icon-material="group_add" @click="openConfirmJoin"> Join</f7-link>
+            <f7-link v-if="isJoinedMember" disabled icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-link>
+            <f7-link v-if="isCreator" icon-material="delete" @click="openConfirmDel"> Delete</f7-link>
 
         </f7-toolbar>
 
@@ -45,7 +43,9 @@ export default {
         return{
             eventInfo:{},
             userEvents:{},
-            groupInfo:{}
+            groupInfo:{},
+            isCreator: false,
+            isJoinedMember: false,
         }
     },
     mounted(){
@@ -53,6 +53,7 @@ export default {
     },
     methods:{
         populateData() {
+            const uid = auth.currentUser.uid
             const eventId = this.$f7route.params.eventId
             let tempEventInfo={}
             db.ref('events/'+eventId).once('value',snapshot=>{
@@ -64,9 +65,11 @@ export default {
             }).then(()=>{
                 this.eventInfo=tempEventInfo
                 this.setJoinedMembers(tempEventInfo.joinedMembers)
+                if (uid === this.eventInfo.eventCreator) {
+                    this.isCreator = true
+                }
             })
 
-            const uid = auth.currentUser.uid
             let tempUserEvents={}
             db.ref('users/'+uid+'/userEvents').once('value', snapshot=>{
                 snapshot.forEach(child=>{
@@ -88,9 +91,14 @@ export default {
         },
         setJoinedMembers(joinedMembers) {
             let members = []
-            for (let uid in joinedMembers) {
-                db.ref("users/" + uid + "/profile").on("value", snapshot => {
-                    members.push(snapshot.val())
+            const uid = auth.currentUser.uid
+            for (let memberUid in joinedMembers) {
+                if (memberUid === uid) {
+                    this.isJoinedMember = true
+                }
+                db.ref("users/" + memberUid + "/profile").on("value", snapshot => {
+                    const member = {[memberUid] : 0, ...snapshot.val()}
+                    members.push(member)
                 })
             }
             this.eventInfo.joinedMembers = members
@@ -138,7 +146,7 @@ export default {
             else{
                 db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
             }
-
+            this.isJoinedMember = false
         },
         deleteEvent(){
             const eventId = this.$f7route.params.eventId
@@ -194,6 +202,8 @@ export default {
             //remove event
             db.ref('events/').child(eventId).remove()
             // .then(()=>{this.$f7router.navigate('group/'+groupId+'/')})
+
+            this.isCreator = false
         },
         openConfirmDel(){
             const app = this.$f7;
