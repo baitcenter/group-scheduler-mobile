@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import firebase from '@/firebase'
 import {googleProvider} from '@/firebase'
 import f7Vue from '../main'
+import {db, auth} from '@/firebase'
 
 // f7 router syntax in here, f7Vue.$f7.router.navigate(<url>)
 Vue.use(Vuex)
@@ -82,6 +83,14 @@ export const store = new Vuex.Store({
                         displayName: name,
                     }).then(function(){
                         console.log("The name after" + user.displayName)
+
+                        // TODO
+                        // add profile to data base
+                        const profile = db.ref("users/"+ firebaseUser.user.uid)
+                        profile.child("profile").set({
+                            name: firebaseUser.user.displayName,
+                            email: firebaseUser.user.email
+                        })
                     }).catch(function(error){
                         console.log(error)
                     })
@@ -161,6 +170,11 @@ export const store = new Vuex.Store({
                 displayName : payload.displayName,
                 email : payload.email
             }).then(function(){
+                const profile = db.ref("users/"+ auth.currentUser.uid)
+                profile.child("profile").set({
+                    name: auth.currentUser.displayName,
+                    email: auth.currentUser.email
+                })
                 const credential = firebase.auth.EmailAuthProvider.credential(payload.email,payload.old_password)
                 firebase.auth().currentUser.reauthenticateAndRetrieveDataWithCredential(credential)
                 .then(function(){
@@ -173,6 +187,7 @@ export const store = new Vuex.Store({
                 }).catch(function(error){
                     console.log(error)
                 })
+
                 commit('setLoading',false)
             }).catch(function(error){
                 console.log(error)
