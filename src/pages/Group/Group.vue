@@ -9,15 +9,18 @@
         <f7-list>
             <f7-list-item>Group Name: {{groupData.groupName}}</f7-list-item>
             <f7-list-item>Description: {{groupData.groupDescription}}</f7-list-item>
-            <f7-list-item>Leader: {{groupLeader}}</f7-list-item>
+            <f7-list-item media-item>Leader:
+                <f7-chip :text="groupData.groupLeader" :media="groupData.groupLeader[0]" media-bg-color="red"></f7-chip>
+            </f7-list-item>
             <f7-list-item accordion-item title="Members">
                 <f7-accordion-content>
                     <f7-list-item v-for="(member, index) in groupData.groupMembers" :key="index">
-                        {{member.name}}
+                        <f7-chip :text="member.name" :media="member.name[0]" media-bg-color="red"></f7-chip>
                     </f7-list-item>
                 </f7-accordion-content>
             </f7-list-item>
-            <f7-list-item>Invite code: {{groupId}}
+            <f7-list-item title="Invite code:">
+                <f7-badge style="font-size: 14px">{{groupId}}</f7-badge>
                 <f7-button @click="copyToClipboard" icon-material="content_copy"></f7-button>
             </f7-list-item>
         </f7-list>
@@ -40,13 +43,13 @@
         data() {
             return {
                 groupId: this.$f7route.params.groupId,
-                groupData: {},
-                groupLeader: ''
+                groupData: {}
             }
         },
         firebase() {
             return {
-                group: db.ref("groups").child(this.groupId)
+                group: db.ref("groups").child(this.groupId),
+                users: db.ref("users")
             }
         },
         // user $f7route.params to get the params from url
@@ -78,10 +81,8 @@
             populateGroupData() {
                 this.$firebaseRefs.group.once("value", snapshot => {
                     this.groupData = snapshot.val()
-                }).then(() => {
-                    for(var x in this.groupData.groupLeader) {
-                        this.groupLeader = this.groupData.groupLeader[x].name
-                    }
+                    this.setGroupLeader(this.groupData.groupLeader)
+                    this.setGroupMembers(snapshot.val().groupMembers)
                 })
             },
             showToastBottom() {
@@ -95,6 +96,21 @@
                 }
                 // Open it
                 self.toastBottom.open();
+            },
+            setGroupLeader(uid) {
+                this.$firebaseRefs.users.child(uid + "/profile").once("value", snapshot => {
+                    this.groupData.groupLeader = snapshot.val().name
+                })
+            },
+            setGroupMembers(groupMembers) {
+                let members = []
+                for (let uid in groupMembers) {
+                    // console.log(uid)
+                    db.ref("users/"+uid+"/profile").once("value", snapshot => {
+                        members.push(snapshot.val())
+                    })
+                }
+                this.groupData.groupMembers = members
             }
         },
         created() {
