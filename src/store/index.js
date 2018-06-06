@@ -93,10 +93,11 @@ export const store = new Vuex.Store({
                         })
                     }).catch(function(error){
                         console.log(error)
+                        commit('setError',error.message)
                     })
                     user.sendEmailVerification().then(function(){                        
                     }).catch(function(error){
-
+                        commit('setError',error.message)
                     })
                     const newUser = {
                         id: firebaseUser.user.uid,
@@ -166,33 +167,62 @@ export const store = new Vuex.Store({
             console.log("email updated")
         },
         updateProfile({commit}, payload) {
-            firebase.auth().currentUser.updateProfile({
-                displayName : payload.displayName,
-                email : payload.email
-            }).then(function(){
-                const profile = db.ref("users/"+ auth.currentUser.uid)
-                profile.child("profile").set({
-                    name: auth.currentUser.displayName,
-                    email: auth.currentUser.email
-                })
-                const credential = firebase.auth.EmailAuthProvider.credential(payload.email,payload.old_password)
-                firebase.auth().currentUser.reauthenticateAndRetrieveDataWithCredential(credential)
-                .then(function(){
-                    console.log("reauthed")
-                    firebase.auth().currentUser.updatePassword(payload.new_password).then(function(){
-                        console.log("password updated")
-                    }).catch(function(error){
-                        console.log(error)
+            commit('setLoading',true)
+            const credential = firebase.auth.EmailAuthProvider.credential(payload.email,payload.password)
+            firebase.auth().currentUser.reauthenticateAndRetrieveDataWithCredential(credential)
+            .then(function(){
+                console.log("reauthentication successful")
+                firebase.auth().currentUser.updateProfile({
+                    displayName : payload.displayName,
+                    email : payload.email
+                }).then(function(){
+                    console.log("profile updated")
+                    const profile = db.ref("user/" + auth.currentUser.uid)
+                    profile.child("profile").set({
+                        name : auth.currentUser.displayName,
+                        email : auth.currentUser.email
                     })
+                    commit('setLoading',false)
                 }).catch(function(error){
+                    console.log("update profile error")
                     console.log(error)
-                })
+                    commit('setError',error.message)
+                    commit('setLoading',false)
 
-                commit('setLoading',false)
+                })
             }).catch(function(error){
+                console.log("reauthentication error")
                 console.log(error)
+                commit('setError',error.message)
                 commit('setLoading',false)
             })
+            // firebase.auth().currentUser.updateProfile({
+            //     displayName : payload.displayName,
+            //     email : payload.email
+            // }).then(function(){
+            //     const profile = db.ref("users/"+ auth.currentUser.uid)
+            //     profile.child("profile").set({
+            //         name: auth.currentUser.displayName,
+            //         email: auth.currentUser.email
+            //     })
+            //     const credential = firebase.auth.EmailAuthProvider.credential(payload.email,payload.old_password)
+            //     firebase.auth().currentUser.reauthenticateAndRetrieveDataWithCredential(credential)
+            //     .then(function(){
+            //         console.log("reauthed")
+            //         firebase.auth().currentUser.updatePassword(payload.new_password).then(function(){
+            //             console.log("password updated")
+            //         }).catch(function(error){
+            //             console.log(error)
+            //         })
+            //     }).catch(function(error){
+            //         console.log(error)
+            //     })
+
+            //     commit('setLoading',false)
+            // }).catch(function(error){
+            //     console.log(error)
+            //     commit('setLoading',false)
+            // })
             console.log("update complete")       
         },
         reauthenticateUser({commit}, payload) {
@@ -211,14 +241,33 @@ export const store = new Vuex.Store({
         },
         changePassword({commit}, payload) {
             commit('setLoading', true)
-            firebase.auth().currentUser.updatePassword(payload.new_password).then(function(){
-                commit('setLoading',false)
-                console.log("password updated")
-                // f7Vue.$f7.router.navigate('/profile/')
+            const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email, payload.old_password)
+            firebase.auth().currentUser.reauthenticateAndRetrieveDataWithCredential(credential)
+            .then(function(){
+                console.log("reauthentication successful")
+                firebase.auth().currentUser.updatePassword(payload.new_password).then(function(){
+                    console.log("password updated")
+                    commit('setLoading',false)
+                }).catch(function(error){
+                    console.log("error updating password")
+                    console.log(error.message)
+                    commit('setError',error.message)
+                    commit('setLoading',false)
+                })
             }).catch(function(error){
-                commit('setError', error.message)
-                commit('setLoading', false)
+                console.log("reauthentication error")
+                console.log(error.message)
+                commit('setError',error.message)
+                commit('setLoading',false)
             })
+            // firebase.auth().currentUser.updatePassword(payload.new_password).then(function(){
+            //     commit('setLoading',false)
+            //     console.log("password updated")
+            //     // f7Vue.$f7.router.navigate('/profile/')
+            // }).catch(function(error){
+            //     commit('setError', error.message)
+            //     commit('setLoading', false)
+            // })
         },
         resendVerificationEmail({commit},payload) {
             commit('setLoading', true)
