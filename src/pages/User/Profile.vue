@@ -131,6 +131,7 @@
                 var curUser = auth.currentUser
                 this.name = curUser.displayName
                 this.email = curUser.email
+                this.password = ""
             },
             toggleEditPassword(){
                 this.editingPassword = !this.editingPassword
@@ -144,8 +145,22 @@
                     this.initializedField()
                     this.toggleEdit()
                 }else{
-                    const app = this.$f7;
-                    app.dialog.alert("error updating profile")
+                    const self = this;
+                    if(!self.toastBottom) {
+                        self.toastBottom = self.$f7.toast.create({
+                            text : "please fill in the edit form",
+                            closeTimeout : 3000,
+                            closeButton : true
+                        });
+                    }else{
+                        self.toastBottom = self.$f7.toast.create({
+                            text : "please fill in the edit form",
+                            closeTimeout : 3000,
+                            closeButton : true
+                        });
+                    }
+                    self.toastBottom.open();
+                    // this.toggleEdit()
                 }
             },
             cancelEdit() {
@@ -160,8 +175,22 @@
                     this.$store.dispatch('changePassword',{old_password : this.old_password, new_password : this.new_password})
                     this.toggleEditPassword()
                 }else{
-                    const app = this.$f7;
-                    app.dialog.alert("error updating password")
+                    const self = this;
+                    if(!self.toastBottom) {
+                        self.toastBottom = self.$f7.toast.create({
+                            text : "please fill in the edit form",
+                            closeTimeout : 3000,
+                            closeButton : true
+                        });
+                    }else{
+                        self.toastBottom = self.$f7.toast.create({
+                            text : "please fill in the edit form",
+                            closeTimeout : 3000,
+                            closeButton : true
+                        });
+                    }
+                    self.toastBottom.open();
+                    // app.dialog.alert("error updating password")
                 }
             },
             // saveChanges() {
@@ -179,6 +208,12 @@
                         closeTimeout : 3000,
                         closeButton : true,
                     });
+                }else{
+                   self.toastBottom = self.$f7.toast.create({
+                        text : error,
+                        closeTimeout : 3000,
+                        closeButton : true,
+                    }); 
                 }
                 self.toastBottom.open();
             }
