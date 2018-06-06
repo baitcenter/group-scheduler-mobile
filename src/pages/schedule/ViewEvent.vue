@@ -162,6 +162,7 @@ export default {
                     })
                 })
                 .then(()=>{
+
                     if(tempUserEvents[this.eventInfo.day]){
                         if(Object.keys(tempUserEvents[this.eventInfo.day]).length===1){
                             db.ref('users/'+key+'/userEvents/').child(this.eventInfo.day).set(0)
@@ -182,10 +183,12 @@ export default {
                     })
                 })
                 .then(()=>{
-                    if(Object.keys(tempUserEvents[this.eventInfo.day]).length===1){
-                        db.ref('users/'+x+'/userEvents/').child(this.eventInfo.day).set(0)
-                    }else{
-                        db.ref('users/'+x+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
+                    if(tempUserEvents[this.eventInfo.day]){
+                        if(Object.keys(tempUserEvents[this.eventInfo.day]).length===1){
+                            db.ref('users/'+x+'/userEvents/').child(this.eventInfo.day).set(0)
+                        }else{
+                            db.ref('users/'+x+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
+                        }
                     }
                 })
             }
@@ -222,7 +225,7 @@ export default {
                 this.joinEvent()
                 app.dialog.alert('You joined the event!')
                 console.log(groupId,eventId)
-                this.$f7router.navigate('/home/')
+                this.$f7router.refreshPage()
             });
         },
         openConfirmLeave(){
@@ -232,7 +235,14 @@ export default {
             app.dialog.confirm('Do you want to leave this event?',eventName, () => {
                 this.leaveEvent()
                 app.dialog.alert('You leaved the event!')
-                this.$f7router.navigate('/group/'+groupId+'/')
+                // this.$f7router.refreshPage()
+                // this.$f7router.navigate(this.$f7router.currentRoute.url, {
+                //     reloadCurrent: true,
+                //     reloadPrevious: true,
+                //     ignoreCache: true,
+                //     force: true,
+                // })
+                this.$f7router.back({ignoreCache: true, force:true, reloadCurrent:true})
             });
         },
     }

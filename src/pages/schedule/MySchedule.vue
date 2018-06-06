@@ -172,6 +172,7 @@ export default {
                 this.userEvents=tempEventData
                 app.dialog.close()
             })
+            app.dialog.close()
         
         })
     }
