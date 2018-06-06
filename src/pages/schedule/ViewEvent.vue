@@ -227,7 +227,7 @@ export default {
                 this.joinEvent()
                 app.dialog.alert('You joined the event!')
                 console.log(groupId,eventId)
-                this.$f7router.navigate('/group/'+groupId+'/')
+                this.$f7router.navigate('/home')
             });
         },
         openConfirmLeave(){
