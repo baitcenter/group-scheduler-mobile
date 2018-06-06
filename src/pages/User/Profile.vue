@@ -141,6 +141,7 @@
             submitEdit() {
                 if((this.name !== "") && (this.email !== "") && (this.password !== "")){
                     this.$store.dispatch('updateProfile',{displayName : this.name, email : this.email, password : this.password})
+                    this.initializedField()
                     this.toggleEdit()
                 }else{
                     const app = this.$f7;

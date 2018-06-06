@@ -154,7 +154,7 @@ export default {
     },
     methods :{
         redirectToEvent(gid,eid){
-          console.log("gid " + gid + ", eid " + eid)
+          console.log("gid : " + gid + ", eid : " + eid)
           this.$f7router.navigate('/group/'+gid+'/schedule/event/'+eid+'/')
         },
     },
@@ -185,7 +185,6 @@ export default {
             })
         }).then(()=>{
             this.userEvents=tempEvents
-            console.log('fuck: '+ this.userEvents)
         })
     }
 }

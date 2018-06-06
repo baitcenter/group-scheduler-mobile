@@ -223,7 +223,7 @@ export const store = new Vuex.Store({
             //     console.log(error)
             //     commit('setLoading',false)
             // })
-            console.log("update complete")       
+            console.log("end update process")       
         },
         reauthenticateUser({commit}, payload) {
             commit('setLoading', true)
@@ -268,6 +268,7 @@ export const store = new Vuex.Store({
             //     commit('setError', error.message)
             //     commit('setLoading', false)
             // })
+            console.log("end password change process")
         },
         resendVerificationEmail({commit},payload) {
             commit('setLoading', true)
