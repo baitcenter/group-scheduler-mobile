@@ -97,8 +97,11 @@
                 self.toastBottom.open();
             }
         },
-        created() {
+        mounted() {
+            const app = this.$f7
+            app.dialog.preloder('Loading')
             this.populateGroupData()
+            app.dialog.close()
         }
     }
 </script>

@@ -63,7 +63,10 @@
             },
         },
         mounted() {
+            const app = this.$f7
+            app.dialog.preloder('Loading')
             this.populateMyGroups()
+            app.dialog.close()
         }
     }
 </script>

@@ -47,6 +47,9 @@ export default {
         }
     },
     mounted(){
+        const app =this.$f7
+        app.dialog.preloader('Loading')
+        
         const eventId = this.$f7route.params.eventId
         let tempEventInfo={}
         db.ref('events/'+eventId).once('value',snapshot=>{
@@ -57,7 +60,7 @@ export default {
             }
         }).then(()=>{
             this.eventInfo=tempEventInfo
-            console.log(this.eventInfo)
+            // console.log(this.eventInfo)
         })
 
         const uid = auth.currentUser.uid
@@ -69,7 +72,7 @@ export default {
         })
         .then(()=>{
             this.userEvents = tempUserEvents
-            console.log(tempUserEvents)
+            // console.log(tempUserEvents)
         })
 
         const groupId = this.$f7route.params.groupId
@@ -80,8 +83,10 @@ export default {
             })
         }).then(()=>{
             this.groupInfo = tempGroupData
-            console.log(this.groupInfo)
+            // console.log(this.groupInfo)
         })
+
+        app.dialog.close()
     },
     methods:{
         joinEvent(){

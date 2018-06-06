@@ -1,9 +1,6 @@
 <template>
 
 <f7-page>
-    <f7-page-content v-if="!doneLoading">
-        <f7-preloader ></f7-preloader>
-    </f7-page-content>
     <f7-page-content>
 
         <f7-navbar color="red">
@@ -129,13 +126,11 @@ export default {
     data(){
         return{
             userEvents : {},
-            doneLoading:'false',
             allEvents:{}
         }
     },
     methods :{
         redirectToEvent(gid,eid){
-          console.log("gid " + gid + ", eid " + eid)
           this.$f7router.navigate('/group/'+gid+'/schedule/event/'+eid+'/')
         },
         isEventLengthZero(day){
@@ -147,8 +142,9 @@ export default {
         },
     },
     mounted(){
+        const app = this.$f7
+        app.dialog.preloader('Loading')
         const uid = auth.currentUser.uid
-        // console.log(groupId)
         let tempEventKey = {
             Monday : 0,
             Tuesday : 0,
@@ -172,8 +168,7 @@ export default {
                     }
                     this.userEvents[x]=eventData
                 }
-                console.log(this.userEvents)
-                this.doneLoading=true
+                app.dialog.close()
             })
         
         })
