@@ -41,10 +41,6 @@ export default {
         enrollGroup() {
             const app = this.$f7
             const uid = auth.currentUser.uid
-            let userInfo = {
-                        'name': auth.currentUser.displayName,
-                        'email' : auth.currentUser.email
-                        }
             if(this.enrollCode===''){
                 app.dialog.alert('Please enter your enroll code!','Enroll')
             }
@@ -57,7 +53,7 @@ export default {
                                 app.dialog.alert('User already joined this group!','Enroll')
                             }
                             else{
-                                db.ref('groups/'+this.enrollCode+'/groupMembers').child(uid).set(userInfo)
+                                db.ref('groups/'+this.enrollCode+'/groupMembers').child(uid).set(0)
                                 db.ref('users/'+uid+'/userGroups').child(this.enrollCode).set(1)
                                 this.$f7router.navigate('group/'+this.enrollCode+'/')
                             }
