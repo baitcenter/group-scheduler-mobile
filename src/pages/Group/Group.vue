@@ -88,7 +88,7 @@
             populateGroupData() {
                 this.$firebaseRefs.group.on("value", snapshot => {
                     this.groupData = snapshot.val()
-                    console.log(this.groupData.groupLeader)
+                    // console.log(this.groupData.groupLeader)
                     this.setGroupLeader(this.groupData.groupLeader)
                     this.setGroupMembers(snapshot.val().groupMembers)
                 })
@@ -137,14 +137,22 @@
                 });
             },
             deleteGroup(){
+                //need to use groupLeader uid
+                // this.leaveGroup(this.groupData.groupLeader)
                 for(let user in this.groupData.groupMembers){
-                    leaveGroup(user)
+                    // this.leaveGroup(user)
                 }
-                leaveGroup(this.groupData.groupLeader)
+                //remove events
+                for(let x in this.groupData.groupSchedule){
+                    for(let y in this.groupData.groupSchedule[x])
+                        db.ref('events').child(y).remove()
+                }
+                //remove groups
                 db.ref('groups/').child(this.groupId).remove()
             },
             leaveGroup(uid){
                 //delete user from groupMembers
+                console.log(uid)
                 if(this.groupData.groupMembers){
                     if(Object.keys(this.groupData.groupMembers).length>1){
                         db.ref('groups/'+this.groupId+'/groupMembers').child(uid).remove()
@@ -160,9 +168,10 @@
                 //getUserEvents
                 let userEvents={}
                 db.ref('users/'+uid+'/userEvents').once('value',snapshot=>{
-                    userEvents[snapshot.key] = snapshot.val()
+                    userEvents = snapshot.val()
                 })
                 .then(()=>{    
+                    console.log('userEvents',userEvents)
                     //delete user from joinedEvents and event from userEvents
                     for(let x in this.groupData.groupSchedule){
                         //x === day
@@ -177,12 +186,20 @@
                                         s++;
                                         //child.key suppose to be uid
                                         //child.val() === 0
+                                        console.log('childkey: '+ child.key)
+                                        console.log('child.val()',child.val())
                                         if(child.key===uid){
+                                            console.log('x: '+x)
+                                            console.log(userEvents[x])
                                             //remove eventId from userEvents
-                                            if(Object.keys(userEvents[x]).length>1){
+
+                                            if(userEvents[x] && Object.keys(userEvents[x]).length>1){
+                                                console.log(Object.keys(userEvents[x]).length)
+                                                delete [userEvents][x][y]
                                                 db.ref('users/'+uid+'/userEvents/'+x).child(y).remove()
                                             }
                                             else{
+                                                console.log('userEventX is 0')
                                                 db.ref('users/'+uid+'/userEvents').child(x).set(0)
                                             }
                                             db.ref('events/'+y+'/joinedMembers').child(uid).remove()
@@ -195,6 +212,7 @@
                             })
                         }
                     }
+                    return true
                 })
             }
         },
