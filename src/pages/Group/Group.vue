@@ -79,7 +79,7 @@
                 this.$f7router.navigate("/group/"+groupId+"/schedule/")
             },
             populateGroupData() {
-                this.$firebaseRefs.group.once("value", snapshot => {
+                this.$firebaseRefs.group.on("value", snapshot => {
                     this.groupData = snapshot.val()
                     this.setGroupLeader(this.groupData.groupLeader)
                     this.setGroupMembers(snapshot.val().groupMembers)
@@ -98,7 +98,7 @@
                 self.toastBottom.open();
             },
             setGroupLeader(uid) {
-                this.$firebaseRefs.users.child(uid + "/profile").once("value", snapshot => {
+                this.$firebaseRefs.users.child(uid + "/profile").on("value", snapshot => {
                     this.groupData.groupLeader = snapshot.val().name
                 })
             },
@@ -106,7 +106,7 @@
                 let members = []
                 for (let uid in groupMembers) {
                     // console.log(uid)
-                    db.ref("users/"+uid+"/profile").once("value", snapshot => {
+                    db.ref("users/"+uid+"/profile").on("value", snapshot => {
                         members.push(snapshot.val())
                     })
                 }
