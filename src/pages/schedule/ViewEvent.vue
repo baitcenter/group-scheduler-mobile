@@ -17,8 +17,10 @@
                 <f7-block-title><b>Joined Members: </b></f7-block-title>
                 <!-- <f7-card> -->
                     <f7-list simple-list inset>
-                        <f7-list-item v-for="(name, index) in this.eventInfo['joinedMembers']" v-bind:key="index">
-                            {{name, index}}
+                        <f7-list-item v-for="(member, index) in this.eventInfo['joinedMembers']" v-bind:key="index">
+                            <f7-chip :text="member.name" media-bg-color="orange">
+                                <f7-icon slot="media" material="person"></f7-icon>
+                            </f7-chip>
                         </f7-list-item>
                     </f7-list>
                 <!-- </f7-card> -->
@@ -47,52 +49,57 @@ export default {
         }
     },
     mounted(){
-        const app =this.$f7
-        // app.dialog.preloader('Loading')
-
-        const eventId = this.$f7route.params.eventId
-        let tempEventInfo={}
-        db.ref('events/'+eventId).once('value',snapshot=>{
-            if(snapshot.val()){
-                snapshot.forEach(child=>{
-                    tempEventInfo[child.key]=child.val()
-                })
-            }
-        }).then(()=>{
-            this.eventInfo=tempEventInfo
-        })
-
-        const uid = auth.currentUser.uid
-        let tempUserEvents={}
-        db.ref('users/'+uid+'/userEvents').once('value', snapshot=>{
-            snapshot.forEach(child=>{
-                tempUserEvents[child.key]=child.val()
-            })
-        })
-        .then(()=>{
-            this.userEvents = tempUserEvents
-        })
-
-        const groupId = this.$f7route.params.groupId
-        let tempGroupData={}
-        db.ref('groups/'+groupId).once('value',snapshot=>{
-            snapshot.forEach(child=>{
-                tempGroupData[child.key] = child.val()
-            })
-        }).then(()=>{
-            this.groupInfo = tempGroupData
-        })
-
-        // app.dialog.close()
+        this.populateData()
     },
     methods:{
+        populateData() {
+            const eventId = this.$f7route.params.eventId
+            let tempEventInfo={}
+            db.ref('events/'+eventId).once('value',snapshot=>{
+                if(snapshot.val()){
+                    snapshot.forEach(child=>{
+                        tempEventInfo[child.key]=child.val()
+                    })
+                }
+            }).then(()=>{
+                this.eventInfo=tempEventInfo
+                this.setJoinedMembers(tempEventInfo.joinedMembers)
+            })
+
+            const uid = auth.currentUser.uid
+            let tempUserEvents={}
+            db.ref('users/'+uid+'/userEvents').once('value', snapshot=>{
+                snapshot.forEach(child=>{
+                    tempUserEvents[child.key]=child.val()
+                })
+            }).then(()=>{
+                    this.userEvents = tempUserEvents
+                })
+
+            const groupId = this.$f7route.params.groupId
+            let tempGroupData={}
+            db.ref('groups/'+groupId).once('value',snapshot=>{
+                snapshot.forEach(child=>{
+                    tempGroupData[child.key] = child.val()
+                })
+            }).then(()=>{
+                this.groupInfo = tempGroupData
+            })
+        },
+        setJoinedMembers(joinedMembers) {
+            let members = []
+            for (let uid in joinedMembers) {
+                db.ref("users/" + uid + "/profile").on("value", snapshot => {
+                    members.push(snapshot.val())
+                })
+            }
+            this.eventInfo.joinedMembers = members
+        },
         joinEvent(){
             const uid = auth.currentUser.uid
             const eventId = this.$f7route.params.eventId
-            const groupId = this.$f7route.params.groupId
             let userEventRef = db.ref('users/'+uid)
                 userEventRef.once('value',(snapshot)=>{
-                    console.log(snapshot)
                     if(!snapshot.hasChild('userEvents')){
                         console.log('fuckthisshit')
                         userEventRef.child('userEvents').child('Monday').set(0)
@@ -117,39 +124,23 @@ export default {
         leaveEvent(){
             const uid = auth.currentUser.uid
             const eventId = this.$f7route.params.eventId
-            const groupId = this.$f7route.params.groupId
-            // eventStatus=0
-            // userStatus=0
 
             if(Object.keys(this.eventInfo.joinedMembers).length===1){
                 db.ref('events/'+eventId +'/joinedMembers').set(0)
-                // eventStatus=1
             }
             else{
                 db.ref('events/'+eventId +'/joinedMembers').child(uid).remove()//may change to something else
-                // eventStatus=1
             }
 
             if(Object.keys(this.userEvents[this.eventInfo.day]).length===1){
-                console.log(Object.keys(this.userEvents[this.eventInfo.day]).length===1)
                 db.ref('users/'+uid+'/userEvents/').child(this.eventInfo.day).set(0)
-                // .then(()=>{this.$f7router.navigate('group/'+groupId+'/')})
-                // userStatus=1
-
             }
             else{
-
                 db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
-                // .then(()=>{
-
-                //     this.$f7router.navigate('group/'+groupId+'/')
-                // })
-                // userStatus=1
             }
 
         },
         deleteEvent(){
-            const uid = auth.currentUser.uid
             const eventId = this.$f7route.params.eventId
             const groupId = this.$f7route.params.groupId
 
@@ -217,31 +208,20 @@ export default {
         },
         openConfirmJoin(){
             const app = this.$f7;
-            const groupId = this.$f7route.params.groupId
             const eventName = this.eventInfo['eventName']
-            const eventId = this.$f7route.params.eventId
 
             app.dialog.confirm('Do you want to joined    this event?',eventName, () => {
                 this.joinEvent()
                 app.dialog.alert('You joined the event!')
-                console.log(groupId,eventId)
                 this.$f7router.refreshPage()
             });
         },
         openConfirmLeave(){
             const app = this.$f7;
-            const groupId = this.$f7route.params.groupId
             const eventName = this.eventInfo['eventName']
             app.dialog.confirm('Do you want to leave this event?',eventName, () => {
                 this.leaveEvent()
                 app.dialog.alert('You leaved the event!')
-                // this.$f7router.refreshPage()
-                // this.$f7router.navigate(this.$f7router.currentRoute.url, {
-                //     reloadCurrent: true,
-                //     reloadPrevious: true,
-                //     ignoreCache: true,
-                //     force: true,
-                // })
                 this.$f7router.back({ignoreCache: true, force:true, reloadCurrent:true})
             });
         },
