@@ -86,7 +86,7 @@
                 <f7-list-item>
                     <f7-icon material="check_circle" slot="media"></f7-icon>
                     <f7-label>Old Password</f7-label>
-                    <f7-input type="password" @input="old_password=$event.target.value"
+                    <f7-input type="password" @input="password=$event.target.value"
                               required validate
                               placeholder="Password" clear-button>
                     </f7-input>
@@ -115,7 +115,7 @@
                 name: "",
                 email: "",
                 password : "",
-                old_password : "",
+                // old_password : "",
                 new_password: "",
             }
         },
@@ -254,6 +254,20 @@
                     this.$store.commit('setLoading',false)
                 })
             },
+            changePassword(){
+                this.$store.commit('setLoading',true)
+                console.log("updating password")
+                firebase.auth().currentUser.updatePassword(this.new_password).then(function(){
+                    console.log("password updated")
+                    this.$store.commit('setError',null)
+                    this.$store.commit('setLoading',false)
+                }).catch(function(error){
+                    console.log("password update error")
+                    console.log(error.message)
+                    this.$store.commit('setError',error.message)
+                    this.$store.commit('setLoading',false)
+                })
+            },
             cancelEdit() {
                 this.initializedField()
                 this.toggleEdit()
@@ -262,8 +276,23 @@
                 this.toggleEditPassword()
             },
             submitPasswordEdit(){
-                if((this.new_password !== "") && (this.old_password !== "")){
-                    this.$store.dispatch('changePassword',{old_password : this.old_password, new_password : this.new_password})
+                if((this.new_password !== "") && (this.password !== "")){
+                    this.$store.commit('setLoading',true)
+                    console.log("reauthenticating")
+                    const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email, this.password)
+                    firebase.auth().currentUser.reauthenticateAndRetrieveDataWithCredential(credential)
+                    .then( f => {
+                        console.log("reauthenticate successful")
+                        this.$store.commit('setLoading', false)
+                        this.$store.commit('setError', null)
+                        this.changePassword()
+                        this.toggleEditPassword()
+                    }).catch(error => {
+                        console.log(error)
+                        this.alert = true
+                        this.$store.commit('setError', error.message)
+                        this.$store.commit('setLoading', false)
+                    })
                 }else{
                     const self = this;
                     if(!self.toastBottom) {
