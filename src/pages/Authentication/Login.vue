@@ -38,8 +38,42 @@
             },
             goBack(){
                 this.$f7router.navigate("/")
+            },
+            showErrorToast(){
+                const self = this;
+                const error = this.$store.getters.getError
+                if(!self.toastBottom) {
+                    self.toastBottom = self.$f7.toast.create({
+                        text : error,
+                        closeTimeout : 3000,
+                        closeButton : true,
+                    });
+                }
+                self.toastBottom.open();
             }
-        }
+        },
+        computed:{
+            error() {
+                return this.$store.state.error
+            },
+            loading() {
+                return this.$store.state.loading
+            }
+        },
+        watch: {
+            error(value) {
+                if (value){
+                    console.log("in page : " + value)
+                    this.showErrorToast()
+                    this.alert = true
+                }
+            },
+            alert(value) {
+                if (!value) {
+                    this.$store.commit('setError',null)
+                }
+            }
+        },
     }
 </script>
 

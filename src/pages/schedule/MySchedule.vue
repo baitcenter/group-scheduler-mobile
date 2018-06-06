@@ -10,7 +10,7 @@
             <f7-nav-title>My Schedule</f7-nav-title>
         </f7-navbar>
         <!-- Switch Between Tabs -->
-        
+
         <f7-segmented>
             <f7-button color="orange" tab-link="#tab-Monday" tab-link-active>Mon</f7-button>
             <f7-button color="orange" tab-link="#tab-Tuesday">Tue</f7-button>
@@ -27,7 +27,7 @@
                 <f7-card v-else>
                     <f7-card-content>
                         <f7-list media-list v-for="(eData, eKey) in this.userEvents.Monday" :key="eKey">
-                            <f7-list-item    
+                            <f7-list-item
                                 @click="redirectToEvent(eData.groupId,eKey)"
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
@@ -63,7 +63,7 @@
                 <f7-card v-else>
                     <f7-card-content>
                         <f7-list media-list v-for="(eData, eKey) in this.userEvents.Wednesday" :key="eKey">
-                            <f7-list-item                            
+                            <f7-list-item
                                 @click="redirectToEvent(eData.groupId,eKey)"
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
@@ -114,7 +114,7 @@
         </f7-tabs>
 
     </f7-page-content>
-    
+
 
 </f7-page>
 
@@ -152,7 +152,7 @@ export default {
             Thursday :0,
             Friday :0,
         }
-        
+
         db.ref('users/'+ uid +'/userEvents/').once('value',snapshot=>{
             snapshot.forEach(child=>{
                 tempEventKey[child.key] = child.val()
@@ -173,7 +173,7 @@ export default {
                 app.dialog.close()
             })
             app.dialog.close()
-        
+
         })
     }
 }
