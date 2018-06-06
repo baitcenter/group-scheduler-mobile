@@ -5,7 +5,7 @@
             <f7-nav-right><f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
         </f7-navbar>
         <!-- FAB must be direct child of a page -->
-        <f7-fab color="green" position="center-bottom" @click="redirectToCreateEvent" >
+        <f7-fab v-if="isGroupLeader" color="green" position="center-bottom" @click="redirectToCreateEvent" >
             <f7-icon f7="add"></f7-icon>
         </f7-fab>
 
@@ -128,6 +128,7 @@ export default {
             groupName : '',
             allEvents:{},
             doneLoading:false,
+            isGroupLeader: false
         }
     },
     methods:{
@@ -160,13 +161,20 @@ export default {
             Friday :0,
         }
 
+        const uid = auth.currentUser.uid
+        db.ref("groups/"+groupId).once("value", snapshot => {
+            if (snapshot.val().groupLeader === uid) {
+                this.isGroupLeader = true
+            }
+        })
+
         db.ref('groups/'+ groupId+'/groupSchedule/').once('value',snapshot=>{
             snapshot.forEach(child=>{
                 tempEventKey[child.key] = child.val()
             })
         }).then(()=>{
-            db.ref('events/').once('value',snapsot=>{
-                this.allEvents = snapsot.val()
+            db.ref('events/').once('value',snapshot=>{
+                this.allEvents = snapshot.val()
             }).then(()=>{
                 let tempEventData = {}
                 for (var x in tempEventKey){
