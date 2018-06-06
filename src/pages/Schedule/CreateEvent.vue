@@ -203,7 +203,8 @@ export default {
                 this.selectedDay=''
                 this.startTime=''
                 this.endTime=''
-                this.$f7router.navigate("/group/"+groupId+"/schedule/", {reloadCurrent: true})
+                // this.$f7router.navigate("/group/"+groupId+"/schedule/", {reloadCurrent: true})
+                this.$f7router.back({ignoreCache: true, force:true})
             }).catch((error)=>{
                 app.dialog.alert("Error Occured!")
                 console.log(error)
