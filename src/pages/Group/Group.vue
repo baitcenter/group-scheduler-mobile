@@ -30,6 +30,8 @@
         </f7-list>
         <f7-block>
             <f7-button color="red" class="col-80" fill @click="redirectTo">Schedule</f7-button>
+            <f7-button color="red" class="col-80" fill @click="openConfirmLeave(uid)">Leave Group</f7-button>
+            <f7-button color="red" class="col-80" fill @click="openConfirmDelete">Delete Group</f7-button>
         </f7-block>
         <f7-popover class="popover-info">
             <f7-block>
@@ -42,10 +44,11 @@
 </template>
 
 <script>
-    import {db} from '@/firebase'
+    import {auth, db} from '@/firebase'
     export default {
         data() {
             return {
+                uid : auth.currentUser.uid,
                 groupId: this.$f7route.params.groupId,
                 groupData: {}
             }
@@ -115,13 +118,79 @@
                     })
                 }
                 this.groupData.groupMembers = members
+            },
+            openConfirmLeave(){
+                const app = this.$f7;
+                app.dialog.confirm('Do you want to leave this event?','Leave Group', () => {
+                    this.leaveGroup()
+                    app.dialog.alert('You leaved the group!')
+                    this.$f7router.back({ignoreCache: true, force:true, reloadCurrent:true})
+                });
+            },
+            
+            openConfirmDelete(){
+                const app = this.$f7;
+                app.dialog.confirm('Do you want to delete this group?','Delete Group', () => {
+                    this.deleteGroup()
+                    app.dialog.alert('You delete the group!')
+                    this.$f7router.back({ignoreCache: true, force:true, reloadCurrent:true})
+                });
+            },
+            deleteGroup(){
+                for(let user in this.groupData.groupMembers){
+                    leaveGroup(user)
+                }
+                leaveGroup(this.groupData.groupLeader)
+                db.ref('groups/').child(this.groupId).remove()
+            },
+            leaveGroup(uid){
+                //delete user from groupMembers
+                if(this.groupData.groupMembers){
+                    if(Object.keys(this.groupData.groupMembers).length>1){
+                        db.ref('groups/'+this.groupId+'/groupMembers').child(uid).remove()
+                    }
+                    else{
+                        db.ref('groups/'+this.groupId).child('groupMembers').set(0)
+                    }
+                }
+
+                //delete group from userGroups
+                db.ref('users/'+uid+'/userGroups').child(this.groupId).remove()
+                
+                //delete user from joinedEvents and event from userEvents
+                for(let x in this.groupData.groupSchedule){
+                    //x === day
+                    for(let y in this.groupData.groupSchedule[x]){
+                        //y === eventId
+                        db.ref('events/'+y+'/joinedMembers').once('value',snapshot=>{
+                            //snapshot.key suppose to joinedMembers
+                            //snapshot.val() suppose to be list
+                            if(snapshot.val()!==0){
+                                let s = 0
+                                snapshot.forEach(child=>{
+                                    s++;
+                                    //child.key suppose to be uid
+                                    //child.val() === 0
+                                    if(child.key===uid){
+                                        //remove eventId from userEvents
+                                        db.ref('users/'+uid+'/userEvents').child(y).remove()
+                                        //remove uid from joinedMembers
+                                        if(s===1){
+                                            db.ref('events/'+y).child('joinedMembers').set(0)
+                                        }
+                                        else{
+                                            db.ref('events/'+y+'/joinedMembers').child(uid).remove()
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                }
             }
         },
         created() {
-            // const app = this.$f7
-            // app.dialog.preloader('Loading')
             this.populateGroupData()
-            // app.dialog.close()
         }
     }
 </script>
