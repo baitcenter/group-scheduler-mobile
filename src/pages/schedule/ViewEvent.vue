@@ -48,7 +48,7 @@ export default {
     },
     mounted(){
         const app =this.$f7
-        app.dialog.preloader('Loading')
+        // app.dialog.preloader('Loading')
         
         const eventId = this.$f7route.params.eventId
         let tempEventInfo={}
@@ -60,7 +60,6 @@ export default {
             }
         }).then(()=>{
             this.eventInfo=tempEventInfo
-            // console.log(this.eventInfo)
         })
 
         const uid = auth.currentUser.uid
@@ -72,7 +71,6 @@ export default {
         })
         .then(()=>{
             this.userEvents = tempUserEvents
-            // console.log(tempUserEvents)
         })
 
         const groupId = this.$f7route.params.groupId
@@ -83,20 +81,19 @@ export default {
             })
         }).then(()=>{
             this.groupInfo = tempGroupData
-            // console.log(this.groupInfo)
         })
 
-        app.dialog.close()
+        // app.dialog.close()
     },
     methods:{
         joinEvent(){
             const uid = auth.currentUser.uid
             const eventId = this.$f7route.params.eventId
             const groupId = this.$f7route.params.groupId
-            let userInfo ={
-                name : auth.currentUser.displayName,
-                email : auth.currentUser.email
-            }
+            // let userInfo ={
+            //     name : auth.currentUser.displayName,
+            //     email : auth.currentUser.email
+            // }
             let userEventRef = db.ref('users/'+uid)
                 userEventRef.once('value',(snapshot)=>{
                     console.log(snapshot)
@@ -115,9 +112,9 @@ export default {
                     app.dialog.alert('User already joined this event','Error!')
                 }
                 else{     
-                    db.ref('events/'+eventId+'/joinedMembers').child(uid).set(userInfo)
+                    db.ref('events/'+eventId+'/joinedMembers').child(uid).set(0)
                     db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).set(0)
-                    this.$f7router.navigate('/group/'+groupId)
+                    // this.$f7router.navigate('/group/'+groupId)
                 }
             })
 
@@ -126,24 +123,33 @@ export default {
             const uid = auth.currentUser.uid
             const eventId = this.$f7route.params.eventId
             const groupId = this.$f7route.params.groupId
+            // eventStatus=0
+            // userStatus=0
 
             if(Object.keys(this.eventInfo.joinedMembers).length===1){ 
                 db.ref('events/'+eventId +'/joinedMembers').set(0)
+                // eventStatus=1
             }
             else{
                 db.ref('events/'+eventId +'/joinedMembers').child(uid).remove()//may change to something else
+                // eventStatus=1
             }
+
             if(Object.keys(this.userEvents[this.eventInfo.day]).length===1){
+                console.log(Object.keys(this.userEvents[this.eventInfo.day]).length===1)
                 db.ref('users/'+uid+'/userEvents/').child(this.eventInfo.day).set(0)
-                .then(()=>{this.$f7router.navigate('group/'+groupId+'/')})
+                // .then(()=>{this.$f7router.navigate('group/'+groupId+'/')})
+                // userStatus=1
+
             }
             else{
 
                 db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
-                .then(()=>{
+                // .then(()=>{
                     
-                    this.$f7router.navigate('group/'+groupId+'/')
-                })
+                //     this.$f7router.navigate('group/'+groupId+'/')
+                // })
+                // userStatus=1
             }
             
         },
@@ -161,10 +167,12 @@ export default {
                     })
                 })
                 .then(()=>{
-                    if(Object.keys(tempUserEvents[this.eventInfo.day]).length===1){
-                        db.ref('users/'+key+'/userEvents/').child(this.eventInfo.day).set(0)
-                    }else{
-                        db.ref('users/'+key+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
+                    if(tempUserEvents[this.eventInfo.day]){
+                        if(Object.keys(tempUserEvents[this.eventInfo.day]).length===1){
+                            db.ref('users/'+key+'/userEvents/').child(this.eventInfo.day).set(0)
+                        }else{
+                            db.ref('users/'+key+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
+                        }
                     }
                 })
                
@@ -196,28 +204,41 @@ export default {
 
             //remove event
             db.ref('events/').child(eventId).remove()
-            .then(()=>{this.$f7router.navigate('group/'+groupId+'/')})
+            // .then(()=>{this.$f7router.navigate('group/'+groupId+'/')})
         },
         openConfirmDel(){
             const app = this.$f7;
+            const groupId = this.$f7route.params.groupId
             const eventName = this.eventInfo['eventName']
-            // app.dialog.title
-            app.dialog.confirm('Do you want to delete this event?',eventName,this.deleteEvent());
+            app.dialog.confirm('Do you want to delete this event?',eventName, () => {
+                this.deleteEvent()
+                app.dialog.alert('You deleted the event!')
+                this.$f7router.navigate('/group/'+groupId+'/')
+            });
 
         },
         openConfirmJoin(){
             const app = this.$f7;
+            const groupId = this.$f7route.params.groupId
             const eventName = this.eventInfo['eventName']
-            // app.dialog.title
-            app.dialog.confirm('Do you want to join this event?',eventName, this.joinEvent());
+            const eventId = this.$f7route.params.eventId
+
+            app.dialog.confirm('Do you want to joined    this event?',eventName, () => {
+                this.joinEvent()
+                app.dialog.alert('You joined the event!')
+                console.log(groupId,eventId)
+                this.$f7router.navigate('/group/'+groupId+'/schedule/')
+            });
         },
         openConfirmLeave(){
             const app = this.$f7;
-
+            const groupId = this.$f7route.params.groupId
             const eventName = this.eventInfo['eventName']
-            // app.dialog.title
-            app.dialog.confirm('Do you want to leave this event?',eventName, this.leaveEvent()
-            );
+            app.dialog.confirm('Do you want to leave this event?',eventName, () => {
+                this.leaveEvent()
+                app.dialog.alert('You leaved the event!')
+                this.$f7router.navigate('/group/'+groupId+'/')
+            });
         },
     }
 }

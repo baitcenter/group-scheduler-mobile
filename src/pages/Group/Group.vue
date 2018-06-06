@@ -97,11 +97,11 @@
                 self.toastBottom.open();
             }
         },
-        mounted() {
-            const app = this.$f7
-            app.dialog.preloder('Loading')
+        created() {
+            // const app = this.$f7
+            // app.dialog.preloader('Loading')
             this.populateGroupData()
-            app.dialog.close()
+            // app.dialog.close()
         }
     }
 </script>

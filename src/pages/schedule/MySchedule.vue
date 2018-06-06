@@ -161,13 +161,15 @@ export default {
             db.ref('events/').once('value',snapsot=>{
                 this.allEvents = snapsot.val()
             }).then(()=>{
+                let tempEventData={}
                 for (var x in tempEventKey){
                     let eventData={}
                     for (var y in tempEventKey[x]){
                         eventData[y]=this.allEvents[y]
                     }
-                    this.userEvents[x]=eventData
+                    tempEventData[x]=eventData
                 }
+                this.userEvents=tempEventData
                 app.dialog.close()
             })
         

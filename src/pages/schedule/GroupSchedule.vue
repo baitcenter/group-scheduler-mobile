@@ -8,14 +8,15 @@
         <f7-fab color="green" position="center-bottom" @click="redirectToCreateEvent" >
             <f7-icon f7="add"></f7-icon>
         </f7-fab>
-        <f7-segmented>
+
+        <f7-segmented >
             <f7-button color="orange" tab-link="#tab-Monday" tab-link-active>Mon</f7-button>
             <f7-button color="orange" tab-link="#tab-Tuesday">Tue</f7-button>
             <f7-button color="orange" tab-link="#tab-Wednesday">Wed</f7-button>
             <f7-button color="orange" tab-link="#tab-Thursday">Thu</f7-button>
             <f7-button color="orange" tab-link="#tab-Friday">Fri</f7-button>
         </f7-segmented>
-
+        
         <f7-tabs swipeable>
             <f7-tab id="tab-Monday"
                 tab-active>
@@ -37,6 +38,7 @@
             </f7-tab>
 
             <f7-tab id="tab-Tuesday">
+                <!-- {{this.groupEvents.Tuesday}} -->
                 <f7-block-title center>Tuesday</f7-block-title>
                 <f7-block inset v-if="isEventLengthZero('Tuesday') ">There is no event in this day.</f7-block>
                 <f7-card v-else>
@@ -55,6 +57,7 @@
             </f7-tab>
 
             <f7-tab id="tab-Wednesday">
+                <!-- {{this.groupEvents.Wednesday}} -->
                 <f7-block-title center>Wednesday</f7-block-title>
                 <f7-block inset v-if="isEventLengthZero('Wednesday')">There is no event in this day.</f7-block>
                 <f7-card v-else>
@@ -109,6 +112,8 @@
                 </f7-card>
             </f7-tab>
         </f7-tabs>
+        
+        <!-- </f7-page> -->
 </f7-page>
 
 </template>
@@ -122,6 +127,7 @@ export default {
             groupId :'',
             groupName : '',
             allEvents:{},
+            doneLoading:false,
         }
     },
     methods:{
@@ -162,16 +168,20 @@ export default {
             db.ref('events/').once('value',snapsot=>{
                 this.allEvents = snapsot.val()
             }).then(()=>{
+                let tempEventData = {}
                 for (var x in tempEventKey){
                     let eventData={}
                     for (var y in tempEventKey[x]){
                         eventData[y]=this.allEvents[y]
                     }
-                    this.groupEvents[x]=eventData
+                    tempEventData[x]=eventData
                 }
+                
+                console.log(tempEventData)
+                this.groupEvents=tempEventData
                 app.dialog.close()
+                
             })
-        
         })
     }
 }
