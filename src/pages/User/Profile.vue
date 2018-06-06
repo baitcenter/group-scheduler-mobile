@@ -6,8 +6,12 @@
         <div v-if="!editing">
             <f7-block-title>Profile</f7-block-title>
             <f7-list>
-                <f7-list-item><f7-icon material="person" slot="media"></f7-icon>Name: {{username}}</f7-list-item>
-                <f7-list-item><f7-icon material="email" slot="media"></f7-icon>Email: {{useremail}}</f7-list-item>
+                <f7-list-item>
+                    <f7-icon material="person" slot="media"></f7-icon>Name: {{name}}
+                </f7-list-item>
+                <f7-list-item>
+                    <f7-icon material="email" slot="media"></f7-icon>Email: {{email}}
+                </f7-list-item>
             </f7-list>
             <f7-row>
                 <f7-col width="5"></f7-col>
@@ -72,8 +76,6 @@
             return {
                 verified : false,
                 editing: false,
-                username : "",
-                useremail : "",
                 name: "",
                 email: "",
                 old_password : "",
