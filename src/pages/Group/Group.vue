@@ -119,10 +119,10 @@
                 }
                 this.groupData.groupMembers = members
             },
-            openConfirmLeave(){
+            openConfirmLeave(uid){
                 const app = this.$f7;
                 app.dialog.confirm('Do you want to leave this event?','Leave Group', () => {
-                    this.leaveGroup()
+                    this.leaveGroup(uid)
                     app.dialog.alert('You leaved the group!')
                     this.$f7router.back({ignoreCache: true, force:true, reloadCurrent:true})
                 });
@@ -156,37 +156,46 @@
 
                 //delete group from userGroups
                 db.ref('users/'+uid+'/userGroups').child(this.groupId).remove()
-                
-                //delete user from joinedEvents and event from userEvents
-                for(let x in this.groupData.groupSchedule){
-                    //x === day
-                    for(let y in this.groupData.groupSchedule[x]){
-                        //y === eventId
-                        db.ref('events/'+y+'/joinedMembers').once('value',snapshot=>{
-                            //snapshot.key suppose to joinedMembers
-                            //snapshot.val() suppose to be list
-                            if(snapshot.val()!==0){
-                                let s = 0
-                                snapshot.forEach(child=>{
-                                    s++;
-                                    //child.key suppose to be uid
-                                    //child.val() === 0
-                                    if(child.key===uid){
-                                        //remove eventId from userEvents
-                                        db.ref('users/'+uid+'/userEvents').child(y).remove()
-                                        //remove uid from joinedMembers
-                                        if(s===1){
-                                            db.ref('events/'+y).child('joinedMembers').set(0)
-                                        }
-                                        else{
+
+                //getUserEvents
+                let userEvents={}
+                db.ref('users/'+uid+'/userEvents').once('value',snapshot=>{
+                    userEvents[snapshot.key] = snapshot.val()
+                })
+                .then(()=>{    
+                    //delete user from joinedEvents and event from userEvents
+                    for(let x in this.groupData.groupSchedule){
+                        //x === day
+                        for(let y in this.groupData.groupSchedule[x]){
+                            //y === eventId
+                            db.ref('events/'+y+'/joinedMembers').once('value',snapshot=>{
+                                //snapshot.key suppose to joinedMembers
+                                //snapshot.val() suppose to be list
+                                if(snapshot.val()!==0){
+                                    let s = 0
+                                    snapshot.forEach(child=>{
+                                        s++;
+                                        //child.key suppose to be uid
+                                        //child.val() === 0
+                                        if(child.key===uid){
+                                            //remove eventId from userEvents
+                                            if(Object.keys(userEvents[x]).length>1){
+                                                db.ref('users/'+uid+'/userEvents/'+x).child(y).remove()
+                                            }
+                                            else{
+                                                db.ref('users/'+uid+'/userEvents').child(x).set(0)
+                                            }
                                             db.ref('events/'+y+'/joinedMembers').child(uid).remove()
                                         }
+                                    })
+                                    if(s===1){
+                                        db.ref('events/'+y).child('joinedMembers').set(0)
                                     }
-                                })
-                            }
-                        })
+                                }
+                            })
+                        }
                     }
-                }
+                })
             }
         },
         created() {
