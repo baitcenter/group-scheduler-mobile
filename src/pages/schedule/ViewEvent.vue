@@ -88,10 +88,6 @@ export default {
             const uid = auth.currentUser.uid
             const eventId = this.$f7route.params.eventId
             const groupId = this.$f7route.params.groupId
-            let userInfo ={
-                name : auth.currentUser.displayName,
-                email : auth.currentUser.email
-            }
             let userEventRef = db.ref('users/'+uid)
                 userEventRef.once('value',(snapshot)=>{
                     console.log(snapshot)
@@ -110,12 +106,11 @@ export default {
                     app.dialog.alert('User already joined this event','Error!')
                 }
                 else{     
-                    db.ref('events/'+eventId+'/joinedMembers').child(uid).set(userInfo)
+                    db.ref('events/'+eventId+'/joinedMembers').child(uid).set(0)
                     db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).set(0)
                     this.$f7router.navigate('/group/'+groupId)
                 }
             })
-
         },
         leaveEvent(){
             const uid = auth.currentUser.uid
