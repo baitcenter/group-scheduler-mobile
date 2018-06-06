@@ -62,8 +62,11 @@
                 return keys
             },
         },
-        mounted() {
+        created() {
+            const app = this.$f7
+            app.dialog.preloader('Loading')
             this.populateMyGroups()
+            app.dialog.close()
         }
     }
 </script>

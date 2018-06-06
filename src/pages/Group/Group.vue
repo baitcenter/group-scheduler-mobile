@@ -10,12 +10,16 @@
             <f7-list-item>Group Name: {{groupData.groupName}}</f7-list-item>
             <f7-list-item>Description: {{groupData.groupDescription}}</f7-list-item>
             <f7-list-item media-item>Leader:
-                <f7-chip :text="groupData.groupLeader" :media="groupData.groupLeader[0]" media-bg-color="red"></f7-chip>
+                <f7-chip :text="groupData.groupLeader" media-bg-color="orange">
+                  <f7-icon slot="media" material="person"></f7-icon>
+                </f7-chip>
             </f7-list-item>
             <f7-list-item accordion-item title="Members">
                 <f7-accordion-content>
                     <f7-list-item v-for="(member, index) in groupData.groupMembers" :key="index">
-                        <f7-chip :text="member.name" :media="member.name[0]" media-bg-color="red"></f7-chip>
+                        <f7-chip :text="member.name" media-bg-color="orange">
+                          <f7-icon slot="media" material="person"></f7-icon>
+                        </f7-chip>
                     </f7-list-item>
                 </f7-accordion-content>
             </f7-list-item>
@@ -81,6 +85,7 @@
             populateGroupData() {
                 this.$firebaseRefs.group.on("value", snapshot => {
                     this.groupData = snapshot.val()
+                    console.log(this.groupData.groupLeader)
                     this.setGroupLeader(this.groupData.groupLeader)
                     this.setGroupMembers(snapshot.val().groupMembers)
                 })
@@ -98,15 +103,14 @@
                 self.toastBottom.open();
             },
             setGroupLeader(uid) {
-                this.$firebaseRefs.users.child(uid + "/profile").on("value", snapshot => {
+                db.ref("users/" + uid + "/profile").on("value", snapshot => {
                     this.groupData.groupLeader = snapshot.val().name
                 })
             },
             setGroupMembers(groupMembers) {
                 let members = []
                 for (let uid in groupMembers) {
-                    // console.log(uid)
-                    db.ref("users/"+uid+"/profile").on("value", snapshot => {
+                db.ref("users/" + uid + "/profile").on("value", snapshot => {
                         members.push(snapshot.val())
                     })
                 }
@@ -114,7 +118,10 @@
             }
         },
         created() {
+            // const app = this.$f7
+            // app.dialog.preloader('Loading')
             this.populateGroupData()
+            // app.dialog.close()
         }
     }
 </script>

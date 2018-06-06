@@ -1,7 +1,7 @@
 <template>
     <f7-page>
         <f7-page-content>
-            <f7-navbar color="red" title="Create Event" back-link="Back">
+            <f7-navbar color="red" title="Create Event" back-link="Close">
                 <f7-nav-right><f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
             </f7-navbar>
             <f7-list form>
@@ -122,7 +122,7 @@ export default {
                 return false
             }
 
-            console.log(userEvents)
+            // console.log(userEvents)
             for (var key1 in userEvents){
                 // console.log(key1)
                 let st1=this.allEvents[key1]['startTime']
@@ -194,12 +194,10 @@ export default {
 
             db.ref('events/').push(eventInfo)
             .then((snapshot)=>{
-
                 db.ref('events/'+snapshot.key).child('joinedMembers').set(0)
                 db.ref('groups/'+groupId+'/groupSchedule/').child(this.selectedDay).child(snapshot.key).set(0)
-                db.ref('users/'+uid+'/userEvents/'+this.selectedDay).child(snapshot.key).set(0)
+                // db.ref('users/'+uid+'/userEvents/'+this.selectedDay).child(snapshot.key).set(0)
 
-                //end
                 this.eventName =''
                 this.eventDescription=''
                 this.selectedDay=''
