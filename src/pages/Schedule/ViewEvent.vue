@@ -164,58 +164,29 @@ export default {
             const eventId = this.$f7route.params.eventId
             const groupId = this.$f7route.params.groupId
 
-            //for joinedEvent Members
-            for(var key in this.eventInfo.joinedMembers){
-                let tempUserEvents={}
-                db.ref('users/'+key+'/userEvents').once('value', snapshot=>{
-                    snapshot.forEach(child=>{
-                        tempUserEvents[child.key]=child.val()
-                    })
+            event={}
+            db.ref('events/'+eventId).once('value',snapshot=>{
+                
+                snapshot.forEach(eventData=>{
+                    event[eventData.key]=eventData.val()
                 })
-                .then(()=>{
-
-                    if(tempUserEvents[this.eventInfo.day]){
-                        if(Object.keys(tempUserEvents[this.eventInfo.day]).length===1){
-                            db.ref('users/'+key+'/userEvents/').child(this.eventInfo.day).set(0)
-                        }else{
-                            db.ref('users/'+key+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
+                for(var member in event.joinedMembers){
+                    db.ref('users/'+member+'/userEvents/'+event.day).child(eventId).remove()
+                    db.ref('users/'+member+'/userEvents').once('value',check=>{
+                        if(!check.hasChild(event.day)){
+                            db.ref('users/'+member+'/userEvents').child(event.day).set(0)
                         }
+                    })
+                }
+            }).then(()=>{
+                db.ref('groups/'+groupId+'/groupSchedule/'+event.day).child(eventId).remove()
+                db.ref('groups/'+groupId+'/groupSchedule').once('value',check=>{
+                    if(!check.hasChild(event.day)){
+                        db.ref('groups/'+groupId+'/groupSchedule').child(event.day).set(0)
                     }
                 })
-
-            }
-            //remove event from group leader
-            for (var x in this.groupInfo.groupLeader){
-                //x =key
-                let tempUserEvents={}
-                db.ref('users/'+x+'/userEvents').once('value', snapshot=>{
-                    snapshot.forEach(child=>{
-                        tempUserEvents[child.key]=child.val()
-                    })
-                })
-                .then(()=>{
-                    if(tempUserEvents[this.eventInfo.day]){
-                        if(Object.keys(tempUserEvents[this.eventInfo.day]).length===1){
-                            db.ref('users/'+x+'/userEvents/').child(this.eventInfo.day).set(0)
-                        }else{
-                            db.ref('users/'+x+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
-                        }
-                    }
-                })
-            }
-
-            //delete from groupSchedule
-            if(Object.keys(this.groupInfo.groupSchedule[this.eventInfo.day]).length===1){
-                db.ref('groups/'+groupId+'/groupSchedule/').child(this.eventInfo.day).set(0)
-            }else{
-                db.ref('groups/'+groupId+'/groupSchedule/'+this.eventInfo.day).child(eventId).remove()
-            }
-
-            //remove event
-            db.ref('events/').child(eventId).remove()
-            // .then(()=>{this.$f7router.navigate('group/'+groupId+'/')})
-
-            this.isCreator = false
+                db.ref('events').child(eventId).remove()
+            })
         },
         openConfirmDel(){
             const app = this.$f7;
