@@ -4,18 +4,6 @@
             <f7-navbar color="red" title="My Group" back-link="Back">
                 <f7-nav-right><f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
             </f7-navbar>
-            <!-- <f7-list v-if="myGroups.length !== 0">
-                <f7-card class="margin-vertical" v-for="group in myGroups" :key="group.groupId"
-                         :title="group.groupName">
-                    <f7-content>
-
-                    </f7-content>
-                    <f7-card-footer>
-                        <span></span>
-                        <f7-link @click="redirectTo(group.groupId)">See more</f7-link>
-                    </f7-card-footer>
-                </f7-card>
-            </f7-list> -->
             <f7-card v-if="myGroups.length !== 0" class="margin-vertical" v-for="group in myGroups" :key="group.groupId">
                 <f7-icon size="30" slot="media" material="group"></f7-icon>
                 <f7-card-content>
@@ -33,8 +21,8 @@
                     <f7-link @click="redirectTo(group.groupId)">See more</f7-link>
                 </f7-card-footer>
             </f7-card>
-            <f7-block v-else strong>
-                <p>You haven't enrolled in any group yet.</p>
+            <f7-block v-if="myGroups.length === 0" strong>
+                <b>You haven't enrolled in any group yet.</b>
             </f7-block>
         </f7-page-content>
     </f7-page>
@@ -91,6 +79,7 @@
         },
         created() {
             this.populateMyGroups()
+            console.log(this.myGroups)
         }
     }
 </script>
