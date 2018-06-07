@@ -287,11 +287,11 @@
             changePassword(){
                 this.$store.commit('setLoading',true)
                 console.log("updating password")
-                firebase.auth().currentUser.updatePassword(this.new_password).then(function(){
+                firebase.auth().currentUser.updatePassword(this.new_password).then(f=>{
                     console.log("password updated")
                     this.$store.commit('setError',null)
                     this.$store.commit('setLoading',false)
-                }).catch(function(error){
+                }).catch(error=>{
                     console.log("password update error")
                     console.log(error.message)
                     this.$store.commit('setError',error.message)
@@ -316,6 +316,7 @@
                         this.$store.commit('setLoading', false)
                         this.$store.commit('setError', null)
                         this.changePassword()
+                        this.password = ""
                         this.toggleEditPassword()
                     }).catch(error => {
                         console.log(error)
