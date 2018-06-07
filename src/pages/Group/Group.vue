@@ -155,89 +155,186 @@
                     this.$f7router.back('/my-group/',{ignoreCache: true, force:true})
                 });
             },
-            deleteGroup(){
-                //need to use groupLeader uid
-                this.leaveGroup(this.groupData.groupLeader.uid)
-                // console.log(this.groupData.groupLeader.uid)
-                for(let i in this.groupData.groupMembers){
-                    // this.leaveGroup(user)
-                    this.leaveGroup(this.groupData.groupMembers[i].uid)
-                }
-                //remove events
-                for(let x in this.groupData.groupSchedule){
-                    for(let y in this.groupData.groupSchedule[x]){
-                        console.log('x:' + x)
-                        console.log(y)
-                        db.ref('events').child(y).remove()
-                    }
-                }
-                //remove groups
-                // db.ref('groups/').child(this.groupId).remove()
-            },
-            leaveGroup(uid){
-                //delete user from groupMembers
-                console.log(uid)
-                if(this.groupData.groupMembers){
-                    if(Object.keys(this.groupData.groupMembers).length>1){
-                        db.ref('groups/'+this.groupId+'/groupMembers').child(uid).remove()
-                    }
-                    else{
-                        db.ref('groups/'+this.groupId).child('groupMembers').set(0)
-                    }
-                }
+            deleteGroupEventPromise(){
+                return new Promise((resolve,reject)=>{
+                    
 
-                //delete group from userGroups
-                db.ref('users/'+uid+'/userGroups').child(this.groupId).remove()
-
-                //getUserEvents
-                let userEvents={}
-                db.ref('users/'+uid+'/userEvents').once('value',snapshot=>{
-                    userEvents = snapshot.val()
-                })
-                .then(()=>{
-                    console.log('userEvents',userEvents)
-                    //delete user from joinedEvents and event from userEvents
                     for(let x in this.groupData.groupSchedule){
-                        //x === day
                         for(let y in this.groupData.groupSchedule[x]){
-                            //y === eventId
-                            db.ref('events/'+y+'/joinedMembers').once('value',snapshot=>{
-                                //snapshot.key suppose to joinedMembers
-                                //snapshot.val() suppose to be list
-                                if(snapshot.val()!==0){
-                                    let s = 0
-                                    snapshot.forEach(child=>{
-                                        s++;
-                                        //child.key suppose to be uid
-                                        //child.val() === 0
-                                        console.log('childkey: '+ child.key)
-                                        console.log('child.val()',child.val())
-                                        if(child.key===uid){
-                                            console.log('x: '+x)
-                                            console.log(userEvents[x])
-                                            //remove eventId from userEvents
-
-                                            if(userEvents[x] && Object.keys(userEvents[x]).length>1){
-                                                console.log(Object.keys(userEvents[x]).length)
-                                                delete [userEvents][x][y]
-                                                db.ref('users/'+uid+'/userEvents/'+x).child(y).remove()
-                                            }
-                                            else{
-                                                console.log('userEventX is 0')
-                                                db.ref('users/'+uid+'/userEvents').child(x).set(0)
-                                            }
-                                            db.ref('events/'+y+'/joinedMembers').child(uid).remove()
-                                        }
-                                    })
-                                    if(s===1){
-                                        db.ref('events/'+y).child('joinedMembers').set(0)
-                                    }
+                            db.ref('events').child(y).remove()
+                        }
+                    }
+                    resolve()
+                })
+            },
+            deleteGroupMembers(){
+                return new Promise((resolve, reject)=>{
+                    let size=0
+                    if(this.groupData.groupMembers){
+                        for(let x in this.groupData.groupMembers){
+                            // console.log(x)
+                            // console.log(this.groupData.groupMembers)
+                            // console.log(this.groupData.groupMembers[x])
+                            size++
+                            this.leaveGroup(this.groupData.groupMembers[x].uid)
+                            .then(()=>{
+                                if(size===Object.keys(this.groupData.groupMembers).length){
+                                    resolve()
+                                    console.log('done deletegroup')
                                 }
                             })
                         }
                     }
                 })
+            },
+            deleteGroup(){
+                let userSet = new Set()
+                db.ref('events').once('value',snapshot=>{
+                    snapshot.forEach(eventSnapshot=>{
+                        let event = {}
+                        eventSnapshot.forEach(eventData=>{
+                            event[eventData.key] = eventData.val()
+                        })
+                        if(event.groupId===this.groupId){
+                            console.log(event.joinedMembers)
+                            for(let key in event.joinedMembers){
+                                db.ref('users/'+key+'/userEvents/'+event.day)
+                                .child(eventSnapshot.key).remove()
+                                db.ref('users/'+key+'/userEvents').once('value',check=>{
+                                    if(!check.hasChild('Monday')){
+                                        db.ref('users/'+key+'/userEvents').child('Monday').set(0)
+                                    }
+                                    if(!check.hasChild('Tuesday')){
+                                        db.ref('users/'+key+'/userEvents').child('Tuesday').set(0)
+                                    }
+                                    if(!check.hasChild('Wednesday')){
+                                        db.ref('users/'+key+'/userEvents').child('Wednesday').set(0)
+                                    }
+                                    if(!check.hasChild('Thursday')){
+                                        db.ref('users/'+key+'/userEvents').child('Thursday').set(0)
+                                    }
+                                    if(!check.hasChild('Friday')){
+                                        db.ref('users/'+key+'/userEvents').child('Friday').set(0)
+                                    }
+                                })
+                                db.ref('users/'+key+'/userGroups').child(this.groupId).remove()
+                            }
+                        }
+                        db.ref('events').child(eventSnapshot.key).remove()
+                        
+                    })
+                }).then(()=>{
+                    
+                    db.ref('users/'+this.uid+'/userGroups').child(this.groupId).remove()
+                    db.ref('groups').child(this.groupId).remove()
+                    
+                })                
+            },
+            leaveGroup(uid){
+                //leave group
+                db.ref('groups/'+this.groupId+'/groupSchedule').once('value',snapshot=>{
+                    //snapshot.val() = 5days
+                    snapshot.forEach(daySnapshot=>{
+                        if(daySnapshot.val()!==0){
+                            daySnapshot.forEach(eventKeySnapshot=>{
+                                db.ref('events/'+eventKeySnapshot.key+'/joinedMembers')
+                                .child(uid).remove()
+
+                                db.ref('events/'+eventKeySnapshot.key).once('value',check=>{
+                                    if(!check.hasChild('joinedMembers')){
+                                        db.ref('events/'+eventKeySnapshot.key).child('joinedMembers').set(0)
+                                    }
+                                })
+
+                                db.ref('users/'+uid+'/userEvents/'+daySnapshot.key).child(eventKeySnapshot.key).remove()
+                                db.ref('users/'+uid+'/userEvents').once('value',check=>{
+                                    if(!check.hasChild(daySnapshot.key)){
+                                        db.ref('users/'+uid+'/userEvents').child(daySnapshot.key).set(0)
+                                    }
+                                })
+                            })
+                        }
+                        
+                    })
+
+                }).then(()=>{
+                    db.ref('groups/'+this.groupId+'/groupMembers').child(uid).remove()
+                    db.ref('groups/'+this.groupId).once('value',check=>{
+                        if(!check.hasChild('groupMembers')){
+                            db.ref('groups/'+this.groupId).child('groupMembers').set(0)
+                        }
+                    })
+                    db.ref('users/'+uid+'/userGroups').child(this.groupId).remove()
+                })
+                // return new Promise((resolve,reject)=>{
+                    
+                //     //delete user from groupMembers
+                //     console.log(uid)
+                //     if(this.groupData.groupMembers){
+                //         if(Object.keys(this.groupData.groupMembers).length>1){
+                //             db.ref('groups/'+this.groupId+'/groupMembers').child(uid).remove()
+                //         }
+                //         else{
+                //             db.ref('groups/'+this.groupId).child('groupMembers').set(0)
+                //         }
+                //     }
+
+                //     //delete group  from userGroups
+                //     db.ref('users/'+uid+'/userGroups').child(this.groupId).remove()
+
+                //     //getUserEvents
+                //     let userEvents={}
+                //     db.ref('users/'+uid+'/userEvents').once('value',snapshot=>{
+                //         userEvents = snapshot.val()
+                //     })
+                //     .then(()=>{
+                //         console.log('userEvents',userEvents)
+                //         //delete user from joinedEvents and event from userEvents
+                //         for(let x in this.groupData.groupSchedule){
+                //             //x === day
+                //             for(let y in this.groupData.groupSchedule[x]){
+                //                 //y === eventId
+                //                 console.log('y: '+y)
+                //                 db.ref('events/'+y+'/joinedMembers').once('value',snapshot=>{
+                //                     console.log('snapshot.key: ' + snapshot.key)
+                //                     //snapshot.key suppose to joinedMembers
+                //                     //snapshot.val() suppose to be list
+                //                     if(snapshot.val()!==0){
+                //                         let s = 0
+                //                         let foundUid=0
+                //                         snapshot.forEach(child=>{
+                //                             s++;
+                //                             //child.key suppose to be uid
+                //                             //child.val() === 0
+                //                             console.log('child key:'+ child.key)
+                //                             if(child.key===uid){
+                //                                 //remove eventId from userEvents
+                                                
+                //                                 foundUid=1
+                //                                 if(userEvents[x] && Object.keys(userEvents[x]).length>1){
+                //                                     delete [userEvents][x][y]
+                //                                     db.ref('users/'+uid+'/userEvents/'+x).child(y).remove()
+                //                                 }
+                //                                 else{
+
+                //                                     db.ref('users/'+uid+'/userEvents').child(x).set(0)
+                //                                 }
+                //                                 db.ref('events/'+y+'/joinedMembers').child(uid).remove()
+                //                             }
+                //                         })
+                //                         if(s===1 && foundUid){
+                //                             db.ref('events/'+y).child('joinedMembers').set(0)
+                //                         }
+                //                     }
+                //                 })
+                //                 .then(()=>{resolve()})
+                //             }
+                //         }
+                //     })
+                // })
+                
             }
+        
         },
         created() {
             // const app = this.$f7
