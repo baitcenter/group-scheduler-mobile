@@ -27,7 +27,7 @@
                 </f7-block>
         </f7-page-content>
         <f7-toolbar color="orange" bottom-md>
-            <f7-link v-if="!isCreator && !isJoinedMember" icon-material="group_add" @click="openConfirmJoin"> Join</f7-link>
+            <f7-link icon-material="group_add" @click="openConfirmJoin"> Join</f7-link>
             <f7-link v-if="isJoinedMember" disabled icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-link>
             <f7-link v-if="isCreator" icon-material="delete" @click="openConfirmDel"> Delete</f7-link>
 
@@ -133,14 +133,14 @@ export default {
             const uid = auth.currentUser.uid
             const eventId = this.$f7route.params.eventId
 
-            if(Object.keys(this.eventInfo.joinedMembers).length===1){
+            if(this.eventInfo.joinedMembers && Object.keys(this.eventInfo.joinedMembers).length===1){
                 db.ref('events/'+eventId +'/joinedMembers').set(0)
             }
             else{
                 db.ref('events/'+eventId +'/joinedMembers').child(uid).remove()//may change to something else
             }
 
-            if(Object.keys(this.userEvents[this.eventInfo.day]).length===1){
+            if(this.userEvents[this.eventInfo.day] && Object.keys(this.userEvents[this.eventInfo.day]).length===1){
                 db.ref('users/'+uid+'/userEvents/').child(this.eventInfo.day).set(0)
             }
             else{
@@ -232,7 +232,7 @@ export default {
             app.dialog.confirm('Do you want to leave this event?',eventName, () => {
                 this.leaveEvent()
                 app.dialog.alert('You leaved the event!')
-                this.$f7router.back({ignoreCache: true, force:true, reloadCurrent:true})
+                this.$f7router.back({ignoreCache: true, force:true})
             });
         },
     }
