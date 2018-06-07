@@ -8,14 +8,23 @@
                 </f7-nav-right>
             </f7-navbar>
             <f7-list>
-                <f7-list-item>Group Name: {{groupData.groupName}}</f7-list-item>
-                <f7-list-item>Description: {{groupData.groupDescription}}</f7-list-item>
-                <f7-list-item media-item>Leader:
+                <f7-list-item>
+                    <div slot="inner">
+                        <b>Group Name: </b>{{groupData.groupName}}
+                    </div>
+                </f7-list-item>
+                <f7-list-item>
+                    <div slot="inner">
+                        <b>Description: </b> {{groupData.groupDescription}}
+                    </div>
+                </f7-list-item>
+                <f7-list-item media-item><b>Leader:</b>
                     <f7-chip :text="groupData.groupLeader.name" media-bg-color="orange">
                         <f7-icon slot="media" material="person"></f7-icon>
                     </f7-chip>
                 </f7-list-item>
-                <f7-list-item accordion-item title="Members">
+                <f7-list-item accordion-item>
+                    <div slot="inner"><b>Members</b></div>
                     <f7-accordion-content>
                         <f7-list-item v-for="(member, index) in groupData.groupMembers" :key="index">
                             <f7-chip :text="member.name" media-bg-color="orange">
@@ -24,7 +33,8 @@
                         </f7-list-item>
                     </f7-accordion-content>
                 </f7-list-item>
-                <f7-list-item title="Invite code:">
+                <f7-list-item>
+                    <div slot="inner"><b>Invite code:</b></div>
                     <f7-badge style="font-size: 14px">{{groupId}}</f7-badge>
                     <f7-button @click="copyToClipboard" icon-material="content_copy"></f7-button>
                 </f7-list-item>
