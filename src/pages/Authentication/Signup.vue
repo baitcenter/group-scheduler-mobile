@@ -5,17 +5,17 @@
             <f7-list-item>
                 <f7-icon material="person" slot="media"></f7-icon>
                 <f7-label>Displayname</f7-label>
-                <f7-input type="text" required v-bind:value="displayName" placeholder="Displayname" @input="displayName = $event.target.value"></f7-input>
+                <f7-input type="text" required validate v-bind:value="displayName" placeholder="Displayname" @input="displayName = $event.target.value"></f7-input>
             </f7-list-item>
             <f7-list-item>
                 <f7-icon material="email" slot="media"></f7-icon>
                 <f7-label>E-mail</f7-label>
-                <f7-input type="email" required v-bind:value="email" placeholder="E-mail" @input="email = $event.target.value"></f7-input>
+                <f7-input type="email" required validate v-bind:value="email" placeholder="E-mail" @input="email = $event.target.value"></f7-input>
             </f7-list-item>
             <f7-list-item>
                 <f7-icon material="lock" slot="media"></f7-icon>
                 <f7-label>Password</f7-label>
-                <f7-input type="password" required v-bind:value="password" placeholder="Password" @input="password = $event.target.value"></f7-input>
+                <f7-input type="password" required validate v-bind:value="password" placeholder="Password" @input="password = $event.target.value"></f7-input>
             </f7-list-item>
             <f7-list-item>
                 <f7-icon material="check_box" slot="media"></f7-icon>
