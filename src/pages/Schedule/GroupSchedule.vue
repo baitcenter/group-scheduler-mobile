@@ -5,7 +5,7 @@
             <f7-nav-right><f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
         </f7-navbar>
         <!-- FAB must be direct child of a page -->
-        <f7-fab v-if="isGroupLeader" color="green" position="center-bottom" @click="redirectToCreateEvent" >
+        <f7-fab v-if="isGroupLeader" color="green" position="right-bottom" @click="redirectToCreateEvent" >
             <f7-icon f7="add"></f7-icon>
         </f7-fab>
 
