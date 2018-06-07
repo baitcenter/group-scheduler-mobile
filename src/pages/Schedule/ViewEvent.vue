@@ -4,27 +4,39 @@
             <f7-navbar color="red" :title="this.eventInfo.eventName" back-link="Back">
                 <f7-nav-right><f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
             </f7-navbar>
-                <f7-block>
-                    <f7-block-title><b>Event Name : {{this.eventInfo['eventName']}}</b></f7-block-title>
-                    <f7-block-title><b>Time: </b> {{this.eventInfo['startTime']}} - {{this.eventInfo['endTime']}}</f7-block-title>
+                <f7-list>
+                    <f7-list-item>
+                        <div slot="inner">
+                            <b>Event Name : </b> {{this.eventInfo['eventName']}}
+                        </div>
+                    </f7-list-item>
+                    <f7-list-item>
+                        <div slot="inner">
+                            <b>Time: </b> {{this.eventInfo['startTime']}} - {{this.eventInfo['endTime']}}
+                        </div>
+                    </f7-list-item>
 
-                <f7-block-title><b>Description:</b></f7-block-title>
-                <!-- Inset -->
-                <f7-block strong inset>
-                      <p>{{this.eventInfo['eventDescription']}}</p>
-                </f7-block>
+                    <f7-list-item>
+                        <div slot="inner">
+                            <b>Description:</b>
+                            <p>{{this.eventInfo['eventDescription']}}</p>
+                        </div>
+                        <!--<f7-block>-->
+                        <!--</f7-block>-->
+                    </f7-list-item>
+                    <!-- Inset -->
 
-                <f7-block-title><b>Joined Members: </b></f7-block-title>
-                <!-- <f7-card> -->
-                    <f7-list simple-list inset>
-                        <f7-list-item v-for="(member, index) in this.eventInfo['joinedMembers']" v-bind:key="index">
-                            <f7-chip :text="member.name" media-bg-color="orange">
-                                <f7-icon slot="media" material="person"></f7-icon>
-                            </f7-chip>
-                        </f7-list-item>
-                    </f7-list>
-                <!-- </f7-card> -->
-                </f7-block>
+                    <f7-list-item accordion-item inset>
+                        <div slot="inner"><b>Joined Members</b></div>
+                        <f7-accordion-content>
+                            <f7-list-item v-for="(member, index) in eventInfo['joinedMembers']" :key="index">
+                                <f7-chip :text="member.name" media-bg-color="orange">
+                                    <f7-icon slot="media" material="person"></f7-icon>
+                                </f7-chip>
+                            </f7-list-item>
+                        </f7-accordion-content>
+                    </f7-list-item>
+                </f7-list>
         </f7-page-content>
         <f7-toolbar color="orange" bottom-md>
             <f7-link v-if="!isCreator && !isJoinedMember" icon-material="group_add" @click="openConfirmJoin"> Join</f7-link>
