@@ -27,7 +27,7 @@
                 </f7-block>
         </f7-page-content>
         <f7-toolbar color="orange" bottom-md>
-            <f7-link icon-material="group_add" @click="openConfirmJoin"> Join</f7-link>
+            <f7-link v-if="!isCreator && !isJoinedMember" icon-material="group_add" @click="openConfirmJoin"> Join</f7-link>
             <f7-link v-if="isJoinedMember" disabled icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-link>
             <f7-link v-if="isCreator" icon-material="delete" @click="openConfirmDel"> Delete</f7-link>
 
