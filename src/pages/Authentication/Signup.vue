@@ -35,6 +35,7 @@
 export default {
     data(){
         return{
+            alert : false,
             displayName : '',
             email : '',
             password : '',
@@ -42,12 +43,20 @@ export default {
         }
     },
     methods: {
+        cleanPassword(){
+            this.password = ""
+            this.confirmpassword = ""
+            this.$store.commit('setError',null)
+            this.alert = false
+        },
         createUser(){
             if(this.confirmpassword === this.password){
                 console.log("Sign up page" + this.displayName)
                 this.$store.dispatch('userSignUp',{displayname : this.displayName, email : this.email, password : this.password})
+                // this.cleanPassword()
             }else{
                 const app = this.$f7
+                this.cleanPassword()
                 app.dialog.alert("The password and confirm is not the same")
             }
         },
@@ -77,7 +86,8 @@ export default {
                 if (value){
                     console.log("in page : " + value)
                     this.showErrorToast()
-                    this.alert = true
+                    // this.alert = true
+                    this.cleanPassword()
                 }
             },
             alert(value) {
