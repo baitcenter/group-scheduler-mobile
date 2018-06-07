@@ -10,7 +10,7 @@
             <f7-list-item>Group Name: {{groupData.groupName}}</f7-list-item>
             <f7-list-item>Description: {{groupData.groupDescription}}</f7-list-item>
             <f7-list-item media-item>Leader:
-                <f7-chip :text="groupData.groupLeader" media-bg-color="orange">
+                <f7-chip :text="groupData.groupLeader.name" media-bg-color="orange">
                   <f7-icon slot="media" material="person"></f7-icon>
                 </f7-chip>
             </f7-list-item>
@@ -30,6 +30,8 @@
         </f7-list>
         <f7-block>
             <f7-button color="red" class="col-80" fill @click="redirectTo">Schedule</f7-button>
+            <f7-button color="red" class="col-80" fill @click="openConfirmLeave(uid)">Leave Group</f7-button>
+            <f7-button color="red" class="col-80" fill @click="openConfirmDelete">Delete Group</f7-button>
         </f7-block>
         <f7-popover class="popover-info">
             <f7-block>
@@ -42,10 +44,11 @@
 </template>
 
 <script>
-    import {db} from '@/firebase'
+    import {auth, db} from '@/firebase'
     export default {
         data() {
             return {
+                uid : auth.currentUser.uid,
                 groupId: this.$f7route.params.groupId,
                 groupData: {}
             }
@@ -104,17 +107,117 @@
             },
             setGroupLeader(uid) {
                 db.ref("users/" + uid + "/profile").on("value", snapshot => {
-                    this.groupData.groupLeader = snapshot.val().name
+                    this.groupData.groupLeader = {uid: uid, ...snapshot.val()}
                 })
             },
             setGroupMembers(groupMembers) {
                 let members = []
                 for (let uid in groupMembers) {
                 db.ref("users/" + uid + "/profile").on("value", snapshot => {
-                        members.push(snapshot.val())
+                        members.push({uid:uid,...snapshot.val()})
                     })
                 }
                 this.groupData.groupMembers = members
+            },
+            openConfirmLeave(uid){
+                const app = this.$f7;
+                app.dialog.confirm('Do you want to leave this event?','Leave Group', () => {
+                    this.leaveGroup(uid)
+                    app.dialog.alert('You leaved the group!')
+                    this.$f7router.back({ignoreCache: true, force:true, reloadCurrent:true})
+                });
+            },
+
+            openConfirmDelete(){
+                const app = this.$f7;
+                app.dialog.confirm('Do you want to delete this group?','Delete Group', () => {
+                    this.deleteGroup()
+                    app.dialog.alert('You delete the group!')
+                    this.$f7router.back('/my-group/',{ignoreCache: true, force:true})
+                });
+            },
+            deleteGroup(){
+                //need to use groupLeader uid
+                this.leaveGroup(this.groupData.groupLeader.uid)
+                // console.log(this.groupData.groupLeader.uid)
+                for(let i in this.groupData.groupMembers){
+                    // this.leaveGroup(user)
+                    this.leaveGroup(this.groupData.groupMembers[i].uid)
+                }
+                //remove events
+                for(let x in this.groupData.groupSchedule){
+                    for(let y in this.groupData.groupSchedule[x]){
+                        console.log('x:' + x)
+                        console.log(y)
+                        db.ref('events').child(y).remove()
+                    }
+                }
+                //remove groups
+                // db.ref('groups/').child(this.groupId).remove()
+            },
+            leaveGroup(uid){
+                //delete user from groupMembers
+                console.log(uid)
+                if(this.groupData.groupMembers){
+                    if(Object.keys(this.groupData.groupMembers).length>1){
+                        db.ref('groups/'+this.groupId+'/groupMembers').child(uid).remove()
+                    }
+                    else{
+                        db.ref('groups/'+this.groupId).child('groupMembers').set(0)
+                    }
+                }
+
+                //delete group from userGroups
+                db.ref('users/'+uid+'/userGroups').child(this.groupId).remove()
+
+                //getUserEvents
+                let userEvents={}
+                db.ref('users/'+uid+'/userEvents').once('value',snapshot=>{
+                    userEvents = snapshot.val()
+                })
+                .then(()=>{
+                    console.log('userEvents',userEvents)
+                    //delete user from joinedEvents and event from userEvents
+                    for(let x in this.groupData.groupSchedule){
+                        //x === day
+                        for(let y in this.groupData.groupSchedule[x]){
+                            //y === eventId
+                            db.ref('events/'+y+'/joinedMembers').once('value',snapshot=>{
+                                //snapshot.key suppose to joinedMembers
+                                //snapshot.val() suppose to be list
+                                if(snapshot.val()!==0){
+                                    let s = 0
+                                    snapshot.forEach(child=>{
+                                        s++;
+                                        //child.key suppose to be uid
+                                        //child.val() === 0
+                                        console.log('childkey: '+ child.key)
+                                        console.log('child.val()',child.val())
+                                        if(child.key===uid){
+                                            console.log('x: '+x)
+                                            console.log(userEvents[x])
+                                            //remove eventId from userEvents
+
+                                            if(userEvents[x] && Object.keys(userEvents[x]).length>1){
+                                                console.log(Object.keys(userEvents[x]).length)
+                                                delete [userEvents][x][y]
+                                                db.ref('users/'+uid+'/userEvents/'+x).child(y).remove()
+                                            }
+                                            else{
+                                                console.log('userEventX is 0')
+                                                db.ref('users/'+uid+'/userEvents').child(x).set(0)
+                                            }
+                                            db.ref('events/'+y+'/joinedMembers').child(uid).remove()
+                                        }
+                                    })
+                                    if(s===1){
+                                        db.ref('events/'+y).child('joinedMembers').set(0)
+                                    }
+                                }
+                            })
+                        }
+                    }
+                })
             }
         },
         created() {
