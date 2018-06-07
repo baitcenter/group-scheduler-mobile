@@ -100,6 +100,7 @@
                     this.loading=true;
                     this.$f7.dialog.close()
                 })
+                this.$f7.dialog.close()
             },
             showToastBottom() {
                 const self = this;

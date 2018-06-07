@@ -214,7 +214,6 @@ export default {
                 app.dialog.alert('You deleted the event!')
                 this.$f7router.navigate('/group/'+groupId+'/')
             });
-
         },
         openConfirmJoin(){
             const app = this.$f7;
