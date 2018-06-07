@@ -204,6 +204,7 @@
                         this.$store.commit('setLoading', false)
                         this.$store.commit('setError', null)
                         this.updateProfileV2()
+                        this.password = ""
                         // this.toggleEdit()
                     })
                     .catch(error => {
