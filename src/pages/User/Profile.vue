@@ -245,8 +245,8 @@
                     })
                     const profile = db.ref("users/" + auth.currentUser.uid)
                     profile.child("profile").set({
-                        name : auth.currentUser.displayName,
-                        email : auth.currentUser.email
+                        name : this.name,
+                        email : this.email
                     })
                     console.log("displayName updated")
                     this.$store.commit('setError',null)
