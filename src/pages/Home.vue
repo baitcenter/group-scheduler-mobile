@@ -3,7 +3,7 @@
         <f7-page-content>
             <f7-block>
                 <f7-row class="text-align-center justify-content-center align-content-center">
-                    <img class="center" src="/static/logo.png">
+                    <img class="center" src="static/logo.png">
                 </f7-row>
                 <f7-row class="justify-content-center text-align-center">
                     <h1 class="text-align-center">Grouppie</h1>

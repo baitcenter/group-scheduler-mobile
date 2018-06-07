@@ -59,7 +59,7 @@
                     <f7-icon material="check_circle" slot="media"></f7-icon>
                     <f7-label>Password</f7-label>
                     <f7-input type="password" @input="password=$event.target.value"
-                              required validate
+                              required validate v-bind:value="password"
                               placeholder="Password" clear-button>
                     </f7-input>
                 </f7-list-item>
@@ -79,7 +79,7 @@
                     <f7-icon material="lock" slot="media"></f7-icon>
                     <f7-label>New Password</f7-label>
                     <f7-input type="password" @input="new_password=$event.target.value"
-                              required validate
+                              required validate v-bind:value="new_password"
                               placeholder="Password" clear-button>
                     </f7-input>
                 </f7-list-item>
@@ -87,7 +87,7 @@
                     <f7-icon material="check_circle" slot="media"></f7-icon>
                     <f7-label>Old Password</f7-label>
                     <f7-input type="password" @input="password=$event.target.value"
-                              required validate
+                              required validate v-bind:value="password"
                               placeholder="Password" clear-button>
                     </f7-input>
                 </f7-list-item>
@@ -203,10 +203,12 @@
                         console.log("reauthenticate successful")
                         this.$store.commit('setLoading', false)
                         this.$store.commit('setError', null)
-                        this.updateUserProfile()
-                        this.toggleEdit()
+                        this.updateProfileV2()
+                        this.password = ""
+                        // this.toggleEdit()
                     })
                     .catch(error => {
+                        console.log("reauthenticated error")
                         console.log(error)
                         this.alert = true
                         this.$store.commit('setError', error.message)
@@ -232,36 +234,64 @@
                     // this.toggleEdit()
                     }
             },
-            updateUserProfile() {
+            updateProfileV2(){
                 this.$store.commit('setLoading',true)
-                console.log("updating profile")
-                firebase.auth().currentUser.updateProfile({
-                    displayName : this.name,
-                    email : this.email
-                }).then(() => {
-                    console.log("profile updated")
+                console.log("updating email")
+                firebase.auth().currentUser.updateEmail(this.email).then(f=>{
+                    console.log("email updated")
+                    console.log("updating displayName")
+                    firebase.auth().currentUser.updateProfile({
+                        displayName : this.name
+                    })
                     const profile = db.ref("users/" + auth.currentUser.uid)
                     profile.child("profile").set({
                         name : auth.currentUser.displayName,
                         email : auth.currentUser.email
                     })
+                    console.log("displayName updated")
                     this.$store.commit('setError',null)
                     this.$store.commit('setLoading',false)
-                }).catch(error => {
-                    console.log("update profile error")
+                    this.toggleEdit()
+                }).catch(error =>{
+                    this.initializedField()
+                    console.log("update email error")
                     console.log(error.message)
+                    this.alert = true
                     this.$store.commit('setError',error.message)
                     this.$store.commit('setLoading',false)
                 })
             },
+            // updateUserProfile() {
+            //     this.$store.commit('setLoading',true)
+            //     console.log("updating profile")
+            //     firebase.auth().currentUser.updateProfile({
+            //         displayName : this.name,
+            //         email : this.email
+            //     }).then(f=>{
+            //         console.log("profile updated")
+            //         const profile = db.ref("users/" + auth.currentUser.uid)
+            //         profile.child("profile").set({
+            //             name : auth.currentUser.displayName,
+            //             email : auth.currentUser.email
+            //         })
+            //         this.$store.commit('setError',null)
+            //         this.$store.commit('setLoading',false)
+            //     }).catch(error =>{
+            //         console.log("update profile error")
+            //         console.log(error.message)
+            //         this.alert = true
+            //         this.$store.commit('setError',error.message)
+            //         this.$store.commit('setLoading',false)
+            //     })
+            // },
             changePassword(){
                 this.$store.commit('setLoading',true)
                 console.log("updating password")
-                firebase.auth().currentUser.updatePassword(this.new_password).then(function(){
+                firebase.auth().currentUser.updatePassword(this.new_password).then(f=>{
                     console.log("password updated")
                     this.$store.commit('setError',null)
                     this.$store.commit('setLoading',false)
-                }).catch(function(error){
+                }).catch(error=>{
                     console.log("password update error")
                     console.log(error.message)
                     this.$store.commit('setError',error.message)
@@ -286,6 +316,7 @@
                         this.$store.commit('setLoading', false)
                         this.$store.commit('setError', null)
                         this.changePassword()
+                        this.password = ""
                         this.toggleEditPassword()
                     }).catch(error => {
                         console.log(error)

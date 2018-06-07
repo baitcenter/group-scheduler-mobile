@@ -5,17 +5,17 @@
             <f7-list-item>
                 <f7-icon material="person" slot="media"></f7-icon>
                 <f7-label>Displayname</f7-label>
-                <f7-input type="text" required v-bind:value="displayName" placeholder="Displayname" @input="displayName = $event.target.value"></f7-input>
+                <f7-input type="text" required validate v-bind:value="displayName" placeholder="Displayname" @input="displayName = $event.target.value"></f7-input>
             </f7-list-item>
             <f7-list-item>
                 <f7-icon material="email" slot="media"></f7-icon>
                 <f7-label>E-mail</f7-label>
-                <f7-input type="email" required v-bind:value="email" placeholder="E-mail" @input="email = $event.target.value"></f7-input>
+                <f7-input type="email" required validate v-bind:value="email" placeholder="E-mail" @input="email = $event.target.value"></f7-input>
             </f7-list-item>
             <f7-list-item>
                 <f7-icon material="lock" slot="media"></f7-icon>
                 <f7-label>Password</f7-label>
-                <f7-input type="password" required v-bind:value="password" placeholder="Password" @input="password = $event.target.value"></f7-input>
+                <f7-input type="password" required validate v-bind:value="password" placeholder="Password" @input="password = $event.target.value"></f7-input>
             </f7-list-item>
             <f7-list-item>
                 <f7-icon material="check_box" slot="media"></f7-icon>
@@ -35,6 +35,7 @@
 export default {
     data(){
         return{
+            alert : false,
             displayName : '',
             email : '',
             password : '',
@@ -42,12 +43,20 @@ export default {
         }
     },
     methods: {
+        cleanPassword(){
+            this.password = ""
+            this.confirmpassword = ""
+            this.$store.commit('setError',null)
+            this.alert = false
+        },
         createUser(){
             if(this.confirmpassword === this.password){
                 console.log("Sign up page" + this.displayName)
                 this.$store.dispatch('userSignUp',{displayname : this.displayName, email : this.email, password : this.password})
+                // this.cleanPassword()
             }else{
                 const app = this.$f7
+                this.cleanPassword()
                 app.dialog.alert("The password and confirm is not the same")
             }
         },
@@ -77,7 +86,8 @@ export default {
                 if (value){
                     console.log("in page : " + value)
                     this.showErrorToast()
-                    this.alert = true
+                    // this.alert = true
+                    this.cleanPassword()
                 }
             },
             alert(value) {

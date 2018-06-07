@@ -12,6 +12,7 @@
             <f7-list-item>
                 <f7-label>Password</f7-label>
                 <f7-input type="Password" placeholder="Password"
+                          v-bind:value="password"
                           @input="password  = $event.target.value"
                           required validate clear-button>
                 </f7-input>
@@ -25,18 +26,32 @@
 </template>
 
 <script>
+    // import firebase from '@/firebase'
+    // import {auth} from '@/firebase'
     export default {
         data() {
             return {
+                alert: false,
                 email: '',
                 password: '',
             }
         },
         methods: {
+            // userSignIn(){
+            //     this.$store.commit('setLoading',true)
+            //     firebase.auth().signInWith
+            // },
+            cleanPassword(){
+                this.password = ''
+                this.$store.commit('setError',null)
+                this.alert=false
+            },
             userSignIn() {
                 this.$store.dispatch('userSignIn', {email: this.email, password: this.password})
+                // this.cleanPassword()
             },
             goBack(){
+                this.cleanPassword
                 this.$f7router.navigate("/")
             },
             showErrorToast(){
@@ -65,7 +80,8 @@
                 if (value){
                     console.log("in page : " + value)
                     this.showErrorToast()
-                    this.alert = true
+                    // this.alert = true
+                    this.cleanPassword()
                 }
             },
             alert(value) {
