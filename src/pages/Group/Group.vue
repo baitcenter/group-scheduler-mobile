@@ -1,5 +1,7 @@
 <template>
     <f7-page>
+        {{groupData.groupLeader}}
+        {{groupData.groupMembers}}
         <f7-navbar color="red" :title="groupData.groupName" back-link="Back">
             <f7-nav-right>
               <f7-link icon-if-md="material:info" class="popover-open" href="#" data-popover=".popover-info">
@@ -10,7 +12,7 @@
             <f7-list-item>Group Name: {{groupData.groupName}}</f7-list-item>
             <f7-list-item>Description: {{groupData.groupDescription}}</f7-list-item>
             <f7-list-item media-item>Leader:
-                <f7-chip :text="groupData.groupLeader" media-bg-color="orange">
+                <f7-chip :text="groupData.groupLeader.name" media-bg-color="orange">
                   <f7-icon slot="media" material="person"></f7-icon>
                 </f7-chip>
             </f7-list-item>
@@ -107,14 +109,14 @@
             },
             setGroupLeader(uid) {
                 db.ref("users/" + uid + "/profile").on("value", snapshot => {
-                    this.groupData.groupLeader = snapshot.val().name
+                    this.groupData.groupLeader = {uid: uid, ...snapshot.val()}
                 })
             },
             setGroupMembers(groupMembers) {
                 let members = []
                 for (let uid in groupMembers) {
                 db.ref("users/" + uid + "/profile").on("value", snapshot => {
-                        members.push(snapshot.val())
+                        members.push({uid:uid,...snapshot.val()})
                     })
                 }
                 this.groupData.groupMembers = members
@@ -133,22 +135,27 @@
                 app.dialog.confirm('Do you want to delete this group?','Delete Group', () => {
                     this.deleteGroup()
                     app.dialog.alert('You delete the group!')
-                    this.$f7router.back({ignoreCache: true, force:true, reloadCurrent:true})
+                    this.$f7router.back('/my-group/',{ignoreCache: true, force:true})
                 });
             },
             deleteGroup(){
                 //need to use groupLeader uid
-                // this.leaveGroup(this.groupData.groupLeader)
-                for(let user in this.groupData.groupMembers){
+                this.leaveGroup(this.groupData.groupLeader.uid)
+                // console.log(this.groupData.groupLeader.uid)
+                for(let i in this.groupData.groupMembers){
                     // this.leaveGroup(user)
+                    this.leaveGroup(this.groupData.groupMembers[i].uid)
                 }
                 //remove events
                 for(let x in this.groupData.groupSchedule){
-                    for(let y in this.groupData.groupSchedule[x])
+                    for(let y in this.groupData.groupSchedule[x]){
+                        console.log('x:' + x)
+                        console.log(y)
                         db.ref('events').child(y).remove()
+                    }
                 }
                 //remove groups
-                db.ref('groups/').child(this.groupId).remove()
+                // db.ref('groups/').child(this.groupId).remove()
             },
             leaveGroup(uid){
                 //delete user from groupMembers
