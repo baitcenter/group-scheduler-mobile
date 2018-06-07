@@ -39,7 +39,7 @@
                 </f7-list>
             <f7-block>
                 <f7-button v-if="!isCreator && !isJoinedMember" color="green" fill icon-material="group_add" @click="openConfirmJoin"> Join</f7-button>
-                <f7-button v-if="isJoinedMember" fill color="orange" disabled icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-button>
+                <f7-button v-if="isJoinedMember" fill color="orange" icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-button>
                 <f7-button v-if="isCreator" color="red" fill icon-material="delete" @click="openConfirmDel"> Delete</f7-button>
             </f7-block>
         </f7-page-content>
@@ -137,6 +137,7 @@ export default {
                     db.ref('events/'+eventId+'/joinedMembers').child(uid).set(0)
                     db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).set(0)
                     // this.$f7router.navigate('/group/'+groupId)
+                    this.$f7router.refreshPage()
                 }
             })
         },

@@ -156,12 +156,12 @@
                 app.dialog.confirm('Do you want to delete this group?','Delete Group', () => {
                     this.deleteGroup()
                     app.dialog.alert('You delete the group!')
-                    this.$f7router.back('/my-group/',{ignoreCache: true, force:true})
+                    this.$f7router.back('/my-group/',{ignoreCache: true, force:true, reloadPrevious: true})
                 });
             },
             deleteGroupEventPromise(){
                 return new Promise((resolve,reject)=>{
-                    
+
 
                     for(let x in this.groupData.groupSchedule){
                         for(let y in this.groupData.groupSchedule[x]){
@@ -225,14 +225,14 @@
                             }
                         }
                         db.ref('events').child(eventSnapshot.key).remove()
-                        
+
                     })
                 }).then(()=>{
-                    
+
                     db.ref('users/'+this.uid+'/userGroups').child(this.groupId).remove()
                     db.ref('groups').child(this.groupId).remove()
-                    
-                })                
+
+                })
             },
             leaveGroup(uid){
                 //leave group
@@ -258,7 +258,7 @@
                                 })
                             })
                         }
-                        
+
                     })
 
                 }).then(()=>{
@@ -271,7 +271,7 @@
                     db.ref('users/'+uid+'/userGroups').child(this.groupId).remove()
                 })
                 // return new Promise((resolve,reject)=>{
-                    
+
                 //     //delete user from groupMembers
                 //     console.log(uid)
                 //     if(this.groupData.groupMembers){
@@ -313,7 +313,7 @@
                 //                             console.log('child key:'+ child.key)
                 //                             if(child.key===uid){
                 //                                 //remove eventId from userEvents
-                                                
+
                 //                                 foundUid=1
                 //                                 if(userEvents[x] && Object.keys(userEvents[x]).length>1){
                 //                                     delete [userEvents][x][y]
@@ -336,9 +336,9 @@
                 //         }
                 //     })
                 // })
-                
+
             }
-        
+
         },
         created() {
             // const app = this.$f7
