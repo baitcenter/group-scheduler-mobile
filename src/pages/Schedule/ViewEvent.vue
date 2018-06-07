@@ -37,13 +37,12 @@
                         </f7-accordion-content>
                     </f7-list-item>
                 </f7-list>
+            <f7-block>
+                <f7-button v-if="!isCreator && !isJoinedMember" color="green" fill icon-material="group_add" @click="openConfirmJoin"> Join</f7-button>
+                <f7-button v-if="isJoinedMember" fill color="orange" disabled icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-button>
+                <f7-button v-if="isCreator" color="red" fill icon-material="delete" @click="openConfirmDel"> Delete</f7-button>
+            </f7-block>
         </f7-page-content>
-        <f7-toolbar color="orange" bottom-md>
-            <f7-link v-if="!isCreator && !isJoinedMember" icon-material="group_add" @click="openConfirmJoin"> Join</f7-link>
-            <f7-link v-if="isJoinedMember" disabled icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-link>
-            <f7-link v-if="isCreator" icon-material="delete" @click="openConfirmDel"> Delete</f7-link>
-
-        </f7-toolbar>
 
     </f7-page>
 </template>
