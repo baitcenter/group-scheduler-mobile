@@ -40,9 +40,9 @@
                 </f7-list-item>
             </f7-list>
             <f7-block>
-                <f7-button color="red" class="col-80" fill @click="redirectTo">Schedule</f7-button>
-                <f7-button color="red" class="col-80" fill @click="openConfirmLeave(uid)">Leave Group</f7-button>
-                <f7-button color="red" class="col-80" fill @click="openConfirmDelete">Delete Group</f7-button>
+                <f7-button color="orange" class="col-80" fill @click="redirectTo">Schedule</f7-button>
+                <f7-button icon-material="delete_forever" v-if="isLeader" color="red" class="col-80 margin-top" fill @click="openConfirmDelete">Delete Group</f7-button>
+                <f7-button icon-material="directions_run" v-else color="red" class="col-80 margin-top" fill @click="openConfirmLeave(uid)">Leave Group</f7-button>
             </f7-block>
             <f7-popover class="popover-info">
                 <f7-block>
@@ -64,7 +64,8 @@
                 uid : auth.currentUser.uid,
                 groupId: this.$f7route.params.groupId,
                 groupData: {},
-                loading:false
+                loading:false,
+                isLeader : false,
             }
         },
         firebase() {
@@ -127,6 +128,9 @@
             setGroupLeader(uid) {
                 db.ref("users/" + uid + "/profile").on("value", snapshot => {
                     this.groupData.groupLeader = {uid: uid, ...snapshot.val()}
+                    if(auth.currentUser.uid === uid){
+                        this.isLeader = true
+                    }
                 })
             },
             setGroupMembers(groupMembers) {
