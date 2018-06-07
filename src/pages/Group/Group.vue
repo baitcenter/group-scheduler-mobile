@@ -146,6 +146,8 @@
             },
             deleteGroupEventPromise(){
                 return new Promise((resolve,reject)=>{
+                    
+
                     for(let x in this.groupData.groupSchedule){
                         for(let y in this.groupData.groupSchedule[x]){
                             db.ref('events').child(y).remove()
@@ -154,24 +156,38 @@
                     resolve()
                 })
             },
-            deleteGroup(){
-                //need to use groupLeader uid
-                this.leaveGroup(this.groupData.groupLeader.uid).then(()=>{
-                    console.log('done')
+            deleteGroupMembers(){
+                return new Promise((resolve, reject)=>{
+                    let size=0
                     if(this.groupData.groupMembers){
-                        let s = Object.keys(this.groupData.groupMembers).length-1
-                        while (s>=0){
-                            console.log(s)
-                            this.leaveGroup(this.groupData.groupMembers[s]).then(()=>{
-                                s++;
+                        for(let x in this.groupData.groupMembers){
+                            // console.log(x)
+                            // console.log(this.groupData.groupMembers)
+                            // console.log(this.groupData.groupMembers[x])
+                            size++
+                            this.leaveGroup(this.groupData.groupMembers[x].uid)
+                            .then(()=>{
+                                if(size===Object.keys(this.groupData.groupMembers).length){
+                                    resolve()
+                                    console.log('done deletegroup')
+                                }
                             })
                         }
                     }
-                    this.deleteGroupEventPromise().then(()=>{
-                        db.ref('groups').child(this.groupId).remove()
+                })
+            },
+            deleteGroup(){
+                //need to use groupLeader uid
+                this.leaveGroup(this.groupData.groupLeader.uid).then(()=>{
+                    this.deleteGroupMembers().then(()=>{
+                        console.log('hi')
+                         this.deleteGroupEventPromise().then(()=>{
+                            console.log('hi2')
+                            db.ref('groups').child(this.groupId).remove()
+                            .then(()=>{console.log('del')})
+                        })
                     })
-
-
+                       
                 })
 
             },
@@ -179,7 +195,7 @@
                 return new Promise((resolve,reject)=>{
                     
                     //delete user from groupMembers
-                    // console.log(uid)
+                    console.log(uid)
                     if(this.groupData.groupMembers){
                         if(Object.keys(this.groupData.groupMembers).length>1){
                             db.ref('groups/'+this.groupId+'/groupMembers').child(uid).remove()
@@ -189,7 +205,7 @@
                         }
                     }
 
-                    //delete group from userGroups
+                    //delete group  from userGroups
                     db.ref('users/'+uid+'/userGroups').child(this.groupId).remove()
 
                     //getUserEvents
@@ -198,35 +214,41 @@
                         userEvents = snapshot.val()
                     })
                     .then(()=>{
-                        // console.log('userEvents',userEvents)
+                        console.log('userEvents',userEvents)
                         //delete user from joinedEvents and event from userEvents
                         for(let x in this.groupData.groupSchedule){
                             //x === day
                             for(let y in this.groupData.groupSchedule[x]){
                                 //y === eventId
+                                console.log('y: '+y)
                                 db.ref('events/'+y+'/joinedMembers').once('value',snapshot=>{
+                                    console.log('snapshot.key: ' + snapshot.key)
                                     //snapshot.key suppose to joinedMembers
                                     //snapshot.val() suppose to be list
                                     if(snapshot.val()!==0){
                                         let s = 0
+                                        let foundUid=0
                                         snapshot.forEach(child=>{
                                             s++;
                                             //child.key suppose to be uid
                                             //child.val() === 0
+                                            console.log('child key:'+ child.key)
                                             if(child.key===uid){
                                                 //remove eventId from userEvents
-
+                                                
+                                                foundUid=1
                                                 if(userEvents[x] && Object.keys(userEvents[x]).length>1){
                                                     delete [userEvents][x][y]
                                                     db.ref('users/'+uid+'/userEvents/'+x).child(y).remove()
                                                 }
                                                 else{
+
                                                     db.ref('users/'+uid+'/userEvents').child(x).set(0)
                                                 }
                                                 db.ref('events/'+y+'/joinedMembers').child(uid).remove()
                                             }
                                         })
-                                        if(s===1){
+                                        if(s===1 && foundUid){
                                             db.ref('events/'+y).child('joinedMembers').set(0)
                                         }
                                     }
