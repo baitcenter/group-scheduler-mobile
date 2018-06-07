@@ -5,7 +5,7 @@
             <f7-nav-right><f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
         </f7-navbar>
         <!-- FAB must be direct child of a page -->
-        <f7-fab v-if="isGroupLeader" color="green" position="center-bottom" @click="redirectToCreateEvent" >
+        <f7-fab v-if="isGroupLeader" color="green" position="right-bottom" @click="redirectToCreateEvent" >
             <f7-icon f7="add"></f7-icon>
         </f7-fab>
 
@@ -20,20 +20,22 @@
         <f7-tabs swipeable>
             <f7-tab id="tab-Monday"
                 tab-active>
-                <f7-block-title>Monday</f7-block-title>
+                <f7-block-title class="padding-bottom">Monday</f7-block-title>
                 <f7-block inset v-if="isEventLengthZero('Monday')">There is no event in this day.</f7-block>
-                <f7-card v-else>
-                    <f7-card-content>
-                        <f7-list media-list v-for="(eData, eKey) in this.groupEvents.Monday" :key="eKey">
+                <f7-card v-else media-list v-for="(eData, eKey) in this.groupEvents.Monday" :key="eKey">
+                    <f7-block class="margin-vertical padding-vertical">
+                        <!-- <f7-icon color="red" material="event" slot="left"></f7-icon> -->
+                        <f7-list>
                             <f7-list-item
                                 @click="redirectToEvent(groupId,eKey)"
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
                                 after=" "
-                            >
+                            >                            
+                            <f7-icon size="30" color="red" slot="media" material="event"></f7-icon>
                             </f7-list-item>
                         </f7-list>
-                    </f7-card-content>
+                    </f7-block>
                 </f7-card>
             </f7-tab>
 
@@ -41,18 +43,20 @@
                 <!-- {{this.groupEvents.Tuesday}} -->
                 <f7-block-title center>Tuesday</f7-block-title>
                 <f7-block inset v-if="isEventLengthZero('Tuesday') ">There is no event in this day.</f7-block>
-                <f7-card v-else>
-                    <f7-card-content>
-                        <f7-list media-list v-for="(eData, eKey) in this.groupEvents.Tuesday" :key="eKey">
+                <f7-card v-else media-list v-for="(eData, eKey) in this.groupEvents.Tuesday" :key="eKey">
+                    <f7-block class="margin-vertical padding-vertical">
+                        <!-- <f7-icon color="red" material="event" slot="left"></f7-icon> -->
+                        <f7-list>
                             <f7-list-item
                                 @click="redirectToEvent(groupId,eKey)"
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
                                 after=" "
-                            >
+                            >                            
+                            <f7-icon size="30" color="red" slot="media" material="event"></f7-icon>
                             </f7-list-item>
                         </f7-list>
-                    </f7-card-content>
+                    </f7-block>
                 </f7-card>
             </f7-tab>
 
@@ -60,18 +64,20 @@
                 <!-- {{this.groupEvents.Wednesday}} -->
                 <f7-block-title center>Wednesday</f7-block-title>
                 <f7-block inset v-if="isEventLengthZero('Wednesday')">There is no event in this day.</f7-block>
-                <f7-card v-else>
-                    <f7-card-content>
-                        <f7-list media-list v-for="(eData, eKey) in this.groupEvents.Wednesday" :key="eKey">
+                <f7-card v-else media-list v-for="(eData, eKey) in this.groupEvents.Wednesday" :key="eKey">
+                    <f7-block class="margin-vertical padding-vertical">
+                        <!-- <f7-icon color="red" material="event" slot="left"></f7-icon> -->
+                        <f7-list>
                             <f7-list-item
                                 @click="redirectToEvent(groupId,eKey)"
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
                                 after=" "
-                            >
+                            >                            
+                            <f7-icon size="30" color="red" slot="media" material="event"></f7-icon>
                             </f7-list-item>
                         </f7-list>
-                    </f7-card-content>
+                    </f7-block>
                 </f7-card>
             </f7-tab>
 
@@ -79,36 +85,40 @@
                 >
                 <f7-block-title center>Thursday</f7-block-title>
                 <f7-block inset v-if="isEventLengthZero('Thursday')">There is no event in this day.</f7-block>
-                <f7-card v-else>
-                    <f7-card-content>
-                        <f7-list media-list v-for="(eData, eKey) in this.groupEvents.Thursday" :key="eKey">
+                <f7-card v-else media-list v-for="(eData, eKey) in this.groupEvents.Thursday" :key="eKey">
+                    <f7-block class="margin-vertical padding-vertical">
+                        <!-- <f7-icon color="red" material="event" slot="left"></f7-icon> -->
+                        <f7-list>
                             <f7-list-item
                                 @click="redirectToEvent(groupId,eKey)"
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
                                 after=" "
-                            >
+                            >                            
+                            <f7-icon size="30" color="red" slot="media" material="event"></f7-icon>
                             </f7-list-item>
                         </f7-list>
-                    </f7-card-content>
+                    </f7-block>
                 </f7-card>
             </f7-tab>
 
             <f7-tab id="tab-Friday">
                 <f7-block-title center>Friday</f7-block-title>
                 <f7-block inset v-if="isEventLengthZero('Friday')">There is no event in this day.</f7-block>
-                <f7-card v-else>
-                    <f7-card-content>
-                        <f7-list media-list v-for="(eData, eKey) in this.groupEvents.Friday" :key="eKey">
+                <f7-card v-else media-list v-for="(eData, eKey) in this.groupEvents.Friday" :key="eKey">
+                    <f7-block class="margin-vertical padding-vertical">
+                        <!-- <f7-icon color="red" material="event" slot="left"></f7-icon> -->
+                        <f7-list>
                             <f7-list-item
                                 @click="redirectToEvent(groupId,eKey)"
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
                                 after=" "
-                            >
+                            >                            
+                            <f7-icon size="30" color="red" slot="media" material="event"></f7-icon>
                             </f7-list-item>
                         </f7-list>
-                    </f7-card-content>
+                    </f7-block>
                 </f7-card>
             </f7-tab>
         </f7-tabs>
