@@ -151,12 +151,15 @@ export default {
             const app = this.$f7
             if(this.eventName ===''){
                 app.dialog.alert('Please state your event name!')
+                return
             }
             else if(this.eventDescription ===''){
                 app.dialog.alert('Please describe your event!')
+                return
             }
             else if(this.selectedDay===''){
                 app.dialog.alert('Please select your event day!')
+                return
             }
             else if(this.startTime==='' || this.endTime===''){
                 app.dialog.alert('Please select the time period for your events')
