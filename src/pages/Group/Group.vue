@@ -216,9 +216,21 @@
 
                     })
                 }).then(()=>{
-                    db.ref('users/'+this.uid+'/userGroups').child(this.groupId).remove()
-                    db.ref('groups').child(this.groupId).remove()
+                    db.ref("groups/" + this.groupId + "/groupMembers").once("value", UIDs => {
+                        UIDs.forEach(uid => {
+                            db.ref("users/" + uid.key + "/userGroups").once("value", groupIDs => {
+                                groupIDs.forEach(groupID => {
+                                    if (this.groupId === groupID.key) {
+                                        db.ref("users/" + uid.key + "/userGroups").child(groupID.key).remove()
+                                    }
+                                })
+                            })
+                        })
+                    }).then(() => {
+                        db.ref('users/'+this.uid+'/userGroups').child(this.groupId).remove()
 
+                        db.ref('groups').child(this.groupId).remove()
+                    })
                 })
             },
             leaveGroup(uid){
