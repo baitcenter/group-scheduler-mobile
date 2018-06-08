@@ -79,7 +79,6 @@
             copyToClipboard(){
                 const app = this.$f7
                 var copyText = this.groupId
-                console.log(copyText)
                 let testingCopy = document.querySelector('#testing-code')
                 testingCopy.setAttribute('type','text')
                 testingCopy.select()
@@ -101,7 +100,6 @@
                 this.$f7.dialog.preloader('Loading');
                 db.ref("groups").child(this.groupId).once("value", snapshot => {
                     this.groupData = snapshot.val()
-                    console.log(this.groupData.groupLeader)
                     this.setGroupLeader(this.groupData.groupLeader)
                     this.setGroupMembers(snapshot.val().groupMembers)
                 }).then(()=>{
