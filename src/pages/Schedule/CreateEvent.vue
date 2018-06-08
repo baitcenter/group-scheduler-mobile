@@ -1,56 +1,54 @@
 <template>
     <f7-page>
-        <f7-page-content>
-            <f7-navbar color="red" title="Create Event" back-link="Close">
-                <f7-nav-right><f7-link href="/home/" icon-if-ios="f7:home" icon-if-md="material:home"></f7-link></f7-nav-right>
-            </f7-navbar>
-            <f7-list form>
-                <f7-list-item>
-                    <f7-label>Event Name</f7-label>
-                    <f7-input type="text" placeholder="Event Name" v-bind:value="eventName" @input="eventName = $event.target.value"></f7-input>
-                </f7-list-item>
-                <f7-list-item>
-                    <f7-label>Event Detail/Description</f7-label>
-                    <f7-input type="textarea" placeholder="Event Description" v-bind:value="eventDescription" @input="eventDescription = $event.target.value" ></f7-input>
-                </f7-list-item>
+        <f7-navbar color="red" title="Create Event" back-link="Close">
+            <f7-nav-right><f7-link href="/home/" icon-if-ios="f7:home" icon-if-md="material:home"></f7-link></f7-nav-right>
+        </f7-navbar>
+        <f7-list form>
+            <f7-list-item>
+                <f7-label>Event Name</f7-label>
+                <f7-input type="text" placeholder="Event Name" v-bind:value="eventName" @input="eventName = $event.target.value"></f7-input>
+            </f7-list-item>
+            <f7-list-item>
+                <f7-label>Event Detail/Description</f7-label>
+                <f7-input type="textarea" placeholder="Event Description" v-bind:value="eventDescription" @input="eventDescription = $event.target.value" ></f7-input>
+            </f7-list-item>
 
-                 <f7-list-item smart-select :smart-select-params="{ closeOnSelect: true }" title="Day :">
-                    <select name="days" v-model="selectedDay">
-                    <option value="Monday" >Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
-                    </select>
-                </f7-list-item>
-                <f7-list-item>
-                    <f7-label><f7-icon material="timer"></f7-icon> From</f7-label>
-                    <f7-input
-                        type="text"
-                        placeholder="Start Time"
-                        readonly="readonly"
-                        id="demo-picker-starttime"
-                        v-bind:value="startTime"
-                        v-on:change="onStartTimeChange" />
-                </f7-list-item>
-                <f7-list-item>
-                    <f7-label><f7-icon material="timer"></f7-icon> To</f7-label>
-                    <f7-input
-                        type="text"
-                        placeholder="End Time"
-                        readonly="readonly"
-                        id="demo-picker-endtime"
-                        v-bind:value="endTime"
-                        v-on:change="onEndTimeChange" />
-                </f7-list-item>
-                <f7-row>
-                    <f7-col width="5"></f7-col>
-                    <f7-button class="col-90" color="red" fill-md icon-material="create" @click="createNewEvent" >Create</f7-button>
-                    <f7-col width="5"></f7-col>
-                </f7-row>
+             <f7-list-item smart-select :smart-select-params="{ closeOnSelect: true }" title="Day :">
+                <select name="days" v-model="selectedDay">
+                <option value="Monday" >Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                </select>
+            </f7-list-item>
+            <f7-list-item>
+                <f7-label><f7-icon material="timer"></f7-icon> From</f7-label>
+                <f7-input
+                    type="text"
+                    placeholder="Start Time"
+                    readonly="readonly"
+                    id="demo-picker-starttime"
+                    v-bind:value="startTime"
+                    v-on:change="onStartTimeChange" />
+            </f7-list-item>
+            <f7-list-item>
+                <f7-label><f7-icon material="timer"></f7-icon> To</f7-label>
+                <f7-input
+                    type="text"
+                    placeholder="End Time"
+                    readonly="readonly"
+                    id="demo-picker-endtime"
+                    v-bind:value="endTime"
+                    v-on:change="onEndTimeChange" />
+            </f7-list-item>
+            <f7-row>
+                <f7-col width="5"></f7-col>
+                <f7-button class="col-90" color="red" fill-md icon-material="create" @click="createNewEvent" >Create</f7-button>
+                <f7-col width="5"></f7-col>
+            </f7-row>
 
-            </f7-list>
-        </f7-page-content>
+        </f7-list>
 
 
 
