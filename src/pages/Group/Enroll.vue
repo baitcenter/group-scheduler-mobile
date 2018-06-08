@@ -57,7 +57,7 @@ export default {
                                 db.ref('users/'+uid+'/userGroups').child(this.enrollCode).set(1)
                                 this.$f7router.navigate('/group/'+this.enrollCode+'/')
                             }
-                        })
+                        }).then( () => {this.enrollCode = ''})
                     }
                     else {
                         this.enrollCode = ''
