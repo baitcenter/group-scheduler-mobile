@@ -21,11 +21,7 @@
                             <b>Description:</b>
                             <p>{{this.eventInfo['eventDescription']}}</p>
                         </div>
-                        <!--<f7-block>-->
-                        <!--</f7-block>-->
                     </f7-list-item>
-                    <!-- Inset -->
-
                     <f7-list-item accordion-item inset>
                         <div slot="inner"><b>Joined Members</b></div>
                         <f7-accordion-content>
@@ -136,7 +132,6 @@ export default {
                 else{
                     db.ref('events/'+eventId+'/joinedMembers').child(uid).set(0)
                     db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).set(0)
-                    // this.$f7router.navigate('/group/'+groupId)
                     this.$f7router.refreshPage()
                 }
             })

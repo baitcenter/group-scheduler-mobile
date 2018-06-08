@@ -26,8 +26,6 @@
 </template>
 
 <script>
-    // import firebase from '@/firebase'
-    // import {auth} from '@/firebase'
     export default {
         data() {
             return {
@@ -37,10 +35,6 @@
             }
         },
         methods: {
-            // userSignIn(){
-            //     this.$store.commit('setLoading',true)
-            //     firebase.auth().signInWith
-            // },
             cleanPassword(){
                 this.password = ''
                 this.$store.commit('setError',null)
@@ -48,7 +42,6 @@
             },
             userSignIn() {
                 this.$store.dispatch('userSignIn', {email: this.email, password: this.password})
-                // this.cleanPassword()
             },
             goBack(){
                 this.cleanPassword
@@ -80,7 +73,6 @@
                 if (value){
                     console.log("in page : " + value)
                     this.showErrorToast()
-                    // this.alert = true
                     this.cleanPassword()
                 }
             },

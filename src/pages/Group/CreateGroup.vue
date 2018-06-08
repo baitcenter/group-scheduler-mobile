@@ -45,7 +45,6 @@ export default {
         //lazy, no loop
         createNewGroup(){
             const uid=auth.currentUser.uid;
-            console.log(uid)
             let groupInfo={
                 groupName:this.groupName,
                 groupDescription:this.groupDescription,

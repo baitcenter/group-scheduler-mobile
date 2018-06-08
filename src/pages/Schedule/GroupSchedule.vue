@@ -194,8 +194,6 @@ export default {
                     }
                     tempEventData[x]=eventData
                 }
-
-                // console.log(tempEventData)
                 this.groupEvents=tempEventData
                 app.dialog.close()
 

@@ -86,14 +86,11 @@
                 try{
                     var success = document.execCommand("copy")
                     var msg = success ? 'successful' : "failed"
-                    // app.dialog.alert("copying " + msg)
                 }catch(error){
                     app.dialog.alert("failed copying the text")
                 }
                 testingCopy.setAttribute('type','hidden')
                 window.getSelection().removeAllRanges()
-                console.log("copy process ended")
-                // document.execCommand("copy")
                 this.showToastBottom()
             },
             redirectTo() {
@@ -115,14 +112,12 @@
             },
             showToastBottom() {
                 const self = this;
-                // Create toast
                 if (!self.toastBottom) {
                     self.toastBottom = self.$f7.toast.create({
                         text: 'copied to clipboard',
                         closeTimeout: 2000,
                     });
                 }
-                // Open it
                 self.toastBottom.open();
             },
             setGroupLeader(uid) {
@@ -176,9 +171,6 @@
                     let size=0
                     if(this.groupData.groupMembers){
                         for(let x in this.groupData.groupMembers){
-                            // console.log(x)
-                            // console.log(this.groupData.groupMembers)
-                            // console.log(this.groupData.groupMembers[x])
                             size++
                             this.leaveGroup(this.groupData.groupMembers[x].uid)
                             .then(()=>{
@@ -192,7 +184,6 @@
                 })
             },
             deleteGroup(){
-                let userSet = new Set()
                 db.ref('events').once('value',snapshot=>{
                     snapshot.forEach(eventSnapshot=>{
                         let event = {}
@@ -200,7 +191,6 @@
                             event[eventData.key] = eventData.val()
                         })
                         if(event.groupId===this.groupId){
-                            console.log(event.joinedMembers)
                             for(let key in event.joinedMembers){
                                 db.ref('users/'+key+'/userEvents/'+event.day)
                                 .child(eventSnapshot.key).remove()
@@ -228,7 +218,6 @@
 
                     })
                 }).then(()=>{
-
                     db.ref('users/'+this.uid+'/userGroups').child(this.groupId).remove()
                     db.ref('groups').child(this.groupId).remove()
 

@@ -51,9 +51,8 @@ export default {
         },
         createUser(){
             if(this.confirmpassword === this.password){
-                console.log("Sign up page" + this.displayName)
-                this.$store.dispatch('userSignUp',{displayname : this.displayName, email : this.email, password : this.password})
-                // this.cleanPassword()
+                this.$store.dispatch('userSignUp',
+                    {displayname : this.displayName, email : this.email, password : this.password})
             }else{
                 const app = this.$f7
                 this.cleanPassword()
@@ -84,9 +83,7 @@ export default {
         watch: {
             error(value) {
                 if (value){
-                    console.log("in page : " + value)
                     this.showErrorToast()
-                    // this.alert = true
                     this.cleanPassword()
                 }
             },

@@ -26,14 +26,14 @@
                 <f7-col width="5"></f7-col>
             </f7-row>
         </div>
-        <div v-if="editing && !editingPassword">
+        <div v-else-if="editing && !editingPassword">
             <f7-block-title>Edit Profile</f7-block-title>
             <f7-list>
                 <f7-list-item>
                     <f7-icon material="person" slot="media"></f7-icon>
                     <f7-label>Name</f7-label>
                     <f7-input type="text" @input="name=$event.target.value"
-                              required validate v-bind:value="name"
+                              required validate :value="name"
                               placeholder="Display name" clear-button>
                     </f7-input>
                 </f7-list-item>
@@ -41,25 +41,17 @@
                     <f7-icon material="email" slot="media"></f7-icon>
                     <f7-label>Email</f7-label>
                     <f7-input type="email" @input="email=$event.target.value"
-                              required validate v-bind:value="email"
+                              required validate :value="email"
                               placeholder="Email" clear-button>
                     </f7-input>
                 </f7-list-item>
             </f7-list>
             <f7-list>
-                <!-- <f7-list-item>
-                    <f7-icon material="lock" slot="media"></f7-icon>
-                    <f7-label>New Password</f7-label>
-                    <f7-input type="password" @input="new_password=$event.target.value"
-                              required validate
-                              placeholder="Password" clear-button>
-                    </f7-input> -->
-                <!-- </f7-list-item> -->
                 <f7-list-item>
                     <f7-icon material="check_circle" slot="media"></f7-icon>
                     <f7-label>Password</f7-label>
                     <f7-input type="password" @input="password=$event.target.value"
-                              required validate v-bind:value="password"
+                              required validate
                               placeholder="Password" clear-button>
                     </f7-input>
                 </f7-list-item>
@@ -68,26 +60,28 @@
             <f7-row>
                 <f7-col width="5"></f7-col>
                 <f7-button class="col-45" fill color="orange" @click="cancelEdit">Cancel</f7-button>
-                <f7-button class="col-45" fill color="green" @click="submitEdit2">Save changes</f7-button>
+                <f7-button class="col-45" fill color="green" @click="submitEdit">Save changes</f7-button>
                 <f7-col width="5"></f7-col>
             </f7-row>
         </div>
-        <div v-if="editingPassword && !editing">
+        <div v-else-if="editingPassword && !editing">
             <f7-block-title>Change Password</f7-block-title>
             <f7-list>
                 <f7-list-item>
-                    <f7-icon material="lock" slot="media"></f7-icon>
-                    <f7-label>New Password</f7-label>
-                    <f7-input type="password" @input="new_password=$event.target.value"
-                              required validate v-bind:value="new_password"
+                    <f7-icon material="check_circle" slot="media"></f7-icon>
+                    <f7-label>Current Password</f7-label>
+                    <f7-input type="password" @input="password=$event.target.value"
+                              info=""
+                              required validate :value="password"
                               placeholder="Password" clear-button>
                     </f7-input>
                 </f7-list-item>
                 <f7-list-item>
-                    <f7-icon material="check_circle" slot="media"></f7-icon>
-                    <f7-label>Old Password</f7-label>
-                    <f7-input type="password" @input="password=$event.target.value"
-                              required validate v-bind:value="password"
+                    <f7-icon material="lock" slot="media"></f7-icon>
+                    <f7-label>New Password</f7-label>
+                    <f7-input type="password" @input="new_password=$event.target.value"
+                              info=""
+                              required validate :value="new_password"
                               placeholder="Password" clear-button>
                     </f7-input>
                 </f7-list-item>
@@ -115,7 +109,6 @@
                 name: "",
                 email: "",
                 password : "",
-                // old_password : "",
                 new_password: "",
             }
         },
@@ -146,70 +139,16 @@
             },
             submitEdit() {
                 if((this.name !== "") && (this.email !== "") && (this.password !== "")){
-                    console.log("in page 1")
-                    var test = this.reauthenticateUser()
-                    console.log("test value : " + test)
-                    if(test){
-                        this.updateUserProfile()
-                        // this.toggleEdit()
-                    }else{
-                        console.log("alert!!!")
-                        this.initializedField()
-                    }
-                    // this.$store.dispatch('reauthenticateUser',{password : this.password})
-                    // .then(()=>{
-                    //     console.log('error1: ',this.$store.state.error);
-                    // }, error => {
-                    //     console.log('error : ',this.$store.state.error);
-
-                    // // if(this.$store.state.error){
-                    // //     console.log("why though?")
-                    // //     this.initializedField()
-                    // // }else{
-                    // //     console.log("hooray")
-                    // //     this.$store.dispatch('updateUserProfile',{displayName : this.name, email : this.email})
-                    // // }
-                    // // // this.initializedField()
-                    // // console.log("in page 2")
-                    // // this.toggleEdit()
-
-                    // })
-                }else{
-                    const self = this;
-                    if(!self.toastBottom) {
-                        self.toastBottom = self.$f7.toast.create({
-                            text : "please fill in the edit form",
-                            closeTimeout : 3000,
-                            closeButton : true
-                        });
-                    }else{
-                        self.toastBottom = self.$f7.toast.create({
-                            text : "please fill in the edit form",
-                            closeTimeout : 3000,
-                            closeButton : true
-                        });
-                    }
-                    self.toastBottom.open();
-                    // this.toggleEdit()
-                    }
-                },
-            submitEdit2() {
-                if((this.name !== "") && (this.email !== "") && (this.password !== "")){
                 this.$store.commit('setLoading', true)
-                console.log("reauthenticating")
                 const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email, this.password)
                 firebase.auth().currentUser.reauthenticateAndRetrieveDataWithCredential(credential)
-                    .then(f => {
-                        console.log("reauthenticate successful")
+                    .then(() => {
                         this.$store.commit('setLoading', false)
                         this.$store.commit('setError', null)
                         this.updateProfileV2()
                         this.password = ""
-                        // this.toggleEdit()
                     })
                     .catch(error => {
-                        console.log("reauthenticated error")
-                        console.log(error)
                         this.alert = true
                         this.$store.commit('setError', error.message)
                         this.$store.commit('setLoading', false)
@@ -231,15 +170,11 @@
                         });
                     }
                     self.toastBottom.open();
-                    // this.toggleEdit()
-                    }
+                }
             },
             updateProfileV2(){
                 this.$store.commit('setLoading',true)
-                console.log("updating email")
-                firebase.auth().currentUser.updateEmail(this.email).then(f=>{
-                    console.log("email updated")
-                    console.log("updating displayName")
+                firebase.auth().currentUser.updateEmail(this.email).then(() =>{
                     firebase.auth().currentUser.updateProfile({
                         displayName : this.name
                     })
@@ -248,52 +183,22 @@
                         name : this.name,
                         email : this.email
                     })
-                    console.log("displayName updated")
                     this.$store.commit('setError',null)
                     this.$store.commit('setLoading',false)
                     this.toggleEdit()
                 }).catch(error =>{
                     this.initializedField()
-                    console.log("update email error")
-                    console.log(error.message)
                     this.alert = true
                     this.$store.commit('setError',error.message)
                     this.$store.commit('setLoading',false)
                 })
             },
-            // updateUserProfile() {
-            //     this.$store.commit('setLoading',true)
-            //     console.log("updating profile")
-            //     firebase.auth().currentUser.updateProfile({
-            //         displayName : this.name,
-            //         email : this.email
-            //     }).then(f=>{
-            //         console.log("profile updated")
-            //         const profile = db.ref("users/" + auth.currentUser.uid)
-            //         profile.child("profile").set({
-            //             name : auth.currentUser.displayName,
-            //             email : auth.currentUser.email
-            //         })
-            //         this.$store.commit('setError',null)
-            //         this.$store.commit('setLoading',false)
-            //     }).catch(error =>{
-            //         console.log("update profile error")
-            //         console.log(error.message)
-            //         this.alert = true
-            //         this.$store.commit('setError',error.message)
-            //         this.$store.commit('setLoading',false)
-            //     })
-            // },
             changePassword(){
                 this.$store.commit('setLoading',true)
-                console.log("updating password")
                 firebase.auth().currentUser.updatePassword(this.new_password).then(f=>{
-                    console.log("password updated")
                     this.$store.commit('setError',null)
                     this.$store.commit('setLoading',false)
                 }).catch(error=>{
-                    console.log("password update error")
-                    console.log(error.message)
                     this.$store.commit('setError',error.message)
                     this.$store.commit('setLoading',false)
                 })
@@ -308,18 +213,15 @@
             submitPasswordEdit(){
                 if((this.new_password !== "") && (this.password !== "")){
                     this.$store.commit('setLoading',true)
-                    console.log("reauthenticating")
                     const credential = firebase.auth.EmailAuthProvider.credential(auth.currentUser.email, this.password)
                     firebase.auth().currentUser.reauthenticateAndRetrieveDataWithCredential(credential)
-                    .then( f => {
-                        console.log("reauthenticate successful")
+                    .then(() => {
                         this.$store.commit('setLoading', false)
                         this.$store.commit('setError', null)
                         this.changePassword()
                         this.password = ""
                         this.toggleEditPassword()
                     }).catch(error => {
-                        console.log(error)
                         this.alert = true
                         this.$store.commit('setError', error.message)
                         this.$store.commit('setLoading', false)
@@ -340,12 +242,8 @@
                         });
                     }
                     self.toastBottom.open();
-                    // app.dialog.alert("error updating password")
                 }
             },
-            // saveChanges() {
-            //     this.toggleEdit()
-            // },
             resendVerificationEmail(){
                 this.$store.dispatch('resendVerificationEmail',null)
             },
@@ -384,13 +282,9 @@
         },
         created(){
             var curUser = auth.currentUser
-            this.username = curUser.displayName
-            this.useremail = curUser.email
             this.verified = curUser.emailVerified
             this.alert = false
             this.initializedField()
-            console.log(curUser.emailVerified)
-            console.log(this.verified)
         }
     }
 </script>

@@ -80,7 +80,6 @@
         },
         created() {
             this.populateMyGroups()
-            console.log(this.myGroups)
             db.ref("groups").on("child_removed", snapshot => {
                 this.populateMyGroups()
             })

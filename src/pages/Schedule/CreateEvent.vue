@@ -75,15 +75,12 @@ export default {
     mounted(){
         const uid = auth.currentUser.uid
         const groupId = this.$f7route.params.groupId
-        console.log('groupID'+groupId)
         db.ref('groups/'+ groupId).child('groupSchedule').once('value',snapsot=>{
-            // console.log(snapsot.key)
             snapsot .forEach(child=>{
                 this.allGroupEvents[child.key] = child.val()
             })
         })
         db.ref('users/'+ uid).child('userEvents').once('value',snapsot=>{
-            // console.log(snapsot.key)
             snapsot .forEach(child=>{
                 this.allUserEvents[child.key]=child.val()
             })
@@ -100,14 +97,11 @@ export default {
             const existStartTimeInt = parseInt(existStartTime.replace(/:/g,''));
             const existEndTimeInt = parseInt(existEndTime.replace(/:/g,''));
 
-            // console.log(startTimeInt,endTimeInt,existStartTimeInt,existEndTimeInt)
-
             if((existStartTimeInt <= startTimeInt && startTimeInt <=existEndTimeInt) ||
                 (existStartTimeInt <= endTimeInt && endTimeInt <=existEndTimeInt) ||
                 (existStartTimeInt <= startTimeInt && startTimeInt <=existEndTimeInt) ||
             ((startTimeInt <= existStartTimeInt) && (endTimeInt>= existEndTimeInt))
             ){
-                // console.log('overlap')
                 return true
             }
             return false
@@ -115,31 +109,22 @@ export default {
         isOverlap(){
             let userEvents = this.allUserEvents[this.selectedDay]
             let groupEvents = this.allGroupEvents[this.selectedDay]
-            // console.log(userEvents)
-            // console.log(groupEvents)
 
             if(userEvents===0 && groupEvents==0){
                 return false
             }
 
-            // console.log(userEvents)
             for (var key1 in userEvents){
-                // console.log(key1)
                 let st1=this.allEvents[key1]['startTime']
                 let et1=this.allEvents[key1]['endTime']
-                // console.log(st1,et1)
                 if(this.compareOverlap(st1,et1)){
-                    // console.log('HELLYA')
                     return true
                 }
             }
             for (var key2 in groupEvents){
-                // console.log(key2)
                 let st2=this.allEvents[key2]['startTime']
                 let et2=this.allEvents[key2]['endTime']
-                // console.log(st2,et2)
                 if(this.compareOverlap(st2,et2)){
-                    // console.log('HELLYA2')
                     return true
                 }
             }
@@ -200,18 +185,15 @@ export default {
             .then((snapshot)=>{
                 db.ref('events/'+snapshot.key).child('joinedMembers').set(0)
                 db.ref('groups/'+groupId+'/groupSchedule/').child(this.selectedDay).child(snapshot.key).set(0)
-                // db.ref('users/'+uid+'/userEvents/'+this.selectedDay).child(snapshot.key).set(0)
 
                 this.eventName =''
                 this.eventDescription=''
                 this.selectedDay=''
                 this.startTime=''
                 this.endTime=''
-                // this.$f7router.navigate("/group/"+groupId+"/schedule/", {reloadCurrent: true})
                 this.$f7router.back({ignoreCache: true, force:true})
             }).catch((error)=>{
                 app.dialog.alert("Error Occured!")
-                console.log(error)
             })
         },
         onStartTimeChange(e){
