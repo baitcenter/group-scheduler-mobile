@@ -1,7 +1,7 @@
 <template>
     <f7-page>
         <f7-navbar color="red" title="Create Group" back-link="Back">
-            <f7-nav-right><f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
+            <f7-nav-right><f7-link href="/home/" icon-if-ios="f7:home" icon-if-md="material:home"></f7-link></f7-nav-right>
         </f7-navbar>
         <f7-block-title>Create Group</f7-block-title>
         <f7-list form>

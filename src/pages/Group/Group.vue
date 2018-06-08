@@ -1,10 +1,9 @@
 <template>
-    <f7-page>
-        <f7-page-content v-if="loading">
+    <f7-page v-if="loading">
             <f7-navbar color="red" :title="groupData.groupName" back-link="Back">
                 <f7-nav-right>
-                    <f7-link icon-if-md="material:info" class="popover-open" href="#" data-popover=".popover-info">
-                    </f7-link><f7-link href="/home/" icon-if-md="material:home"></f7-link>
+                    <f7-link icon-if-ios="f7:info" icon-if-md="material:info" class="popover-open" href="#" data-popover=".popover-info">
+                    </f7-link><f7-link href="/home/" icon-if-ios="f7:home" icon-if-md="material:home"></f7-link>
                 </f7-nav-right>
             </f7-navbar>
             <f7-list>
@@ -51,7 +50,6 @@
                 </f7-block>
             </f7-popover>
             <f7-input type="hidden" id="testing-code" v-bind:value="groupId"></f7-input>
-        </f7-page-content>
 
     </f7-page>
 </template>

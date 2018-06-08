@@ -1,44 +1,42 @@
 <template>
     <f7-page>
-        <f7-page-content>
-            <f7-navbar color="red" :title="this.eventInfo.eventName" back-link="Back">
-                <f7-nav-right><f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
-            </f7-navbar>
-                <f7-list>
-                    <f7-list-item>
-                        <div slot="inner">
-                            <b>Event Name : </b> {{this.eventInfo['eventName']}}
-                        </div>
-                    </f7-list-item>
-                    <f7-list-item>
-                        <div slot="inner">
-                            <b>Time: </b> {{this.eventInfo['startTime']}} - {{this.eventInfo['endTime']}}
-                        </div>
-                    </f7-list-item>
+        <f7-navbar color="red" :title="this.eventInfo.eventName" back-link="Back">
+            <f7-nav-right><f7-link href="/home/" icon-if-ios="f7:home" icon-if-md="material:home"></f7-link></f7-nav-right>
+        </f7-navbar>
+        <f7-list>
+            <f7-list-item>
+                <div slot="inner">
+                    <b>Event Name : </b> {{this.eventInfo['eventName']}}
+                </div>
+            </f7-list-item>
+            <f7-list-item>
+                <div slot="inner">
+                    <b>Time: </b> {{this.eventInfo['startTime']}} - {{this.eventInfo['endTime']}}
+                </div>
+            </f7-list-item>
 
-                    <f7-list-item>
-                        <div slot="inner">
-                            <b>Description:</b>
-                            <p>{{this.eventInfo['eventDescription']}}</p>
-                        </div>
+            <f7-list-item>
+                <div slot="inner">
+                    <b>Description:</b>
+                    <p>{{this.eventInfo['eventDescription']}}</p>
+                </div>
+            </f7-list-item>
+            <f7-list-item accordion-item inset>
+                <div slot="inner"><b>Joined Members</b></div>
+                <f7-accordion-content>
+                    <f7-list-item v-for="(member, index) in eventInfo['joinedMembers']" :key="index">
+                        <f7-chip :text="member.name" media-bg-color="orange">
+                            <f7-icon slot="media" material="person"></f7-icon>
+                        </f7-chip>
                     </f7-list-item>
-                    <f7-list-item accordion-item inset>
-                        <div slot="inner"><b>Joined Members</b></div>
-                        <f7-accordion-content>
-                            <f7-list-item v-for="(member, index) in eventInfo['joinedMembers']" :key="index">
-                                <f7-chip :text="member.name" media-bg-color="orange">
-                                    <f7-icon slot="media" material="person"></f7-icon>
-                                </f7-chip>
-                            </f7-list-item>
-                        </f7-accordion-content>
-                    </f7-list-item>
-                </f7-list>
-            <f7-block>
-                <f7-button v-if="!isCreator && !isJoinedMember" color="green" fill icon-material="group_add" @click="openConfirmJoin"> Join</f7-button>
-                <f7-button v-if="isJoinedMember" fill color="orange" icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-button>
-                <f7-button v-if="isCreator" color="red" fill icon-material="delete" @click="openConfirmDel"> Delete</f7-button>
-            </f7-block>
-        </f7-page-content>
+                </f7-accordion-content>
+            </f7-list-item>
+        </f7-list>
+        <f7-block>
+            <f7-button v-if="!isCreator && !isJoinedMember" color="green" fill icon-material="group_add" @click="openConfirmJoin"> Join</f7-button>
+            <f7-button v-if="isJoinedMember" fill color="orange" icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-button>
+            <f7-button v-if="isCreator" color="red" fill icon-material="delete" @click="openConfirmDel"> Delete</f7-button>
+        </f7-block>
 
     </f7-page>
 </template>

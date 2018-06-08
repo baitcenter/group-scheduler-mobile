@@ -2,7 +2,7 @@
 
 <f7-page>
         <f7-navbar color="red" title="Group Schedule" back-link="Back">
-            <f7-nav-right><f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
+            <f7-nav-right><f7-link href="/home/" icon-if-ios="f7:home" icon-if-md="material:home"></f7-link></f7-nav-right>
         </f7-navbar>
         <!-- FAB must be direct child of a page -->
         <f7-fab v-if="isGroupLeader" color="green" position="right-bottom" @click="redirectToCreateEvent" >

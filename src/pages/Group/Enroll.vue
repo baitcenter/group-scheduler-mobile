@@ -3,7 +3,7 @@
         <f7-navbar color="red" back-link="Back">
             <f7-nav-title>Enroll</f7-nav-title>
             <f7-nav-right><f7-link icon-if-md="material:info" class="popover-open" href="#" data-popover=".popover-info"></f7-link>
-            <f7-link href="/home/" icon-if-md="material:home"></f7-link></f7-nav-right>
+            <f7-link href="/home/" icon-if-ios="f7:home" icon-if-md="material:home"></f7-link></f7-nav-right>
         </f7-navbar>
         <f7-block-title>Enroll</f7-block-title>
         <f7-list form>

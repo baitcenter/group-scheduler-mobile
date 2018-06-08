@@ -3,25 +3,25 @@
         <f7-navbar title="Sign Up" color="red" back-link="Back"></f7-navbar>
         <f7-list form>
             <f7-list-item>
-                <f7-icon material="person" slot="media"></f7-icon>
+                <f7-icon if-ios="f7:person" if-md="material:person" slot="media"></f7-icon>
                 <f7-label>Displayname</f7-label>
                 <f7-input type="text" required validate v-bind:value="displayName" placeholder="Displayname" @input="displayName = $event.target.value"></f7-input>
             </f7-list-item>
             <f7-list-item>
-                <f7-icon material="email" slot="media"></f7-icon>
+                <f7-icon if-ios="f7:email" if-md="material:email" slot="media"></f7-icon>
                 <f7-label>E-mail</f7-label>
                 <f7-input type="email" required validate v-bind:value="email" placeholder="E-mail" @input="email = $event.target.value"></f7-input>
             </f7-list-item>
             <f7-list-item>
-                <f7-icon material="lock" slot="media"></f7-icon>
+                <f7-icon if-ios="f7:lock" if-md="material:lock" slot="media"></f7-icon>
                 <f7-label>Password</f7-label>
                 <f7-input type="password" required validate v-bind:value="password" placeholder="Password" @input="password = $event.target.value"></f7-input>
             </f7-list-item>
             <f7-list-item>
-                <f7-icon material="check_box" slot="media"></f7-icon>
+                <f7-icon if-ios="f7:check_round_fill" if-md="material:check_box" slot="media"></f7-icon>
                 <f7-label>Confirm Password</f7-label>
                 <f7-input type="password" v-bind:value="confirmpassword" placeholder="Confirm Password" @input="confirmpassword = $event.target.value"></f7-input>
-            </f7-list-item>    
+            </f7-list-item>
         </f7-list>
         <f7-block>
             <f7-row>

@@ -1,19 +1,19 @@
 <template>
     <f7-page>
         <f7-navbar color="red">
-            <f7-button big href="/profile/" icon-material="account_circle" icon-size="40px"
-                       view="#main-view"panel-close>
+            <f7-link big href="/profile/" icon-material="account_circle" icon-size="40px"
+                       view="#main-view" panel-close>
                 Profile
-            </f7-button>
+            </f7-link>
         </f7-navbar>
         <f7-list>
             <f7-list-item v-for="item in panelItems" :key="item.title"
                           :link="item.path"
                           view="#main-view"
+                          :title="item.title"
                           panel-close>
-                <div>
+                <div slot="media">
                     <f7-icon :material="item.icon"></f7-icon>
-                    {{item.title}}
                 </div>
             </f7-list-item>
         </f7-list>
