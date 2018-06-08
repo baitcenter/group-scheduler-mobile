@@ -7,7 +7,7 @@ import ViewEvent from './pages/Schedule/ViewEvent'
 import CreateEvent from './pages/Schedule/CreateEvent'
 import SignUp from './pages/Authentication/Signup';
 import CreateGroup from './pages/Group/CreateGroup';
-import Enroll from './pages/Schedule/Enroll';
+import Enroll from './pages/Group/Enroll';
 import Home from './pages/Home';
 
 import Panel from './pages/Component/Panel';
