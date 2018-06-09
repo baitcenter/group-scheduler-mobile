@@ -45,15 +45,17 @@
             populateMyGroups() {
                 this.$f7.dialog.preloader('Loading');
                 let groups = []
+                this.myGroups = []
+                this.myGroupsIDs = []
                 db.ref().once("value", snapshot => {
                     if (!snapshot.hasChild("groups")) {
-                        return groups
+                        return
                     }
                 })
                 let keys = []
                 db.ref("users/"+auth.currentUser.uid).once("value", snapshot => {
                     if (!snapshot.hasChild("userGroups")) {
-                        this.myGroupsIDs = []
+                        return
                     }
                 })
                 db.ref("users/" + auth.currentUser.uid + "/userGroups").once('value', snapshot => {
