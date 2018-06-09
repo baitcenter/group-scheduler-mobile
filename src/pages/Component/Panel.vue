@@ -2,8 +2,7 @@
     <f7-page>
         <f7-navbar color="red">
             <f7-link big href="/profile/" icon-material="account_circle" icon-size="40px"
-                       view="#main-view" panel-close>
-                Profile
+                       view="#main-view" text="Profile" panel-close>
             </f7-link>
         </f7-navbar>
         <f7-list>

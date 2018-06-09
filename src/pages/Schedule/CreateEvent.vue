@@ -30,7 +30,8 @@
                     readonly="readonly"
                     id="demo-picker-starttime"
                     v-bind:value="startTime"
-                    v-on:change="onStartTimeChange" />
+                    v-on:change="onStartTimeChange">
+                </f7-input>
             </f7-list-item>
             <f7-list-item>
                 <f7-label><f7-icon material="timer"></f7-icon> To</f7-label>
@@ -40,16 +41,15 @@
                     readonly="readonly"
                     id="demo-picker-endtime"
                     v-bind:value="endTime"
-                    v-on:change="onEndTimeChange" />
+                    v-on:change="onEndTimeChange">
+                </f7-input>
             </f7-list-item>
-            <f7-row>
-                <f7-col width="5"></f7-col>
-                <f7-button class="col-90" color="red" fill-md icon-material="create" @click="createNewEvent" >Create</f7-button>
-                <f7-col width="5"></f7-col>
-            </f7-row>
-
         </f7-list>
-
+        <f7-row>
+            <f7-col width="5"></f7-col>
+            <f7-button class="col-90" color="red" fill icon-material="create" @click="createNewEvent" >Create</f7-button>
+            <f7-col width="5"></f7-col>
+        </f7-row>
 
 
     </f7-page>
