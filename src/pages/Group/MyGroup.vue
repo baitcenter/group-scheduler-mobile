@@ -49,12 +49,14 @@
                 this.myGroupsIDs = []
                 db.ref().once("value", snapshot => {
                     if (!snapshot.hasChild("groups")) {
+                        this.$f7.dialog.close()
                         return
                     }
                 })
                 let keys = []
                 db.ref("users/"+auth.currentUser.uid).once("value", snapshot => {
                     if (!snapshot.hasChild("userGroups")) {
+                        this.$f7.dialog.close()
                         return
                     }
                 })
