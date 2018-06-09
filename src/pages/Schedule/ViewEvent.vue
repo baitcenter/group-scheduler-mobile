@@ -24,11 +24,12 @@
             <f7-list-item accordion-item inset>
                 <div slot="inner"><b>Joined Members</b></div>
                 <f7-accordion-content>
-                    <f7-list-item v-for="(member, index) in eventInfo['joinedMembers']" :key="index">
-                        <f7-chip :text="member.name" media-bg-color="orange">
+                    <f7-block strong>
+                        <f7-chip v-for="(member, index) in eventInfo['joinedMembers']" :key="index"
+                                 :text="member.name" media-bg-color="orange">
                             <f7-icon slot="media" material="person"></f7-icon>
                         </f7-chip>
-                    </f7-list-item>
+                    </f7-block>
                 </f7-accordion-content>
             </f7-list-item>
         </f7-list>
@@ -114,7 +115,6 @@ export default {
             let userEventRef = db.ref('users/'+uid)
                 userEventRef.once('value',(snapshot)=>{
                     if(!snapshot.hasChild('userEvents')){
-                        console.log('fuckthisshit')
                         userEventRef.child('userEvents').child('Monday').set(0)
                         userEventRef.child('userEvents').child('Tuesday').set(0)
                         userEventRef.child('userEvents').child('Wednesday').set(0)
