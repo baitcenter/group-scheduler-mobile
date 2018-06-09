@@ -34,6 +34,7 @@
         data() {
             return {
                 myGroups: [],
+                myGroupsIDs: [],
                 loaded: false
             }
         },
@@ -49,37 +50,34 @@
                         return groups
                     }
                 })
-                db.ref("groups").once('value', snapshot => {
-                    let myGroupsIDs = this.getMyGroupsIDs()
-                    for (let groupId in snapshot.val()) {
-                        if (myGroupsIDs.includes(groupId)) {
-                            let group = {...snapshot.val()[groupId]}
-                            group["groupId"] = groupId
-                            groups.push(group)
-                        }
-                    }
-                }).then(() => {
-                    this.myGroups = groups
-                    this.loaded = true
-                    this.$f7.dialog.close()
-                })
-                this.$f7.dialog.close()
-            },
-            getMyGroupsIDs() {
                 let keys = []
                 db.ref("users/"+auth.currentUser.uid).once("value", snapshot => {
                     if (!snapshot.hasChild("userGroups")) {
-                        return keys
+                        this.myGroupsIDs = []
                     }
                 })
                 db.ref("users/" + auth.currentUser.uid + "/userGroups").once('value', snapshot => {
                     snapshot.forEach(group => {
                         keys.push(group.key)
                     })
+                }).then(() => {
+                    this.myGroupsIDs = keys
+                    db.ref("groups").once('value', snapshot => {
+                        for (let groupId in snapshot.val()) {
+                            if (this.myGroupsIDs.includes(groupId)) {
+                                let group = {...snapshot.val()[groupId]}
+                                group["groupId"] = groupId
+                                groups.push(group)
+                            }
+                        }
+                    }).then(() => {
+                        this.myGroups = groups
+                        this.loaded = true
+                        this.$f7.dialog.close()
+                    })
+                    this.$f7.dialog.close()
                 })
-                return keys
-            },
-
+            }
         },
         created() {
             this.populateMyGroups()
