@@ -26,11 +26,12 @@
                 <f7-list-item accordion-item>
                     <div slot="inner"><b>Members</b></div>
                     <f7-accordion-content>
-                        <f7-list-item v-for="(member, index) in groupData.groupMembers" :key="index">
-                            <f7-chip :text="member.name" media-bg-color="orange">
+                        <f7-block>
+                            <f7-chip v-for="(member, index) in groupData.groupMembers" :key="index"
+                                     :text="member.name" media-bg-color="orange">
                                 <f7-icon slot="media" material="person"></f7-icon>
                             </f7-chip>
-                        </f7-list-item>
+                        </f7-block>
                     </f7-accordion-content>
                 </f7-list-item>
                 <f7-list-item>
