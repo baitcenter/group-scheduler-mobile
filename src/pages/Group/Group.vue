@@ -351,6 +351,9 @@
             db.ref("groups/" + this.groupId).on("child_changed", snapshot => {
                 this.populateGroupData()
             })
+            db.ref("groups/" + this.groupId).on("child_removed", snapshot => {
+                this.populateGroupData()
+            })
         }
     }
 </script>
