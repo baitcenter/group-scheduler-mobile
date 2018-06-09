@@ -229,6 +229,11 @@
                         db.ref('users/'+this.uid+'/userGroups').child(this.groupId).remove()
 
                         db.ref('groups').child(this.groupId).remove()
+                        db.ref().once("value", snapshot => {
+                            if (!snapshot.hasChild("groups")) {
+                                db.ref().child("groups").set(0)
+                            }
+                        })
                     })
                 })
             },

@@ -44,9 +44,15 @@
             populateMyGroups() {
                 this.$f7.dialog.preloader('Loading');
                 let groups = []
-                this.$firebaseRefs.groups.once('value', snapshot => {
+                db.ref().once("value", snapshot => {
+                    if (!snapshot.hasChild("groups")) {
+                        return groups
+                    }
+                })
+                db.ref("groups").once('value', snapshot => {
+                    let myGroupsIDs = this.getMyGroupsIDs()
                     for (let groupId in snapshot.val()) {
-                        if (this.myGroupsIDs.includes(groupId)) {
+                        if (myGroupsIDs.includes(groupId)) {
                             let group = {...snapshot.val()[groupId]}
                             group["groupId"] = groupId
                             groups.push(group)
@@ -58,25 +64,22 @@
                     this.$f7.dialog.close()
                 })
                 this.$f7.dialog.close()
-            }
-
-        },
-        firebase() {
-            return {
-                userGroups: db.ref("users/" + auth.currentUser.uid + "/userGroups"),
-                groups: db.ref("groups")
-            }
-        },
-        computed: {
-            myGroupsIDs() {
+            },
+            getMyGroupsIDs() {
                 let keys = []
-                this.$firebaseRefs.userGroups.once('value', snapshot => {
+                db.ref("users/"+auth.currentUser.uid).once("value", snapshot => {
+                    if (!snapshot.hasChild("userGroups")) {
+                        return keys
+                    }
+                })
+                db.ref("users/" + auth.currentUser.uid + "/userGroups").once('value', snapshot => {
                     snapshot.forEach(group => {
                         keys.push(group.key)
                     })
                 })
                 return keys
             },
+
         },
         created() {
             this.populateMyGroups()
