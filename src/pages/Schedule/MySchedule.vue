@@ -140,40 +140,47 @@ export default {
             }
             return length===0
         },
+        retrieveUserEvents() {
+            const app = this.$f7
+            app.dialog.preloader('Loading')
+            const uid = auth.currentUser.uid
+            let tempEventKey = {
+                Monday : 0,
+                Tuesday : 0,
+                Wednesday :0,
+                Thursday :0,
+                Friday :0,
+            }
+
+            db.ref('users/'+ uid +'/userEvents/').once('value',snapshot=>{
+                snapshot.forEach(child=>{
+                    tempEventKey[child.key] = child.val()
+                })
+            }).then(()=>{
+                db.ref('events/').once('value',snapsot=>{
+                    this.allEvents = snapsot.val()
+                }).then(()=>{
+                    let tempEventData={}
+                    for (var x in tempEventKey){
+                        let eventData={}
+                        for (var y in tempEventKey[x]){
+                            eventData[y]=this.allEvents[y]
+                        }
+                        tempEventData[x]=eventData
+                    }
+                    this.userEvents=tempEventData
+                    app.dialog.close()
+                })
+                app.dialog.close()
+
+            })
+        },
     },
     mounted(){
-        const app = this.$f7
-        app.dialog.preloader('Loading')
-        const uid = auth.currentUser.uid
-        let tempEventKey = {
-            Monday : 0,
-            Tuesday : 0,
-            Wednesday :0,
-            Thursday :0,
-            Friday :0,
-        }
+        this.retrieveUserEvents()
 
-        db.ref('users/'+ uid +'/userEvents/').once('value',snapshot=>{
-            snapshot.forEach(child=>{
-                tempEventKey[child.key] = child.val()
-            })
-        }).then(()=>{
-            db.ref('events/').once('value',snapsot=>{
-                this.allEvents = snapsot.val()
-            }).then(()=>{
-                let tempEventData={}
-                for (var x in tempEventKey){
-                    let eventData={}
-                    for (var y in tempEventKey[x]){
-                        eventData[y]=this.allEvents[y]
-                    }
-                    tempEventData[x]=eventData
-                }
-                this.userEvents=tempEventData
-                app.dialog.close()
-            })
-            app.dialog.close()
-
+        db.ref("users/" + auth.currentUser.uid).child("userEvents").on("child_removed", snapshot => {
+            this.retrieveUserEvents()
         })
     }
 }
