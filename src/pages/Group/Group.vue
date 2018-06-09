@@ -348,6 +348,9 @@
             // app.dialog.preloader('Loading')
             this.populateGroupData()
             // app.dialog.close()
+            db.ref("groups/" + this.groupId).on("child_changed", snapshot => {
+                this.populateGroupData()
+            })
         }
     }
 </script>
