@@ -34,10 +34,12 @@
                         </f7-block>
                     </f7-accordion-content>
                 </f7-list-item>
-                <f7-list-item>
+                <f7-list-item media-item>
                     <div slot="inner"><b>Invite code:</b></div>
-                    <f7-badge style="font-size: 14px">{{groupId}}</f7-badge>
-                    <f7-button @click="copyToClipboard" icon-material="content_copy"></f7-button>
+                    <f7-list-item-row>
+                        <f7-chip :text="groupId" media-bg-color="gray"></f7-chip>
+                        <f7-button outline round @click="copyToClipboard" icon-material="content_copy"></f7-button>
+                    </f7-list-item-row>
                 </f7-list-item>
             </f7-list>
             <f7-block>
