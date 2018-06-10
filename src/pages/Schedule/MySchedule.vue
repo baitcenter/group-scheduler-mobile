@@ -1,6 +1,6 @@
 <template>
 
-<f7-page>
+    <f7-page>
         <f7-navbar color="red">
             <f7-nav-left>
                 <f7-link icon-if-ios="f7:menu" icon-if-md="material:menu" panel-open="left"></f7-link>
@@ -26,11 +26,11 @@
                     <f7-block class="margin-vertical padding-vertical">
                         <f7-list>
                             <f7-list-item
-                                @click="redirectToEvent(groupId,eKey)"
+                                @click="redirectToEvent(eData.groupId,eKey)"
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
                                 after=" "
-                            >                            
+                            >
                             <f7-icon size="30" color="red" slot="media" material="event"></f7-icon>
                             </f7-list-item>
                         </f7-list>
@@ -49,7 +49,7 @@
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
                                 after=" "
-                            >                            
+                            >
                             <f7-icon size="30" color="red" slot="media" material="event"></f7-icon>
                             </f7-list-item>
                         </f7-list>
@@ -68,7 +68,7 @@
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
                                 after=" "
-                            >                            
+                            >
                             <f7-icon size="30" color="red" slot="media" material="event"></f7-icon>
                             </f7-list-item>
                         </f7-list>
@@ -88,7 +88,7 @@
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
                                 after=" "
-                            >                            
+                            >
                             <f7-icon size="30" color="red" slot="media" material="event"></f7-icon>
                             </f7-list-item>
                         </f7-list>
@@ -107,7 +107,7 @@
                                 :title="eData.eventName"
                                 :footer="'Time: '+eData.startTime + ' - '+eData.endTime"
                                 after=" "
-                            >                            
+                            >
                             <f7-icon size="30" color="red" slot="media" material="event"></f7-icon>
                             </f7-list-item>
                         </f7-list>
@@ -115,8 +115,7 @@
                 </f7-card>
             </f7-tab>
         </f7-tabs>
-
-</f7-page>
+    </f7-page>
 
 </template>
 
