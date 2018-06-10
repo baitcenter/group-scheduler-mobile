@@ -3,6 +3,7 @@
         <f7-navbar color="red" :title="this.eventInfo.eventName" back-link="Back">
             <f7-nav-right><f7-link href="/home/" icon-if-ios="f7:home" icon-if-md="material:home"></f7-link></f7-nav-right>
         </f7-navbar>
+        <div v-if="loaded">
         <f7-list>
             <f7-list-item>
                 <div slot="inner">
@@ -35,10 +36,10 @@
         </f7-list>
         <f7-block>
             <f7-button v-if="!isCreator && !isJoinedMember" color="green" fill icon-material="group_add" @click="openConfirmJoin"> Join</f7-button>
-            <f7-button v-if="isJoinedMember" fill color="orange" icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-button>
-            <f7-button v-if="isCreator" color="red" fill icon-material="delete" @click="openConfirmDel"> Delete</f7-button>
+            <f7-button v-else-if="isJoinedMember" fill color="orange" icon-material="exit_to_app" @click="openConfirmLeave"> Leave</f7-button>
+            <f7-button v-else-if="isCreator" color="red" fill icon-material="delete" @click="openConfirmDel"> Delete</f7-button>
         </f7-block>
-
+        </div>
     </f7-page>
 </template>
 <script>
@@ -52,10 +53,15 @@ export default {
             groupInfo:{},
             isCreator: false,
             isJoinedMember: false,
+            eventID: this.$f7route.params.eventId,
+            loaded: false
         }
     },
     mounted(){
         this.populateData()
+        db.ref("events").child(this.eventID).on("child_changed", snapshot => {
+            this.populateData()
+        })
     },
     methods:{
         populateData() {
@@ -93,6 +99,7 @@ export default {
                 })
             }).then(()=>{
                 this.groupInfo = tempGroupData
+                this.loaded = true
             })
         },
         setJoinedMembers(joinedMembers) {
