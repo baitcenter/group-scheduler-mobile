@@ -121,7 +121,7 @@
                 self.toastBottom.open();
             },
             setGroupLeader(uid) {
-                db.ref("users/" + uid + "/profile").on("value", snapshot => {
+                db.ref("users/" + uid + "/profile").once("value", snapshot => {
                     this.groupData.groupLeader = {uid: uid, ...snapshot.val()}
                     if(auth.currentUser.uid === uid){
                         this.isLeader = true
@@ -131,7 +131,7 @@
             setGroupMembers(groupMembers) {
                 let members = []
                 for (let uid in groupMembers) {
-                db.ref("users/" + uid + "/profile").on("value", snapshot => {
+                db.ref("users/" + uid + "/profile").once("value", snapshot => {
                         members.push({uid:uid,...snapshot.val()})
                     })
                 }
