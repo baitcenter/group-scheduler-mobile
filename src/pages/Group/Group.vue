@@ -154,35 +154,6 @@
                     this.$f7router.back('/my-group/',{ignoreCache: true, force:true, reloadPrevious: true})
                 });
             },
-            deleteGroupEventPromise(){
-                return new Promise((resolve,reject)=>{
-
-
-                    for(let x in this.groupData.groupSchedule){
-                        for(let y in this.groupData.groupSchedule[x]){
-                            db.ref('events').child(y).remove()
-                        }
-                    }
-                    resolve()
-                })
-            },
-            deleteGroupMembers(){
-                return new Promise((resolve, reject)=>{
-                    let size=0
-                    if(this.groupData.groupMembers){
-                        for(let x in this.groupData.groupMembers){
-                            size++
-                            this.leaveGroup(this.groupData.groupMembers[x].uid)
-                            .then(()=>{
-                                if(size===Object.keys(this.groupData.groupMembers).length){
-                                    resolve()
-                                    console.log('done deletegroup')
-                                }
-                            })
-                        }
-                    }
-                })
-            },
             deleteGroup(){
                 db.ref('events').once('value',snapshot=>{
                     snapshot.forEach(eventSnapshot=>{
@@ -276,81 +247,12 @@
                     })
                     db.ref('users/'+uid+'/userGroups').child(this.groupId).remove()
                 })
-                // return new Promise((resolve,reject)=>{
-
-                //     //delete user from groupMembers
-                //     console.log(uid)
-                //     if(this.groupData.groupMembers){
-                //         if(Object.keys(this.groupData.groupMembers).length>1){
-                //             db.ref('groups/'+this.groupId+'/groupMembers').child(uid).remove()
-                //         }
-                //         else{
-                //             db.ref('groups/'+this.groupId).child('groupMembers').set(0)
-                //         }
-                //     }
-
-                //     //delete group  from userGroups
-                //     db.ref('users/'+uid+'/userGroups').child(this.groupId).remove()
-
-                //     //getUserEvents
-                //     let userEvents={}
-                //     db.ref('users/'+uid+'/userEvents').once('value',snapshot=>{
-                //         userEvents = snapshot.val()
-                //     })
-                //     .then(()=>{
-                //         console.log('userEvents',userEvents)
-                //         //delete user from joinedEvents and event from userEvents
-                //         for(let x in this.groupData.groupSchedule){
-                //             //x === day
-                //             for(let y in this.groupData.groupSchedule[x]){
-                //                 //y === eventId
-                //                 console.log('y: '+y)
-                //                 db.ref('events/'+y+'/joinedMembers').once('value',snapshot=>{
-                //                     console.log('snapshot.key: ' + snapshot.key)
-                //                     //snapshot.key suppose to joinedMembers
-                //                     //snapshot.val() suppose to be list
-                //                     if(snapshot.val()!==0){
-                //                         let s = 0
-                //                         let foundUid=0
-                //                         snapshot.forEach(child=>{
-                //                             s++;
-                //                             //child.key suppose to be uid
-                //                             //child.val() === 0
-                //                             console.log('child key:'+ child.key)
-                //                             if(child.key===uid){
-                //                                 //remove eventId from userEvents
-
-                //                                 foundUid=1
-                //                                 if(userEvents[x] && Object.keys(userEvents[x]).length>1){
-                //                                     delete [userEvents][x][y]
-                //                                     db.ref('users/'+uid+'/userEvents/'+x).child(y).remove()
-                //                                 }
-                //                                 else{
-
-                //                                     db.ref('users/'+uid+'/userEvents').child(x).set(0)
-                //                                 }
-                //                                 db.ref('events/'+y+'/joinedMembers').child(uid).remove()
-                //                             }
-                //                         })
-                //                         if(s===1 && foundUid){
-                //                             db.ref('events/'+y).child('joinedMembers').set(0)
-                //                         }
-                //                     }
-                //                 })
-                //                 .then(()=>{resolve()})
-                //             }
-                //         }
-                //     })
-                // })
 
             }
 
         },
         created() {
-            // const app = this.$f7
-            // app.dialog.preloader('Loading')
             this.populateGroupData()
-            // app.dialog.close()
             db.ref("groups/" + this.groupId).on("child_changed", snapshot => {
                 this.populateGroupData()
             })
