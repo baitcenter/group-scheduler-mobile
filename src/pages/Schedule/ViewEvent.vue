@@ -128,36 +128,48 @@ export default {
                         userEventRef.child('userEvents').child('Thursday').set(0)
                         userEventRef.child('userEvents').child('Friday').set(0)
                     }
+                }).then(()=>{
+                    const app =this.$f7
+                    db.ref('events/'+eventId+'/joinedMembers').once('value', snapshot=>{
+                        if(snapshot.hasChild(uid)){
+                            app.dialog.alert('User already joined this event','Error!')
+                        }
+                        else{
+                            db.ref('events/'+eventId+'/joinedMembers').child(uid).set(0)
+                            db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).set(0)
+                            this.$f7router.refreshPage()
+                        }
+                    })
                 })
-            const app =this.$f7
-            db.ref('events/'+eventId+'/joinedMembers').once('value', snapshot=>{
-                if(snapshot.hasChild(uid)){
-                    app.dialog.alert('User already joined this event','Error!')
-                }
-                else{
-                    db.ref('events/'+eventId+'/joinedMembers').child(uid).set(0)
-                    db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).set(0)
-                    this.$f7router.refreshPage()
-                }
-            })
+            
         },
         leaveEvent(){
             const uid = auth.currentUser.uid
             const eventId = this.$f7route.params.eventId
-
-            if(this.eventInfo.joinedMembers && Object.keys(this.eventInfo.joinedMembers).length===1){
-                db.ref('events/'+eventId +'/joinedMembers').set(0)
-            }
-            else{
-                db.ref('events/'+eventId +'/joinedMembers').child(uid).remove()//may change to something else
-            }
-
             if(this.userEvents[this.eventInfo.day] && Object.keys(this.userEvents[this.eventInfo.day]).length===1){
-                db.ref('users/'+uid+'/userEvents/').child(this.eventInfo.day).set(0)
+                db.ref('users/'+uid+'/userEvents/').child(this.eventInfo.day).set(0).then(()=>{
+                    
+                    if(this.eventInfo.joinedMembers && Object.keys(this.eventInfo.joinedMembers).length===1){
+                        db.ref('events/'+eventId +'/joinedMembers').set(0)
+                    }
+                    else{
+                        db.ref('events/'+eventId +'/joinedMembers').child(uid).remove()
+                    }
+                })
+
             }
             else{
-                db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).remove()
+                db.ref('users/'+uid+'/userEvents/'+this.eventInfo.day).child(eventId).remove().then(()=>{        
+                    if(this.eventInfo.joinedMembers && Object.keys(this.eventInfo.joinedMembers).length===1){
+                        db.ref('events/'+eventId +'/joinedMembers').set(0)
+                    }
+                    else{
+                        db.ref('events/'+eventId +'/joinedMembers').child(uid).remove()
+                    }
+                })
             }
+
+            
             this.isJoinedMember = false
         },
         deleteEvent(){
