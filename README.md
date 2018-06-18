@@ -23,3 +23,4 @@ Then open your browser and go to [http://localhost:8080](http://localhost:8080) 
 This project is a hybrid app which uses
 * Framework7-vue to develop
 * Cordova to deploy to mobile
+* Google firebase as backend
