@@ -1,56 +1,25 @@
-# Framework7 Vue + Webpack App Template
+# Group Scheduler Mobile App
 
-A full-featured Framework7 Vue with Webpack setup with hot-reload & css extraction. Based on [Vue Webpack Boilerplate](https://github.com/vuejs-templates/webpack)
+## ICCS 485: Assignment 3
+A group scheduler app where user can
+* Create/Delete Group
+* Create/Delete Group Event
+* Join/Leave Group
+* Join/Leave Event
+* View their schedule based on joined events
+* View group events
 
-## Usage
-
-### 1. Download this repository
+### How to run on local
 ```
-git clone https://github.com/sunsern/framework7-template-vue-webpack my-app
+npm install && npm run dev
 ```
+Then open your browser and go to [http://localhost:8080](http://localhost:8080) and use inspect mode with device screen.
 
-Repository will be downloaded into `my-app/` folder
+| ![Login page](images/home.png) | ![My schedule page](images/my-schedule.png) | ![View event page](images/view-event.png)
+|:---:|:---:|:---:|
+| Home page | My schedule page | View event page |
 
-### 2. Instal dependencies
-
-Go to the downloaded repository folder and run:
-```
-npm install
-```
-
-This will download latest version of Framework7, Framework7-Vue, Vue and required icon fonts (to `/src/fonts/`)
-
-### 3. Run the app
-
-```
-npm run dev
-```
-
-App will be opened in browser at `http://localhost:8080/`
-
-### 4. Build app for production
-
-```
-npm run build
-```
-
-The output will be at `www/` folder
-
-## Use with cordova
-
-```
-cd cordova
-cordova platform add android
-cordova emulate android
-```
-
-
-## Project Structure
-
-* `src/assets` - folder with static assets (images)
-* `src/components` - folder with custom `.vue` components
-* `src/css` - put custom app CSS styles here. Don't forget to import them in `main.js`
-* `src/pages` - app `.vue` pages
-* `src/main.js` - main app file where you include/import all required libs and init app
-* `src/routes.js` - app routes
-* `src/app.vue` - main app structure/component
+## Note
+This project is a hybrid app which uses
+* Framework7-vue to develop
+* Cordova to deploy to mobile
